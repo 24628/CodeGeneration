@@ -26,6 +26,22 @@ paths:
                   $ref: '#/components/schemas/Account'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+    post: 
+      tags: 
+        - Accounts
+      summary: Creating a new user
+      requestBody:
+        description: Create new account with this endpoint
+        required: true 
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        "201":
+          description: Successfully created
+        "405":
+          description: Invalid input
 
   /users:
     get:
@@ -97,17 +113,25 @@ components:
   schemas:
     Account:
       type: object
+      required: 
+        - type
+        - user_id
+        - iban
+        - limit 
       properties:
         id:
           type: integer
         type:
           type: string
+          example: "saving"
         user_id:
           type: integer
         iban:
           type: string
+          example: "AL35202111090000000001234567"
         limit:
           type: integer
+          example: 500
 
     User:
       type: object
@@ -144,6 +168,8 @@ components:
       properties:
         id:
           type: integer
+        role_name:
+          type: string
         permissions:
           type: array
           items:
