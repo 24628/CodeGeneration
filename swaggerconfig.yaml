@@ -6,12 +6,104 @@ info:
 
 security:
   - bearerAuth: []
+
+servers:
+  - url: '{site}/{endpoint}/'
+    variables:
+      endpoint:
+        enum:
+          - api
+          - apiv2
+        default: api 
+      site:
+        enum:
+          - localhost
+          - example.com
+          - 127.0.0.1
+        default: localhost
+  
 paths:
+  /login:
+    post: 
+      tags: 
+        - Auth
+      summary: Login 
+      requestBody:
+        description: logging in to an existing account
+        required: true 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  example: password
+      responses:
+        "201":
+          description: Logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+        "405":
+          $ref: '#/components/responses/InvalidInput'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+          
+  /register:
+    post: 
+      tags: 
+        - Auth
+      summary: Register 
+      requestBody:
+        description: register a new account
+        required: true 
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John doe
+                email: 
+                  type: string
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  example: password
+                day_limit:
+                  type: integer
+                  example: 500 
+      responses:
+        "201":
+          description: registerd successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+        "405":
+          $ref: '#/components/responses/InvalidInput'
+        "403":
+          $ref: '#/components/responses/UnAuthorized' 
+          
+          
   /accounts:
     get:
       tags:
         - Accounts
-      description: Returns a list of accounts
+      summary: Returns a list of accounts
+      description: Successfully returns a list of all users and the acoounts with it. A saving account or the current account.
       parameters:
         - $ref: '#/components/parameters/PageLimit'
         - $ref: '#/components/parameters/PageOffset'
@@ -26,12 +118,14 @@ paths:
                   $ref: '#/components/schemas/Account'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
     post: 
       tags: 
         - Accounts
-      summary: Creating a new user
+      summary: Creating a new account
       requestBody:
-        description: Create new account with this endpoint
+        description:  This endpoint creates a new account that can be used to transfer and withdraw money.
         required: true 
         content:
           application/json:
@@ -39,10 +133,120 @@ paths:
               $ref: '#/components/schemas/Account'
       responses:
         "201":
-          description: Successfully created
+          description: The account has been successfully created
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Account'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
         "405":
-          description: Invalid input
-
+          $ref: '#/components/responses/InvalidInput'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+          
+  /accounts/id/{id}:
+    get:
+      tags:
+        - Accounts
+      summary: Returns all accounts on user id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The unique id of the user is taken
+      responses:
+        '200':
+          description: returns account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+          
+  /accounts/iban/{iban}:
+    put:
+      tags:
+        - Accounts
+      summary: Change account data
+      parameters:
+        - in: path
+          name: iban
+          schema:
+            type: integer
+          required: true
+          description: The iban of the user is taken 
+      responses:
+        '200':
+          description: returns account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "405":
+          $ref: '#/components/responses/InvalidInput'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+          
+    get:
+      tags:
+        - Accounts
+      summary: Returns single account using IBAN
+      parameters:
+        - in: path
+          name: iban
+          schema:
+            type: integer
+          required: true
+          description: Gets the Iban of the user based on the input
+      responses:
+        '200':
+          description: returns account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+          
+  /accounts/search:
+    get:
+      tags:
+        - Accounts
+      summary: Returns single account using IBAN
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: The name of the user is searched with the submitted input. If the user existed the account is returned
+      responses:
+        '200':
+          description: returns account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+  
   /users:
     get:
       tags:
@@ -53,7 +257,7 @@ paths:
         - $ref: '#/components/parameters/PageOffset'
       responses:
         '200':
-          description: Successfully returned a list of users
+          description: The list of users is returned from the database.
           content:
             application/json:
               schema:
@@ -62,7 +266,111 @@ paths:
                   $ref: '#/components/schemas/User'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+          
+    post:
+      tags:
+        - Users
+      description: creates a new users
+      responses:
+        '200':
+          description: creates a new user based on the fields of the user after checking the inputand the permissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+          
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      description: gets a single user data
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the user
+      responses:
+        '200':
+          description: return user data after submitting an existing id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+          
+    put:
+      tags:
+        - Users
+      description: Updates user data
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the user to get
+      responses:
+        '200':
+          description: updates all the data of the user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        "405":
+          $ref: '#/components/responses/InvalidInput'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+          
+    delete:
+      tags:
+        - Users
+      description: delete user data
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the user to get
+      responses:
+        '200':
+          description: deletes all the data of the user
+          content:
+            application/json:
+              schema:
+                type: string
+                example: account closed
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        "405":
+          $ref: '#/components/responses/InvalidInput'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+    
+    
   /transactions:
     get:
       tags:
@@ -73,7 +381,7 @@ paths:
         - $ref: '#/components/parameters/PageOffset'
       responses:
         '200':
-          description: Successfully returned a list of transactions
+          description: returns a list of all the transactions tht has been made
           content:
             application/json:
               schema:
@@ -82,26 +390,26 @@ paths:
                   $ref: '#/components/schemas/Transaction'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-
-  /roles:
-    get:
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
+    post:
       tags:
-        - Roles
-      description: Returns a list of roles
-      parameters:
-        - $ref: '#/components/parameters/PageLimit'
-        - $ref: '#/components/parameters/PageOffset'
+        - Transactions
+      description: creates a new transaction
+      summary: creates a new transaction
       responses:
         '200':
-          description: Successfully returned a list of roles
+          description: creates new transaction and returns the information of the transaction e.g. timestamp, from, to and the amount of the transaction
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Role'
+                $ref: '#/components/schemas/Transaction'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        "405":
+          $ref: '#/components/responses/InvalidInput'
+        "403":
+          $ref: '#/components/responses/UnAuthorized'
 
 components:
   securitySchemes:
@@ -109,52 +417,57 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
   schemas:
     Account:
       type: object
       required: 
         - type
         - user_id
-        - iban
-        - limit 
+        - IBAN
       properties:
-        id:
-          type: integer
+        IBAN:
+          type: string
+          example: "NL69INHO1234123412"
         type:
           type: string
-          example: "saving"
+          enum:
+            - normal
+            - saving
+            - closed
         user_id:
           type: integer
-        iban:
-          type: string
-          example: "AL35202111090000000001234567"
-        limit:
+        absolute_limit:
           type: integer
-          example: 500
-
     User:
       type: object
       properties:
         id:
           type: integer
-        role_id:
-          type: integer
+        type:
+          type: string
+          enum: 
+            - customer
+            - employee
+            - disabled
         name:
           type: string
         email:
           type: string
         password:
           type: string
-
+        day_limit:
+          type: integer
+          example: 500
+        transaction_limit:
+          type: integer
     Transaction:
       type: object
       properties:
         id:
           type: integer
-        account_from_id:
+        from:
           type: integer
-        account_to_id:
+        to:
           type: integer
         user_id:
           type: integer
@@ -162,27 +475,6 @@ components:
           type: object
         amount:
           type: integer
-
-    Role:
-      type: object
-      properties:
-        id:
-          type: integer
-        role_name:
-          type: string
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Permission'
-
-    Permission:
-      type: object
-      properties:
-        id:
-          type: integer
-        permission:
-          type: string
-
 
   parameters:
     PageLimit:
@@ -197,6 +489,68 @@ components:
       description: Specifies the page number of the artists to be displayed
       schema:
         type: integer
+        
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 401
+              body:
+                type: string
+                example: Access token is missing
+                      
+    InvalidInput:
+      description: Data input is invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 405
+              body:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                      example: "password"
+                    value:
+                      type: string
+                      example: "has to be 8 characters"
+              
+    NotFound:
+      description: 404 not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 404
+              body:
+                type: string
+                example: Resource X was not found
+                
+    UnAuthorized:
+      description: 403 not Authorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 403
+              body:
+                type: string
+                example: You dont have permissions to take this action
