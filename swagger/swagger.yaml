@@ -1,0 +1,426 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Code generation",
+    "version" : "1.0.1"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "security" : [ {
+    "bearerAuth" : [ ]
+  } ],
+  "paths" : {
+    "/accounts" : {
+      "get" : {
+        "tags" : [ "Accounts" ],
+        "summary" : "Returns a list of accounts",
+        "description" : "Returns a list of accounts",
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "Limits the number of items on a page",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Specifies the page number of the artists to be displayed",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully returned a list of accounts",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Account"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Access token is missing or invalid"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Accounts" ],
+        "summary" : "Creating a new account",
+        "requestBody" : {
+          "description" : "Create new account with this endpoint",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Account"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Successfully created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Access token is missing or invalid"
+          },
+          "405" : {
+            "description" : "Data input is invalid"
+          }
+        }
+      }
+    },
+    "/accounts/{iban}" : {
+      "get" : {
+        "tags" : [ "Accounts" ],
+        "description" : "Returns an account",
+        "parameters" : [ {
+          "name" : "iban",
+          "in" : "path",
+          "description" : "Iban of account",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "returns account",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Access token is missing or invalid"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Accounts" ],
+        "description" : "Updates an account",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Numeric ID of the user to get",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "returns account",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Account"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Access token is missing or invalid"
+          }
+        }
+      }
+    },
+    "/users" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "description" : "Returns a list of users",
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "Limits the number of items on a page",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Specifies the page number of the artists to be displayed",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully returned a list of users",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Access token is missing or invalid"
+          }
+        }
+      }
+    },
+    "/transactions" : {
+      "get" : {
+        "tags" : [ "Transactions" ],
+        "description" : "Returns a list of transactions",
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "Limits the number of items on a page",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Specifies the page number of the artists to be displayed",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully returned a list of transactions",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Access token is missing or invalid"
+          }
+        }
+      }
+    },
+    "/roles" : {
+      "get" : {
+        "tags" : [ "Roles" ],
+        "description" : "Returns a list of roles",
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "Limits the number of items on a page",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Specifies the page number of the artists to be displayed",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully returned a list of roles",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Role"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Access token is missing or invalid"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Account" : {
+        "required" : [ "IBAN", "limit", "type", "user_id" ],
+        "type" : "object",
+        "properties" : {
+          "IBAN" : {
+            "type" : "string",
+            "example" : "NL69INHO1234123412"
+          },
+          "type" : {
+            "type" : "string",
+            "example" : "saving"
+          },
+          "user_id" : {
+            "type" : "integer"
+          },
+          "limit" : {
+            "type" : "integer",
+            "example" : 500
+          }
+        }
+      },
+      "User" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "role_id" : {
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Transaction" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "account_from_id" : {
+            "type" : "integer"
+          },
+          "account_to_id" : {
+            "type" : "integer"
+          },
+          "user_id" : {
+            "type" : "integer"
+          },
+          "date" : {
+            "type" : "object"
+          },
+          "amount" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "Role" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "role_name" : {
+            "type" : "string"
+          },
+          "permissions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Permission"
+            }
+          }
+        }
+      },
+      "Permission" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "permission" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "responses" : {
+      "UnauthorizedError" : {
+        "description" : "Access token is missing or invalid"
+      },
+      "InvalidInput" : {
+        "description" : "Data input is invalid"
+      }
+    },
+    "parameters" : {
+      "PageLimit" : {
+        "name" : "limit",
+        "in" : "query",
+        "description" : "Limits the number of items on a page",
+        "required" : false,
+        "style" : "form",
+        "explode" : true,
+        "schema" : {
+          "type" : "integer"
+        }
+      },
+      "PageOffset" : {
+        "name" : "offset",
+        "in" : "query",
+        "description" : "Specifies the page number of the artists to be displayed",
+        "required" : false,
+        "style" : "form",
+        "explode" : true,
+        "schema" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    }
+  }
+}
