@@ -2,13 +2,13 @@ package io.swagger.model.Entity;
 
 import io.swagger.enums.UserType;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue
@@ -20,12 +20,14 @@ public class User {
     private Long day_limit;
     private Long transaction_limit;
 
-    public User(){
+   @ElementCollection(fetch = FetchType.EAGER)
+   private
+   List<UserType> roles;
 
-    }
+  public UserEntity(){}
 
-    public UserType getType() {
-        return type;
+    public List<UserType> getType() {
+        return roles;
     }
 
     public void setType(UserType type) {
@@ -80,4 +82,5 @@ public class User {
     public UUID getUuid() {
         return uuid;
     }
+
 }

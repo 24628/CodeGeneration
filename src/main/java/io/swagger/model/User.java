@@ -1,11 +1,16 @@
 package io.swagger.model;
 
+import java.util.List;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.enums.UserType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.FetchType;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -31,6 +36,7 @@ public class User   {
     DISABLED("disabled");
 
     private String value;
+
 
     TypeEnum(String value) {
       this.value = value;

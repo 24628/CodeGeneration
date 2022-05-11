@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import java.util.UUID;
 
 @Entity
-public class Account {
+public class AccountEntity {
 
     @Id
     @GeneratedValue
@@ -18,7 +18,7 @@ public class Account {
     private UUID user_uuid;
     private Long absolute_limit;
 
-    public Account() {
+    public AccountEntity() {
 
     }
 

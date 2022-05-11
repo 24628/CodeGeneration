@@ -1,7 +1,14 @@
 package io.swagger.enums;
 
-public enum UserType {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum UserType implements GrantedAuthority {
     CUSTOMER,
     EMPLOYEE,
-    DISABLED
+    DISABLED;
+
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }

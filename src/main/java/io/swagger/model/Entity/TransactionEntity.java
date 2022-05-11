@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-public class Transaction {
+public class TransactionEntity {
     @Id
     @GeneratedValue
     private UUID uuid;
@@ -17,7 +17,7 @@ public class Transaction {
     private Date date;
     private long amount;
 
-    public Transaction(){
+    public TransactionEntity(){
 
     }
 
