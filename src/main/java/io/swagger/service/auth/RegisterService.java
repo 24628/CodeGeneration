@@ -1,21 +1,21 @@
-package io.swagger.service;
+package io.swagger.service.auth;
 
+import io.swagger.enums.UserType;
 import io.swagger.jwt.JwtTokenProvider;
+import io.swagger.model.Entity.UserEntity;
 import io.swagger.repository.IUserRepository;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
-import org.springframework.security.core.AuthenticationException;
-
-
-public class LoginService {
-
+public class RegisterService {
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -35,11 +35,30 @@ public class LoginService {
         return authenticationManagerBean();
     }
 
-    public String login(String username, String password)
+    public String register(String email, String username, String password)
     {
         String token = "";
 
+        if(email.isEmpty() || username.isEmpty() || password.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Missing content");
+
+        if(userRepository.existsByName(username))
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username already exist in the database");
+
+        if(EmailValidator.getInstance().isValid(email))
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Email is invalid");
+
         try {
+            UserEntity user = new UserEntity();
+            user.setEmail(email);
+            user.setName(username);
+            user.setPassword(password);
+            user.setType(UserType.CUSTOMER);
+            user.setDay_limit(5000);
+            user.setTransaction_limit(500);
+
+            userRepository.save(user);
+
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getType());
         } catch (AuthenticationException e) {
