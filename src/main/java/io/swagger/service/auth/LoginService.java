@@ -9,11 +9,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import org.springframework.security.core.AuthenticationException;
 
-
+@Service
 public class LoginService {
 
 
@@ -26,14 +27,8 @@ public class LoginService {
     @Autowired
     IUserRepository userRepository;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
-    }
-
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return authenticationManagerBean();
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public String login(String username, String password)
     {

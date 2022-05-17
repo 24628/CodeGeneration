@@ -13,8 +13,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+@Service
 public class RegisterService {
 
     @Autowired
@@ -26,14 +28,8 @@ public class RegisterService {
     @Autowired
     IUserRepository userRepository;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
-    }
-
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return authenticationManagerBean();
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public String register(String email, String username, String password)
     {
