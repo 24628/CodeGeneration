@@ -1,6 +1,7 @@
 package io.swagger.model.Entity;
 
 import io.swagger.enums.UserType;
+import io.swagger.model.User;
 
 
 import javax.persistence.*;
@@ -17,15 +18,13 @@ public class UserEntity {
     private String name;
     private String email;
     private String password;
-    private int day_limit;
-    private int transaction_limit;
+    private Long day_limit;
+    private Long transaction_limit;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private
-    List<UserType> roles;
+   @ElementCollection(fetch = FetchType.EAGER)
+   List<UserType> roles;
 
-    public UserEntity() {
-    }
+  public UserEntity(){}
 
     public List<UserType> getType() {
         return roles;
@@ -59,19 +58,19 @@ public class UserEntity {
         this.password = password;
     }
 
-    public int getDay_limit() {
+    public Long getDay_limit() {
         return day_limit;
     }
 
-    public void setDay_limit(int day_limit) {
+    public void setDay_limit(Long day_limit) {
         this.day_limit = day_limit;
     }
 
-    public int getTransaction_limit() {
+    public Long getTransaction_limit() {
         return transaction_limit;
     }
 
-    public void setTransaction_limit(int transaction_limit) {
+    public void setTransaction_limit(Long transaction_limit) {
         this.transaction_limit = transaction_limit;
     }
 
@@ -84,4 +83,7 @@ public class UserEntity {
         return uuid;
     }
 
+    public String getRoles() {
+      return String.valueOf(type);
+    }
 }

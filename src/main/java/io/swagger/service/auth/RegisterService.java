@@ -50,8 +50,8 @@ public class RegisterService {
             user.setName(username);
             user.setPassword(password);
             user.setType(UserType.CUSTOMER);
-            user.setDay_limit(5000);
-            user.setTransaction_limit(500);
+            user.setDay_limit(5000L);
+            user.setTransaction_limit(500L);
 
             userRepository.save(user);
 
