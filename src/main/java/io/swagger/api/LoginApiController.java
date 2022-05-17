@@ -6,6 +6,7 @@ import io.swagger.model.InlineResponse403;
 import io.swagger.model.InlineResponse405;
 import io.swagger.model.LoginBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.service.auth.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,10 +56,14 @@ public class LoginApiController implements LoginApi {
     }
 
     public ResponseEntity<InlineResponse201> loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginBody body) {
+        System.out.println("Welp i get here");
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<InlineResponse201>(objectMapper.readValue("{\n  \"user\" : {\n    \"password\" : \"password\",\n    \"day_limit\" : 500,\n    \"name\" : \"name\",\n    \"transaction_limit\" : 6,\n    \"id\" : 0,\n    \"type\" : \"customer\",\n    \"email\" : \"email\"\n  }\n}", InlineResponse201.class), HttpStatus.NOT_IMPLEMENTED);
+                LoginService loginService = new LoginService();
+                String token = loginService.login(body.getUsername(), body.getPassword());
+
+                return new ResponseEntity<InlineResponse201>(objectMapper.readValue("{ token: "+token+"}", InlineResponse201.class), HttpStatus.ACCEPTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<InlineResponse201>(HttpStatus.INTERNAL_SERVER_ERROR);

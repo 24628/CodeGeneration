@@ -18,8 +18,8 @@ import javax.validation.constraints.*;
 
 
 public class RegisterBody {
-    @JsonProperty("name")
-    private String name = null;
+    @JsonProperty("username")
+    private String username = null;
 
     @JsonProperty("email")
     private String email = null;
@@ -30,24 +30,24 @@ public class RegisterBody {
     @JsonProperty("day_limit")
     private Integer dayLimit = null;
 
-    public RegisterBody name(String name) {
-        this.name = name;
+    public RegisterBody username(String username) {
+        this.username = username;
         return this;
     }
 
     /**
-     * Get name
+     * Get username
      *
-     * @return name
+     * @return username
      **/
     @Schema(example = "John doe", description = "")
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public RegisterBody email(String email) {
@@ -120,7 +120,7 @@ public class RegisterBody {
             return false;
         }
         RegisterBody registerBody = (RegisterBody) o;
-        return Objects.equals(this.name, registerBody.name) &&
+        return Objects.equals(this.username, registerBody.username) &&
                 Objects.equals(this.email, registerBody.email) &&
                 Objects.equals(this.password, registerBody.password) &&
                 Objects.equals(this.dayLimit, registerBody.dayLimit);
@@ -128,7 +128,7 @@ public class RegisterBody {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, password, dayLimit);
+        return Objects.hash(username, email, password, dayLimit);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class RegisterBody {
         StringBuilder sb = new StringBuilder();
         sb.append("class RegisterBody {\n");
 
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    username: ").append(toIndentedString(username)).append("\n");
         sb.append("    email: ").append(toIndentedString(email)).append("\n");
         sb.append("    password: ").append(toIndentedString(password)).append("\n");
         sb.append("    dayLimit: ").append(toIndentedString(dayLimit)).append("\n");

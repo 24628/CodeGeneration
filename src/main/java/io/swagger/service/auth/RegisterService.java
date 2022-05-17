@@ -31,7 +31,7 @@ public class RegisterService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String register(String email, String username, String password)
+    public String register(String email, String username, String password, long dayLimit)
     {
         String token = "";
 
@@ -39,11 +39,11 @@ public class RegisterService {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Missing content");
 
         UserEntity userExist = userRepository.findByUsername(username);
-        if(userExist == null)
+        if(userExist != null)
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username already exist in the database");
 
-        if(EmailValidator.getInstance().isValid(email))
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Email is invalid");
+//        if(EmailValidator.getInstance().isValid(email))
+//            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Email is invalid");
 
         try {
             UserEntity user = new UserEntity();
@@ -51,10 +51,12 @@ public class RegisterService {
             user.setUsername(username);
             user.setPassword(password);
             user.setType(UserType.CUSTOMER);
-            user.setDay_limit(5000L);
+            user.setDay_limit(dayLimit);
             user.setTransaction_limit(500L);
 
             userRepository.save(user);
+
+            System.out.println("LOL");
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getType());

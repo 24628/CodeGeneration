@@ -18,30 +18,30 @@ import javax.validation.constraints.*;
 
 
 public class LoginBody {
-    @JsonProperty("email")
-    private String email = null;
+    @JsonProperty("username")
+    private String username = null;
 
     @JsonProperty("password")
     private String password = null;
 
-    public LoginBody email(String email) {
-        this.email = email;
+    public LoginBody username(String username) {
+        this.username = username;
         return this;
     }
 
     /**
-     * Get email
+     * Get username
      *
-     * @return email
+     * @return username
      **/
-    @Schema(example = "johndoe@example.com", description = "")
+    @Schema(example = "johndoe", description = "")
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public LoginBody password(String password) {
@@ -74,13 +74,13 @@ public class LoginBody {
             return false;
         }
         LoginBody loginBody = (LoginBody) o;
-        return Objects.equals(this.email, loginBody.email) &&
+        return Objects.equals(this.username, loginBody.username) &&
                 Objects.equals(this.password, loginBody.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, password);
+        return Objects.hash(username, password);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class LoginBody {
         StringBuilder sb = new StringBuilder();
         sb.append("class LoginBody {\n");
 
-        sb.append("    email: ").append(toIndentedString(email)).append("\n");
+        sb.append("    username: ").append(toIndentedString(username)).append("\n");
         sb.append("    password: ").append(toIndentedString(password)).append("\n");
         sb.append("}");
         return sb.toString();
