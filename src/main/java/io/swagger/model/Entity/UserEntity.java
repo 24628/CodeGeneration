@@ -15,7 +15,7 @@ public class UserEntity {
     @GeneratedValue
     private UUID uuid;
     private UserType type;
-    private String name;
+    private String username;
     private String email;
     private String password;
     private Long day_limit;
@@ -34,12 +34,12 @@ public class UserEntity {
         this.type = type;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -72,15 +72,6 @@ public class UserEntity {
 
     public void setTransaction_limit(Long transaction_limit) {
         this.transaction_limit = transaction_limit;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    @Id
-    public UUID getUuid() {
-        return uuid;
     }
 
     public String getRoles() {

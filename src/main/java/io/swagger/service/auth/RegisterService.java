@@ -38,7 +38,8 @@ public class RegisterService {
         if(email.isEmpty() || username.isEmpty() || password.isEmpty())
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Missing content");
 
-        if(userRepository.existsByName(username))
+        UserEntity userExist = userRepository.findByUsername(username);
+        if(userExist == null)
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username already exist in the database");
 
         if(EmailValidator.getInstance().isValid(email))
@@ -47,7 +48,7 @@ public class RegisterService {
         try {
             UserEntity user = new UserEntity();
             user.setEmail(email);
-            user.setName(username);
+            user.setUsername(username);
             user.setPassword(password);
             user.setType(UserType.CUSTOMER);
             user.setDay_limit(5000L);
