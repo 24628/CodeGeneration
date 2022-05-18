@@ -3,7 +3,8 @@ package io.swagger.api;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import io.swagger.annotations.Api;
-import io.swagger.responses.HelperResponse;
+import io.swagger.api.interfaces.RegisterApi;
+import io.swagger.responses.JwtTokenResponse;
 import io.swagger.model.RegisterBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.auth.RegisterService;
@@ -50,10 +51,10 @@ public class RegisterApiController implements RegisterApi {
                 String json = "";
 
                 try {
-                    json = mapper.writeValueAsString(new HelperResponse(HttpStatus.CREATED, token));
+                    json = mapper.writeValueAsString(new JwtTokenResponse(HttpStatus.CREATED, token));
                 }
                 catch (JsonGenerationException | JsonMappingException e) {
-                    json = mapper.writeValueAsString(new HelperResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Oopsie!"));
+                    json = mapper.writeValueAsString(new JwtTokenResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Oopsie!"));
                     e.printStackTrace();
                 }
 

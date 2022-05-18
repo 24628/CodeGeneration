@@ -2,11 +2,11 @@ package io.swagger.responses;
 
 import org.springframework.http.HttpStatus;
 
-public class HelperResponse {
+public class JwtTokenResponse {
 
     public final HttpStatus code;
     public final String token;
-    public HelperResponse(HttpStatus code, String token) {
+    public JwtTokenResponse(HttpStatus code, String token) {
         this.code = code;
         this.token = token;
     }

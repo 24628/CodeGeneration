@@ -3,18 +3,13 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package io.swagger.api;
+package io.swagger.api.interfaces;
 
-import io.swagger.model.InlineResponse201;
-import io.swagger.model.InlineResponse403;
-import io.swagger.model.InlineResponse405;
 import io.swagger.model.RegisterBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.validation.annotation.Validated;
