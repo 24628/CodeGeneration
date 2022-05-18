@@ -34,6 +34,8 @@ public class LoginService {
     {
         String token = "";
 
+        //@todo make sure password encode works with the stuff otherwise the user cant find the shit
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());
