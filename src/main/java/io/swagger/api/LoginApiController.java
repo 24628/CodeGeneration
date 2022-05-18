@@ -1,11 +1,14 @@
 package io.swagger.api;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import io.swagger.annotations.Api;
 import io.swagger.model.InlineResponse201;
 import io.swagger.model.InlineResponse403;
 import io.swagger.model.InlineResponse405;
 import io.swagger.model.LoginBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.responses.HelperResponse;
 import io.swagger.service.auth.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -58,21 +61,29 @@ public class LoginApiController implements LoginApi {
         this.request = request;
     }
 
-    public ResponseEntity<InlineResponse201> loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginBody body) {
-        System.out.println("Welp i get here");
+    public String loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginBody body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
                 String token = loginService.login(body.getUsername(), body.getPassword());
+                ObjectMapper mapper = new ObjectMapper();
+                String json = "";
 
-                return new ResponseEntity<InlineResponse201>(objectMapper.readValue("{ token: "+token+"}", InlineResponse201.class), HttpStatus.ACCEPTED);
+                try {
+                    json = mapper.writeValueAsString(new HelperResponse(HttpStatus.CREATED, token));
+                }
+                catch (JsonGenerationException | JsonMappingException e) {
+                    json = mapper.writeValueAsString(new HelperResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Oopsie!"));
+                    e.printStackTrace();
+                }
+
+                return json;
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<InlineResponse201>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return "test";
             }
         }
-
-        return new ResponseEntity<InlineResponse201>(HttpStatus.NOT_IMPLEMENTED);
+        return "oopsie";
     }
 
 }

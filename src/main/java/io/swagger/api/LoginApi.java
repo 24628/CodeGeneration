@@ -51,7 +51,7 @@ public interface LoginApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<InlineResponse201> loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginBody body);
+    String loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginBody body);
 
 }
 
