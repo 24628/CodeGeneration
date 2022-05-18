@@ -1,17 +1,14 @@
 package io.swagger.service.auth;
 
-import io.swagger.enums.UserType;
+import io.swagger.enums.Roles;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.repository.IUserRepository;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -49,17 +46,17 @@ public class RegisterService {
             UserEntity user = new UserEntity();
             user.setEmail(email);
             user.setUsername(username);
-            user.setPassword(password);
-            user.setType(UserType.CUSTOMER);
+            user.setPassword(passwordEncoder.encode(password));
+            user.setRole(Roles.CUSTOMER);
             user.setDay_limit(dayLimit);
             user.setTransaction_limit(500L);
 
             userRepository.save(user);
 
-            System.out.println("LOL");
-
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getType());
+
+            System.out.println("hier Lmao");
+            token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid username/password");
         }

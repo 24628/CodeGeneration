@@ -49,6 +49,9 @@ public class LoginApiController implements LoginApi {
 
     private final HttpServletRequest request;
 
+    @Autowired
+    private LoginService loginService;
+
     @org.springframework.beans.factory.annotation.Autowired
     public LoginApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -60,7 +63,6 @@ public class LoginApiController implements LoginApi {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                LoginService loginService = new LoginService();
                 String token = loginService.login(body.getUsername(), body.getPassword());
 
                 return new ResponseEntity<InlineResponse201>(objectMapper.readValue("{ token: "+token+"}", InlineResponse201.class), HttpStatus.ACCEPTED);

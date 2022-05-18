@@ -36,7 +36,7 @@ public class LoginService {
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getType());
+            token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid username/password");
         }
