@@ -4,6 +4,7 @@ import io.swagger.enums.Roles;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.repository.IUserRepository;
+import io.swagger.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,6 +35,9 @@ public class RegisterService {
 
         if(email.isEmpty() || username.isEmpty() || password.isEmpty())
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Missing content");
+
+        if(Validator.containsWhiteSpace(email) || Validator.containsWhiteSpace(username) || Validator.containsWhiteSpace(password))
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "No white Spaces!");
 
         UserEntity userExist = userRepository.findByUsername(username);
         if(userExist != null)
