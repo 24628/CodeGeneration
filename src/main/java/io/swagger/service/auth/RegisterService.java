@@ -58,8 +58,6 @@ public class RegisterService {
             userRepository.save(user);
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-
-            System.out.println("hier Lmao");
             token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid username/password");

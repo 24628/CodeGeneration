@@ -28,13 +28,17 @@ public class jwtTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = jwtTokenProvider.resolveToken(httpServletRequest);    // retrieve the token from the request
         try {
+            System.out.println(token + "is prob null!");
             if (token != null && jwtTokenProvider.validateToken(token)) {        // check if the token is valid
+                System.out.println("ik start hier");
                 Authentication auth = jwtTokenProvider.getAuthentication(token);    // retrieve the user from the database
                 SecurityContextHolder.getContext().setAuthentication(auth);    // apply the user to the security context of the request
+                System.out.println("ik eindig hier");
             }
         } catch (ResponseStatusException ex) {
             SecurityContextHolder.clearContext();                // if the token is invalid, clear the security context
-            httpServletResponse.sendError(ex.getStatus().value(), ex.getMessage());
+            httpServletResponse.sendError(ex.getStatus().value(), "current token" + token);
+//            httpServletResponse.sendError(ex.getStatus().value(), ex.getMessage());
             return;
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);        // move on to the next filter

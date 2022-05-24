@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.AccountsApi;
 import io.swagger.model.Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.model.Entity.UserEntity;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +42,7 @@ public class AccountsApiController implements AccountsApi {
 
     public ResponseEntity<List<Account>> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,@Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) {
         String accept = request.getHeader("Accept");
+        System.out.println("Wow post accountGet");
         if (accept != null && accept.contains("application/json")) {
             try {
                 return new ResponseEntity<List<Account>>(objectMapper.readValue("[ {\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absolute_limit\" : 6,\n  \"type\" : \"normal\"\n}, {\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absolute_limit\" : 6,\n  \"type\" : \"normal\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
@@ -59,6 +62,7 @@ public class AccountsApiController implements AccountsApi {
                 return new ResponseEntity<Account>(objectMapper.readValue("{\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absolute_limit\" : 6,\n  \"type\" : \"normal\"\n}", Account.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
+                System.out.println("Couldn't serialize response for content type application/json");
                 return new ResponseEntity<Account>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -96,9 +100,13 @@ public class AccountsApiController implements AccountsApi {
 
     public ResponseEntity<Account> accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required=true, schema=@Schema()) @Valid @RequestBody Account body) {
         String accept = request.getHeader("Accept");
+        System.out.println("Wow post accountPost");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<Account>(objectMapper.readValue("{\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absolute_limit\" : 6,\n  \"type\" : \"normal\"\n}", Account.class), HttpStatus.NOT_IMPLEMENTED);
+                String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+                System.out.println(username);
+
+                return new ResponseEntity<Account>(objectMapper.readValue("", Account.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<Account>(HttpStatus.INTERNAL_SERVER_ERROR);
