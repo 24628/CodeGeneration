@@ -127,25 +127,10 @@ public class AccountsApiController implements AccountsApi {
             required=true, schema=@Schema()) @RequestBody Account body) {
 
         String accept = request.getHeader("Accept");
-//        String jwtToken = request.getHeader("Authorization").split("\\s+")[1];
-//        UserEntity user = userService.findUserByName(jwtTokenProvider.getUsername(jwtToken));
-//        System.out.println(user.getUsername() + user.getRole());
-
         if (accept != null && accept.contains("application/json")) {
             try {
                 accountService.addAccount(body);
-                ObjectMapper mapper = new ObjectMapper();
-                String json = "";
-
-                try {
-                    json = mapper.writeValueAsString(new AccountCreatedResponse(HttpStatus.CREATED));
-                }
-                catch (JsonGenerationException | JsonMappingException e) {
-                    json = mapper.writeValueAsString(new AccountCreatedResponse(HttpStatus.INTERNAL_SERVER_ERROR));
-                    e.printStackTrace();
-                }
-
-                return json;
+                return this.objectMapper.writeValueAsString(new AccountCreatedResponse(HttpStatus.CREATED));
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return "error";
