@@ -1,8 +1,7 @@
 package io.swagger.service;
 
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.User;
-import io.swagger.repository.IUserRepository;
+import io.swagger.repository.IUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    public IUserRepository userRepository;
+    public IUserDTO userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

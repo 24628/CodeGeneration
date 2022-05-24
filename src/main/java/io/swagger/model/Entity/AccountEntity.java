@@ -19,7 +19,6 @@ public class AccountEntity {
     private Long absolute_limit;
 
     public AccountEntity() {
-
     }
 
     public AccountType getType() {

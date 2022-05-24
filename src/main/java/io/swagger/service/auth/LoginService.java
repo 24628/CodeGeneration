@@ -1,13 +1,11 @@
 package io.swagger.service.auth;
 
 import io.swagger.jwt.JwtTokenProvider;
-import io.swagger.repository.IUserRepository;
+import io.swagger.repository.IUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,7 +23,7 @@ public class LoginService {
     JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    IUserRepository userRepository;
+    IUserDTO userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

@@ -3,7 +3,7 @@ package io.swagger.service.auth;
 import io.swagger.enums.Roles;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.repository.IUserRepository;
+import io.swagger.repository.IUserDTO;
 import io.swagger.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class RegisterService {
     JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    IUserRepository userRepository;
+    IUserDTO userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

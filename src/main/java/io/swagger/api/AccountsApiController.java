@@ -128,7 +128,10 @@ public class AccountsApiController implements AccountsApi {
     }
 
     public ResponseEntity<Account> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned" ,schema=@Schema()) @Valid @RequestParam(value = "name", required = false) String name) {
+
         String accept = request.getHeader("Accept");
+        String jwtToken = request.getHeader("Authorization").split("\\s+")[1];
+        UserEntity user = userService.findUserByName(jwtTokenProvider.getUsername(jwtToken));
         if (accept != null && accept.contains("application/json")) {
             try {
                 return new ResponseEntity<Account>(objectMapper.readValue("{\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absolute_limit\" : 6,\n  \"type\" : \"normal\"\n}", Account.class), HttpStatus.NOT_IMPLEMENTED);
