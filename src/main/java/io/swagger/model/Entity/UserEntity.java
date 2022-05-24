@@ -23,6 +23,12 @@ public class UserEntity {
     public UserEntity() {
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
     public Roles getRole() {
         return role;
     }

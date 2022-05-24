@@ -112,7 +112,7 @@ public interface AccountsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Account> accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required=true, schema=@Schema()) @Valid @RequestBody Account body);
+    String accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required=true, schema=@Schema()) @Valid @RequestBody Account body);
 
 
     @Operation(summary = "Returns single account using IBAN", description = "", security = {
