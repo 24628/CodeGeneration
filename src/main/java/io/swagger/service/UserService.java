@@ -14,4 +14,8 @@ public class UserService {
     public UserEntity addUser(UserEntity t) {
         return userRepository.save(t);
     }
+
+    public UserEntity findUserByName(String username) {
+        return userRepository.findByUsername(username);
+    }
 }

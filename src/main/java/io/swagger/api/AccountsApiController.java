@@ -2,16 +2,21 @@ package io.swagger.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.AccountsApi;
+import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.Entity.UserEntity;
+import io.swagger.service.UserService;
+import io.swagger.service.auth.LoginService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +38,12 @@ public class AccountsApiController implements AccountsApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private UserService userService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public AccountsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -100,13 +111,13 @@ public class AccountsApiController implements AccountsApi {
 
     public ResponseEntity<Account> accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required=true, schema=@Schema()) @Valid @RequestBody Account body) {
         String accept = request.getHeader("Accept");
-        System.out.println("Wow post accountPost");
+        String jwtToken = request.getHeader("Authorization").split("\\s+")[1];
+        UserEntity user = userService.findUserByName(jwtTokenProvider.getUsername(jwtToken));
+        System.out.println(user.getUsername() + user.getRole());
+
         if (accept != null && accept.contains("application/json")) {
             try {
-                String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-                System.out.println(username);
-
-                return new ResponseEntity<Account>(objectMapper.readValue("", Account.class), HttpStatus.NOT_IMPLEMENTED);
+                return new ResponseEntity<Account>(objectMapper.readValue("{}", Account.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<Account>(HttpStatus.INTERNAL_SERVER_ERROR);
