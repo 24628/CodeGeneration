@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import java.util.List;
@@ -48,8 +49,18 @@ public class AccountService {
 
         accountRepository.save(account);
     }
-    public List<AccountEntity> getAllUsersAndAccounts(){return accountRepository.getAllUsersAndAccounts();}
-    public List<AccountEntity> getAccountByIban(String iban){ return accountRepository.getAccountByIban(iban);}
+
+    public List<Account> getAccounts(){
+        accountRepository.findAll();
+        return new ArrayList<>();
+    }
+    public List<AccountEntity> getAccountByIban(Account body){
+      //  UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       // List<AccountEntity> useraccount = accountRepository.getAccountByIban("1234");
+
+        return new ArrayList<>();
+    }
+
 
 
 }
