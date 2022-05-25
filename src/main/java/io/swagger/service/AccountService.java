@@ -49,22 +49,19 @@ public class AccountService {
 
         accountRepository.save(account);
     }
-
+    // haalt alle accounts op uit de database
     public List<AccountEntity> getAccounts(){
         return accountRepository.findAll();
     }
-    public List<AccountEntity> getAccountByIban(Account body){
-      //  UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       // List<AccountEntity> useraccount = accountRepository.getAccountByIban("1234");
-
-        return new ArrayList<>();
+    // get account after inserting the iban
+    public AccountEntity getAccountByIBAN(String IBAN){
+       return accountRepository.getAccountByIBAN(IBAN);
     }
-    public List<AccountEntity> getAccountByUserId(int iban){
-        //  UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        // List<AccountEntity> useraccount = accountRepository.getAccountByIban("1234");
-
-        return new ArrayList<>();
+    // todo account can be updated
+    public void updateAccountByIBAN(String IBAN){
+         accountRepository.updateAccountByIBAN(IBAN);
     }
+
 
 
 }

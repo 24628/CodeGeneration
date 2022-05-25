@@ -57,19 +57,20 @@ public class AccountsApiController implements AccountsApi {
     private AccountService accountService;
 
 
-
     @org.springframework.beans.factory.annotation.Autowired
     public AccountsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
     }
 
-    public ResponseEntity<List<Account>> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,@Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) {
+    public ResponseEntity<List<Account>> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,
+                                                     @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid
+                                                     @RequestParam(value = "offset", required = false) Integer offset) {
         String accept = request.getHeader("Accept");
-        System.out.println("Wow post accountGet");
         if (accept != null && accept.contains("application/json")) {
             try {
-               // accountService.getAccountByIban(body)
+                System.out.println("het komt hier");
+                accountService.getAccounts();
                 return new ResponseEntity<List<Account>>(objectMapper.readValue("[ {\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absolute_limit\" : 6,\n  \"type\" : \"normal\"\n}, {\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absolute_limit\" : 6,\n  \"type\" : \"normal\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
@@ -79,11 +80,11 @@ public class AccountsApiController implements AccountsApi {
 
         return new ResponseEntity<List<Account>>(HttpStatus.NOT_IMPLEMENTED);
     }
-
-    public ResponseEntity<Account> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required=true, schema=@Schema()) @PathVariable("iban") String iban) {
+    public ResponseEntity<Account> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required = true, schema = @Schema()) @PathVariable("IBAN") String IBAN) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
+                accountService.getAccountByIBAN(IBAN);
                 return new ResponseEntity<Account>(objectMapper.readValue("{\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absolute_limit\" : 6,\n  \"type\" : \"normal\"\n}", Account.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
@@ -95,7 +96,7 @@ public class AccountsApiController implements AccountsApi {
         return new ResponseEntity<Account>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Account> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("iban") String iban) {
+    public ResponseEntity<Account> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required = true, schema = @Schema()) @PathVariable("IBAN") String IBAN) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -109,7 +110,7 @@ public class AccountsApiController implements AccountsApi {
         return new ResponseEntity<Account>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Account> accountsIdIdGet(@Parameter(in = ParameterIn.PATH, description = "The unique id of the user is taken", required=true, schema=@Schema()) @PathVariable("id") Integer id) {
+    public ResponseEntity<Account> accountsIdIdGet(@Parameter(in = ParameterIn.PATH, description = "The unique id of the user is taken", required = true, schema = @Schema()) @PathVariable("id") Integer id) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -125,7 +126,7 @@ public class AccountsApiController implements AccountsApi {
 
     public String accountsPost(@Parameter(in = ParameterIn.DEFAULT,
             description = "This endpoint creates a new account that can be used to transfer and withdraw money.",
-            required=true, schema=@Schema()) @RequestBody Account body) {
+            required = true, schema = @Schema()) @RequestBody Account body) {
 
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -141,7 +142,7 @@ public class AccountsApiController implements AccountsApi {
         return "oops";
     }
 
-    public ResponseEntity<Account> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned" ,schema=@Schema()) @Valid @RequestParam(value = "name", required = false) String name) {
+    public ResponseEntity<Account> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned", schema = @Schema()) @Valid @RequestParam(value = "name", required = false) String name) {
 
         String accept = request.getHeader("Accept");
         String jwtToken = request.getHeader("Authorization").split("\\s+")[1];

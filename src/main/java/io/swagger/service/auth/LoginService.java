@@ -33,6 +33,9 @@ public class LoginService {
         String token = "";
 
         //@todo make sure password encode works with the stuff otherwise the user cant find the shit
+        if(!passwordEncoder.matches(password,userRepository.findByUsername(username).getPassword())){
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid username/password");
+        }
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

@@ -58,10 +58,10 @@ public interface AccountsApi {
         @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
         
         @ApiResponse(responseCode = "404", description = "404 not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse404.class))) })
-    @RequestMapping(value = "/accounts/iban/{iban}",
+    @RequestMapping(value = "/accounts/IBAN/{IBAN}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Account> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required=true, schema=@Schema()) @PathVariable("iban") String iban);
+    ResponseEntity<Account> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN);
 
 
     @Operation(summary = "Change account data", description = "", security = {
@@ -76,10 +76,10 @@ public interface AccountsApi {
         @ApiResponse(responseCode = "404", description = "404 not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse404.class))),
         
         @ApiResponse(responseCode = "405", description = "Data input is invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse405.class))) })
-    @RequestMapping(value = "/accounts/iban/{iban}",
+    @RequestMapping(value = "/accounts/IBAN/{IBAN}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Account> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("iban") String iban);
+    ResponseEntity<Account> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN);
 
 
     @Operation(summary = "Returns all accounts on user id", description = "", security = {

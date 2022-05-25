@@ -171,14 +171,14 @@ paths:
         "403":
           $ref: '#/components/responses/UnAuthorized'
 
-  /accounts/iban/{iban}:
+  /accounts/IBAN/{IBAN}:
     put:
       tags:
         - Accounts
       summary: Change account data
       parameters:
         - in: path
-          name: iban
+          name: IBAN
           schema:
             type: integer
           required: true
@@ -205,7 +205,7 @@ paths:
       summary: Returns single account using IBAN
       parameters:
         - in: path
-          name: iban
+          name: IBAN
           schema:
             type: integer
           required: true
