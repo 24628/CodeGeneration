@@ -57,7 +57,6 @@ public class AccountEntity {
         this.uuid = uuid;
     }
 
-    @Id
     public UUID getUuid() {
         return uuid;
     }

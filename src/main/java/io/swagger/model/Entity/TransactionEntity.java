@@ -65,7 +65,6 @@ public class TransactionEntity {
         this.uuid = uuid;
     }
 
-    @Id
     public UUID getUuid() {
         return uuid;
     }

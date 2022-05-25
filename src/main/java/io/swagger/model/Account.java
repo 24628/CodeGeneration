@@ -6,9 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.iban4j.CountryCode;
+import org.iban4j.Iban;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
@@ -22,60 +23,21 @@ public class Account {
     @JsonProperty("IBAN")
     private String IBAN = null;
 
-    /**
-     * Gets or Sets type
-     */
-    public enum TypeEnum {
-        NORMAL("normal"),
-
-        SAVING("saving"),
-
-        CLOSED("closed");
-
-        private String value;
-
-        TypeEnum(String value) {
-            this.value = value;
-        }
-
-        @Override
-        @JsonValue
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        @JsonCreator
-        public static TypeEnum fromValue(String text) {
-            for (TypeEnum b : TypeEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-    }
-
     @JsonProperty("type")
-    private TypeEnum type = null;
+    private String type = null;
 
     @JsonProperty("user_id")
-    private Integer userId = null;
+    private String userId = null;
 
     @JsonProperty("absolute_limit")
     private Integer absoluteLimit = null;
-
-    public Account IBAN(String IBAN) {
-        this.IBAN = IBAN;
-        return this;
-    }
 
     /**
      * Get IBAN
      *
      * @return IBAN
      **/
-    @Schema(example = "NL69INHO1234123412", required = true, description = "")
-    @NotNull
+    @Schema(example = "NL69INHO1234123412", required = false, description = "")
 
     public String getIBAN() {
         return IBAN;
@@ -85,7 +47,7 @@ public class Account {
         this.IBAN = IBAN;
     }
 
-    public Account type(TypeEnum type) {
+    public Account type(String type) {
         this.type = type;
         return this;
     }
@@ -95,18 +57,17 @@ public class Account {
      *
      * @return type
      **/
-    @Schema(required = true, description = "")
-    @NotNull
+    @Schema(required = false, description = "")
 
-    public TypeEnum getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(TypeEnum type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public Account userId(Integer userId) {
+    public Account userId(String userId) {
         this.userId = userId;
         return this;
     }
@@ -116,14 +77,13 @@ public class Account {
      *
      * @return userId
      **/
-    @Schema(required = true, description = "")
-    @NotNull
+    @Schema(required = false, description = "")
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -150,6 +110,7 @@ public class Account {
 
     @Override
     public boolean equals(java.lang.Object o) {
+        System.out.println("in de equals account swagger");
         if (this == o) {
             return true;
         }
