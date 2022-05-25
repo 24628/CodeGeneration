@@ -61,7 +61,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/iban/{iban}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Account> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required=true, schema=@Schema()) @PathVariable("iban") Integer iban);
+    ResponseEntity<Account> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required=true, schema=@Schema()) @PathVariable("iban") String iban);
 
 
     @Operation(summary = "Change account data", description = "", security = {
@@ -79,7 +79,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/iban/{iban}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Account> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("iban") Integer iban);
+    ResponseEntity<Account> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("iban") String iban);
 
 
     @Operation(summary = "Returns all accounts on user id", description = "", security = {

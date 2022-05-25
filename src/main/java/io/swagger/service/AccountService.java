@@ -50,9 +50,8 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    public List<Account> getAccounts(){
-        accountRepository.findAll();
-        return new ArrayList<>();
+    public List<AccountEntity> getAccounts(){
+        return accountRepository.findAll();
     }
     public List<AccountEntity> getAccountByIban(Account body){
       //  UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -60,7 +59,12 @@ public class AccountService {
 
         return new ArrayList<>();
     }
+    public List<AccountEntity> getAccountByUserId(int iban){
+        //  UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // List<AccountEntity> useraccount = accountRepository.getAccountByIban("1234");
 
+        return new ArrayList<>();
+    }
 
 
 }
