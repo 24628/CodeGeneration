@@ -43,8 +43,7 @@ public class RegisterApiController implements RegisterApi {
     }
 
     public String registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required=true, schema=@Schema()) @Valid @RequestBody RegisterBody body) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+
             try {
                 String token = registerService.register(body.getEmail(), body.getUsername(), body.getPassword(), body.getDayLimit());
                 ObjectMapper mapper = new ObjectMapper();
@@ -63,8 +62,7 @@ public class RegisterApiController implements RegisterApi {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return "test";
             }
-        }
-        return "oops!";
+
     }
 
 }

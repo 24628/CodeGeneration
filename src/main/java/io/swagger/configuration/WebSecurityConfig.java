@@ -46,12 +46,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable();    // no CSRF protection needed
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);  // no sessions needed
-
-        http.authorizeRequests()
-                .antMatchers(AUTH_WHITELIST).permitAll()
-                .anyRequest().authenticated();
-
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().
+                antMatchers("/login", "/register","/api-docs/**", "/swagger-resources/**", "/swagger-ui/**", "/error/**").permitAll()
+                .anyRequest().authenticated();;  // no sessions needed
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class); // add the filter
     }
 

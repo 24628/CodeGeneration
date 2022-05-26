@@ -79,24 +79,22 @@ public class AccountsApiController implements AccountsApi {
     }
 
     public String accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required = true, schema = @Schema()) @PathVariable("IBAN") String IBAN) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                AccountEntity found = accountService.getAccountByIBAN(IBAN);
 
-                final ByteArrayOutputStream out = new ByteArrayOutputStream();
-                objectMapper.writeValue(out, found);
+        try {
+            AccountEntity found = accountService.getAccountByIBAN(IBAN);
 
-                final byte[] data = out.toByteArray();
-                return new String(data);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                System.out.println("Couldn't serialize response for content type application/json");
-                return "OOps";
-            }
+            final ByteArrayOutputStream out = new ByteArrayOutputStream();
+            objectMapper.writeValue(out, found);
+
+            final byte[] data = out.toByteArray();
+            return new String(data);
+        } catch (IOException e) {
+            log.error("Couldn't serialize response for content type application/json", e);
+            System.out.println("Couldn't serialize response for content type application/json");
+            return "OOps";
+
         }
 
-        return "OOps";
     }
 
     public String accountsIbanIbanPut(
@@ -105,79 +103,60 @@ public class AccountsApiController implements AccountsApi {
                     schema = @Schema()) @PathVariable("IBAN") String IBAN,
             @RequestBody Account body
     ) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                AccountEntity acc = accountService.updateAccountByIBAN(body, IBAN);
-
-                final ByteArrayOutputStream out = new ByteArrayOutputStream();
-                objectMapper.writeValue(out, acc);
-
-                final byte[] data = out.toByteArray();
-                return new String(data);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return "LOL";
-            }
+        try {
+            AccountEntity acc = accountService.updateAccountByIBAN(body, IBAN);
+            final ByteArrayOutputStream out = new ByteArrayOutputStream();
+            objectMapper.writeValue(out, acc);
+            final byte[] data = out.toByteArray();
+            return new String(data);
+        } catch (IOException e) {
+            log.error("Couldn't serialize response for content type application/json", e);
+            return "LOL";
         }
-        return "LOL";
+
     }
 
     public String accountsIdIdGet(@Parameter(in = ParameterIn.PATH,
             description = "The unique id of the user is taken",
             required = true,
-            schema = @Schema()) @PathVariable("id") String id)
-    {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                List<AccountEntity> acc = accountService.getAccountByUserId(UUID.fromString(id));
+            schema = @Schema()) @PathVariable("id") String id) {
 
-                final ByteArrayOutputStream out = new ByteArrayOutputStream();
-                objectMapper.writeValue(out, acc);
+        try {
+            List<AccountEntity> acc = accountService.getAccountByUserId(UUID.fromString(id));
+            final ByteArrayOutputStream out = new ByteArrayOutputStream();
+            objectMapper.writeValue(out, acc);
 
-                final byte[] data = out.toByteArray();
-                return new String(data);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return "LOL";
-            }
+            final byte[] data = out.toByteArray();
+            return new String(data);
+        } catch (IOException e) {
+            log.error("Couldn't serialize response for content type application/json", e);
+            return "LOL";
+
         }
-
-        return "LOL";
     }
 
     public String accountsPost(@Parameter(in = ParameterIn.DEFAULT,
             description = "This endpoint creates a new account that can be used to transfer and withdraw money.",
             required = true, schema = @Schema()) @RequestBody Account body) {
 
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                accountService.addAccount(body);
-                return this.objectMapper.writeValueAsString(new AccountCreatedResponse(HttpStatus.CREATED));
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return "error";
-            }
+        try {
+            accountService.addAccount(body);
+            return this.objectMapper.writeValueAsString(new AccountCreatedResponse(HttpStatus.CREATED));
+        } catch (IOException e) {
+            log.error("Couldn't serialize response for content type application/json", e);
+            return "error";
         }
-
-        return "oops";
     }
 
     public ResponseEntity<Account> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned", schema = @Schema()) @Valid @RequestParam(value = "name", required = false) String name) {
 
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Account>(objectMapper.readValue("{\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absolute_limit\" : 6,\n  \"type\" : \"normal\"\n}", Account.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Account>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+        try {
+            return new ResponseEntity<Account>(objectMapper.readValue("{\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absolute_limit\" : 6,\n  \"type\" : \"normal\"\n}", Account.class), HttpStatus.NOT_IMPLEMENTED);
+        } catch (IOException e) {
+            log.error("Couldn't serialize response for content type application/json", e);
+            return new ResponseEntity<Account>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<Account>(HttpStatus.NOT_IMPLEMENTED);
     }
 
 }
