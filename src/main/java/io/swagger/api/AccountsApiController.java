@@ -58,24 +58,19 @@ public class AccountsApiController implements AccountsApi {
     public String accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,
                               @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid
                               @RequestParam(value = "offset", required = false) Integer offset) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+
             try {
                 System.out.println("het komt hier");
                 List<AccountEntity> accounts = accountService.getAccounts();
 
                 final ByteArrayOutputStream out = new ByteArrayOutputStream();
                 objectMapper.writeValue(out, accounts);
-
                 final byte[] data = out.toByteArray();
                 return new String(data);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return "OOps";
             }
-        }
-
-        return "OOps";
     }
 
     public String accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required = true, schema = @Schema()) @PathVariable("IBAN") String IBAN) {
