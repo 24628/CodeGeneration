@@ -9,9 +9,11 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import io.swagger.repository.IAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -31,9 +33,12 @@ public class AccountService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
+        if(1 > body.getAbsoluteLimit())
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Absolute limit has to be higher then 0");
+
         AccountEntity account = new AccountEntity();
         account.setType(AccountType.valueOf(body.getType()));
-        account.setAbsolute_limit((long)body.getAbsoluteLimit());
+        account.setAbsolute_limit(body.getAbsoluteLimit());
         account.setIBAN(
             new Iban.Builder()
                 .countryCode(CountryCode.NL)
@@ -57,9 +62,22 @@ public class AccountService {
     public AccountEntity getAccountByIBAN(String IBAN){
        return accountRepository.getAccountByIBAN(IBAN);
     }
-    // todo account can be updated
-    public void updateAccountByIBAN(String IBAN){
-         accountRepository.updateAccountByIBAN(IBAN);
+    public List<AccountEntity> getAccountByUserId(UUID userid){
+        return accountRepository.getAllByUuidIs(userid);
+    }
+
+    public AccountEntity updateAccountByIBAN(Account body, String IBAN){
+        AccountEntity account = accountRepository.getAccountByIBAN(IBAN);
+
+        if(1 > body.getAbsoluteLimit())
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Absolute limit has to be higher then 0");
+
+        account.setAbsolute_limit(body.getAbsoluteLimit());
+        account.setType(AccountType.valueOf(body.getType()));
+
+        accountRepository.save(account);
+
+        return account;
     }
 
 

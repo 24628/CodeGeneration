@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @Validated
@@ -45,7 +44,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Account>> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset);
+    String accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset);
 
 
     @Operation(summary = "Returns single account using IBAN", description = "", security = {
@@ -61,7 +60,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/IBAN/{IBAN}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Account> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN);
+    String accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN);
 
 
     @Operation(summary = "Change account data", description = "", security = {
@@ -79,7 +78,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/IBAN/{IBAN}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Account> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN);
+    String accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN, @RequestBody Account body);
 
 
     @Operation(summary = "Returns all accounts on user id", description = "", security = {
@@ -95,7 +94,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/id/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Account> accountsIdIdGet(@Parameter(in = ParameterIn.PATH, description = "The unique id of the user is taken", required=true, schema=@Schema()) @PathVariable("id") Integer id);
+    String accountsIdIdGet(@Parameter(in = ParameterIn.PATH, description = "The unique id of the user is taken", required=true, schema=@Schema()) @PathVariable("id") String id);
 
 
     @Operation(summary = "Creating a new account", description = "", security = {

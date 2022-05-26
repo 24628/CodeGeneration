@@ -3,14 +3,8 @@ package io.swagger.model;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.constraints.*;
 
 /**
  * Account
@@ -30,7 +24,7 @@ public class Account {
     private String userId = null;
 
     @JsonProperty("absolute_limit")
-    private Integer absoluteLimit = null;
+    private Long absoluteLimit = null;
 
     /**
      * Get IBAN
@@ -87,7 +81,7 @@ public class Account {
         this.userId = userId;
     }
 
-    public Account absoluteLimit(Integer absoluteLimit) {
+    public Account absoluteLimit(Long absoluteLimit) {
         this.absoluteLimit = absoluteLimit;
         return this;
     }
@@ -99,11 +93,11 @@ public class Account {
      **/
     @Schema(description = "")
 
-    public Integer getAbsoluteLimit() {
+    public Long getAbsoluteLimit() {
         return absoluteLimit;
     }
 
-    public void setAbsoluteLimit(Integer absoluteLimit) {
+    public void setAbsoluteLimit(Long absoluteLimit) {
         this.absoluteLimit = absoluteLimit;
     }
 

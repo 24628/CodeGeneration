@@ -11,5 +11,6 @@ import java.util.UUID;
 @Repository
 public interface IAccountDTO extends JpaRepository<AccountEntity, UUID> {
      AccountEntity getAccountByIBAN(String IBAN);
-     void updateAccountByIBAN(String IBAN);
+
+     List<AccountEntity> getAllByUuidIs(UUID userid);
 }
