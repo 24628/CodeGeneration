@@ -7,6 +7,7 @@ import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Transaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.responses.AccountCreatedResponse;
+import io.swagger.responses.TransactionCreateResponse;
 import io.swagger.service.AccountService;
 import io.swagger.service.TransactionService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -66,7 +67,7 @@ public class TransactionsApiController implements TransactionsApi {
     public String transactionsPost(@RequestBody Transaction body) {
         try {
             transactionService.addTransaction(body);
-            return this.objectMapper.writeValueAsString(new AccountCreatedResponse(HttpStatus.CREATED));
+            return this.objectMapper.writeValueAsString(new TransactionCreateResponse(HttpStatus.CREATED));
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
             return "OOps";
