@@ -82,8 +82,8 @@ public class TransactionService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
-        if (user.getRole().equals(Roles.CUSTOMER))
-            return transactionRepository.getAllByAccount_from(user.getUuid());
+//        if (user.getRole().equals(Roles.CUSTOMER))
+//            return transactionRepository.getAllByAccount_from(user.getUuid());
 
         return transactionRepository.findAll();
     }
