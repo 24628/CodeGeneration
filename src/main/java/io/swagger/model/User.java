@@ -66,10 +66,10 @@ public class User {
     private String password = null;
 
     @JsonProperty("day_limit")
-    private Integer dayLimit = null;
+    private Long dayLimit = null;
 
     @JsonProperty("transaction_limit")
-    private Integer transactionLimit = null;
+    private Long transactionLimit = null;
 
     public User id(Integer id) {
         this.id = id;
@@ -171,7 +171,7 @@ public class User {
         this.password = password;
     }
 
-    public User dayLimit(Integer dayLimit) {
+    public User dayLimit(Long dayLimit) {
         this.dayLimit = dayLimit;
         return this;
     }
@@ -183,15 +183,15 @@ public class User {
      **/
     @Schema(example = "500", description = "")
 
-    public Integer getDayLimit() {
+    public Long getDayLimit() {
         return dayLimit;
     }
 
-    public void setDayLimit(Integer dayLimit) {
+    public void setDayLimit(Long dayLimit) {
         this.dayLimit = dayLimit;
     }
 
-    public User transactionLimit(Integer transactionLimit) {
+    public User transactionLimit(Long transactionLimit) {
         this.transactionLimit = transactionLimit;
         return this;
     }
@@ -203,11 +203,11 @@ public class User {
      **/
     @Schema(description = "")
 
-    public Integer getTransactionLimit() {
+    public Long getTransactionLimit() {
         return transactionLimit;
     }
 
-    public void setTransactionLimit(Integer transactionLimit) {
+    public void setTransactionLimit(Long transactionLimit) {
         this.transactionLimit = transactionLimit;
     }
 

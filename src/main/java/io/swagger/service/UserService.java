@@ -34,7 +34,12 @@ public class UserService {
     }
 
     public void updateUser(String uuid, User body){
+        UserEntity userToEdit = userRepository.getOne(UUID.fromString(uuid));
 
+        userToEdit.setDay_limit(body.getDayLimit());
+        userToEdit.setTransaction_limit(body.getTransactionLimit());
+
+        userRepository.save(userToEdit);
     }
 
     public void deleteUser(String uuid) {
