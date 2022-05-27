@@ -39,6 +39,7 @@ public class AccountService {
         AccountEntity account = new AccountEntity();
         account.setType(AccountType.valueOf(body.getType()));
         account.setAbsolute_limit(body.getAbsoluteLimit());
+        account.setBalance(0L); // Always start with 0 with transactions we can up that
         account.setIBAN(
             new Iban.Builder()
                 .countryCode(CountryCode.NL)

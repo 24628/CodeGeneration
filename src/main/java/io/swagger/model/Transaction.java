@@ -19,16 +19,16 @@ import javax.validation.constraints.*;
 
 public class Transaction {
     @JsonProperty("id")
-    private Integer id = null;
+    private String id = null;
 
     @JsonProperty("from")
-    private Integer from = null;
+    private String from = null;
 
     @JsonProperty("to")
-    private Integer to = null;
+    private String to = null;
 
     @JsonProperty("user_id")
-    private Integer userId = null;
+    private String userId = null;
 
     @JsonProperty("date")
     private Object date = null;
@@ -36,7 +36,7 @@ public class Transaction {
     @JsonProperty("amount")
     private Integer amount = null;
 
-    public Transaction id(Integer id) {
+    public Transaction id(String id) {
         this.id = id;
         return this;
     }
@@ -48,15 +48,15 @@ public class Transaction {
      **/
     @Schema(description = "")
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Transaction from(Integer from) {
+    public Transaction from(String from) {
         this.from = from;
         return this;
     }
@@ -68,15 +68,15 @@ public class Transaction {
      **/
     @Schema(description = "")
 
-    public Integer getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(Integer from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
-    public Transaction to(Integer to) {
+    public Transaction to(String to) {
         this.to = to;
         return this;
     }
@@ -88,15 +88,15 @@ public class Transaction {
      **/
     @Schema(description = "")
 
-    public Integer getTo() {
+    public String getTo() {
         return to;
     }
 
-    public void setTo(Integer to) {
+    public void setTo(String to) {
         this.to = to;
     }
 
-    public Transaction userId(Integer userId) {
+    public Transaction userId(String userId) {
         this.userId = userId;
         return this;
     }
@@ -108,11 +108,11 @@ public class Transaction {
      **/
     @Schema(description = "")
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

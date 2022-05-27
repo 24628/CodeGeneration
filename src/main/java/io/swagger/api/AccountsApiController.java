@@ -60,7 +60,6 @@ public class AccountsApiController implements AccountsApi {
                               @RequestParam(value = "offset", required = false) Integer offset) {
 
             try {
-                System.out.println("het komt hier");
                 List<AccountEntity> accounts = accountService.getAccounts();
 
                 final ByteArrayOutputStream out = new ByteArrayOutputStream();

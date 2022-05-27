@@ -5,10 +5,7 @@
  */
 package io.swagger.api.interfaces;
 
-import io.swagger.model.InlineResponse401;
-import io.swagger.model.InlineResponse403;
-import io.swagger.model.InlineResponse405;
-import io.swagger.model.Transaction;
+import io.swagger.model.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -20,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +40,7 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Transaction>> transactionsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset);
+    String transactionsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset);
 
 
     @Operation(summary = "creates a new transaction", description = "creates a new transaction", security = {
@@ -58,7 +56,7 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Transaction> transactionsPost();
+    String transactionsPost(@RequestBody Transaction body);
 
 }
 

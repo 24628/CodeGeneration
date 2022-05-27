@@ -17,6 +17,15 @@ public class AccountEntity {
     private String IBAN;
     private UUID user_uuid;
     private Long absolute_limit;
+    private Long balance;
+
+    public Long getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Long balance) {
+        this.balance = balance;
+    }
 
     public AccountEntity() {
     }
