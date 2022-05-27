@@ -53,10 +53,6 @@ public class UserEntity {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -75,5 +71,9 @@ public class UserEntity {
 
     public void setTransaction_limit(Long transaction_limit) {
         this.transaction_limit = transaction_limit;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

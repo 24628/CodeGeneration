@@ -5,11 +5,7 @@
  */
 package io.swagger.api.interfaces;
 
-import io.swagger.model.InlineResponse401;
-import io.swagger.model.InlineResponse403;
-import io.swagger.model.InlineResponse404;
-import io.swagger.model.InlineResponse405;
-import io.swagger.model.User;
+import io.swagger.model.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -21,10 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -44,7 +37,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<User>> usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset);
+    String usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset);
 
 
     @Operation(summary = "", description = "delete user data", security = {
@@ -62,7 +55,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<String> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required=true, schema=@Schema()) @PathVariable("id") Integer id);
+    String usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required=true, schema=@Schema()) @PathVariable("id") String id);
 
 
     @Operation(summary = "", description = "gets a single user data", security = {
@@ -78,7 +71,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<User> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user", required=true, schema=@Schema()) @PathVariable("id") Integer id);
+    String usersIdGet(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user", required=true, schema=@Schema()) @PathVariable("id") String id);
 
 
     @Operation(summary = "", description = "Updates user data", security = {
@@ -96,7 +89,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<List<User>> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required=true, schema=@Schema()) @PathVariable("id") Integer id);
+    String usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required=true, schema=@Schema()) @PathVariable("id") String id, @RequestBody User body);
 
 
     @Operation(summary = "", description = "creates a new users", security = {

@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface IUserDTO extends JpaRepository<UserEntity, UUID> {
 
     UserEntity findByUsername(String username);
+
+    UserEntity findUserEntityByUuid(String uuid);
 }
