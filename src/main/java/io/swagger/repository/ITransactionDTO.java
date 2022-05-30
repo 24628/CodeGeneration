@@ -14,4 +14,6 @@ public interface ITransactionDTO extends JpaRepository<TransactionEntity, UUID> 
 //    List<TransactionEntity> getAllByAccount_from(UUID acc_from_id);
 
     List<TransactionEntity> findAllBy();
+
+
 }

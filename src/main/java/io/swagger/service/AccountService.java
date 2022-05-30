@@ -10,6 +10,7 @@ import org.iban4j.Iban;
 import io.swagger.repository.IAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,21 @@ public class AccountService {
     @Autowired
     private UserService userService;
 
+
+    //Check if the user has already a saving // normal account
     public void addAccount(Account body) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
-        if(1 > body.getAbsoluteLimit())
+        List<AccountEntity>  accountEntityList = accountRepository.getAllByUuidIs(UUID.fromString(body.getUserId()));
+
+        for (AccountEntity account: accountEntityList){
+            if(account.getType().equals(AccountType.valueOf(body.getType()))){
+                //Throw error body.getType() -> aan geven welk type account niet aan gemaakt mag worden
+            }
+        }
+
+        if (1 > body.getAbsoluteLimit())
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Absolute limit has to be higher then 0");
 
         AccountEntity account = new AccountEntity();
@@ -41,36 +52,59 @@ public class AccountService {
         account.setAbsolute_limit(body.getAbsoluteLimit());
         account.setBalance(0L); // Always start with 0 with transactions we can up that
         account.setIBAN(
-            new Iban.Builder()
-                .countryCode(CountryCode.NL)
-                .buildRandom()
-                .toString()
+                new Iban.Builder()
+                        .countryCode(CountryCode.NL)
+                        .buildRandom()
+                        .toString()
         );
 
-        if(user.getRole().equals(Roles.CUSTOMER))
+        if (user.getRole().equals(Roles.CUSTOMER))
             account.setUser_uuid(user.getUuid());
 
-        if(user.getRole().equals(Roles.EMPLOYEE))
+        if (user.getRole().equals(Roles.EMPLOYEE))
             account.setUser_uuid(UUID.fromString(body.getUserId()));
 
         accountRepository.save(account);
     }
+
     // haalt alle accounts op uit de database
-    public List<AccountEntity> getAccounts(){
-        return accountRepository.findAll();
+    // Zorg dat alleen employee dit mag doen
+    // Als de account role ATM heeft moet deze weg gefilterd worden
+    // Stuurt een lijst terug van alle accounts
+    public List<AccountEntity> getAccounts() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserEntity user = userService.findUserByName(userDetails.getUsername());
+
+        if (!user.getRole().equals(Roles.EMPLOYEE)) {
+            // gooi error
+        }
+
+        return accountRepository.getAllByTypeIsNot("ATM");
     }
+
+
     // get account after inserting the iban
-    public AccountEntity getAccountByIBAN(String IBAN){
-       return accountRepository.getAccountByIBAN(IBAN);
+    // Zorg dat je geen atm kan op halen
+    public AccountEntity getAccountByIBAN(String IBAN) {
+        return accountRepository.getAccountByIBAN(IBAN);
     }
-    public List<AccountEntity> getAccountByUserId(UUID userid){
+
+    public List<AccountEntity> getAccountByUserId(UUID userid) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserEntity user = userService.findUserByName(userDetails.getUsername());
+
+        if(!user.getRole().equals(Roles.EMPLOYEE) && !user.getUuid().equals(userid)) {
+            // throw error
+
+        }
+
         return accountRepository.getAllByUuidIs(userid);
     }
 
-    public AccountEntity updateAccountByIBAN(Account body, String IBAN){
+    public AccountEntity updateAccountByIBAN(Account body, String IBAN) {
         AccountEntity account = accountRepository.getAccountByIBAN(IBAN);
 
-        if(1 > body.getAbsoluteLimit())
+        if (1 > body.getAbsoluteLimit())
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Absolute limit has to be higher then 0");
 
         account.setAbsolute_limit(body.getAbsoluteLimit());
@@ -81,7 +115,9 @@ public class AccountService {
         return account;
     }
 
-    public void generateAccount(AccountEntity account){ accountRepository.save(account); }
+    public void generateAccount(AccountEntity account) {
+        accountRepository.save(account);
+    }
 
 
 }
