@@ -31,7 +31,7 @@ import java.util.List;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @RestController
 @Api(tags = "Transactions")
-public class TransactionsApiController implements TransactionsApi {
+public class   TransactionsApiController implements TransactionsApi {
 
     private static final Logger log = LoggerFactory.getLogger(TransactionsApiController.class);
 
