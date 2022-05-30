@@ -1,17 +1,14 @@
 package io.swagger.configuration;
 
+import io.swagger.enums.AccountType;
+import io.swagger.enums.Roles;
+import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.security.SecurityScheme;
-
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import io.swagger.service.AccountService;
+import io.swagger.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.StringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -26,7 +23,17 @@ import java.util.*;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @Configuration
-public class SwaggerUiConfiguration<OpenApiProperties> implements WebMvcConfigurer {
+public class SwaggerUiConfiguration implements WebMvcConfigurer {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private AccountService accountService;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         generateData();
@@ -46,8 +53,20 @@ public class SwaggerUiConfiguration<OpenApiProperties> implements WebMvcConfigur
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername("admin");
         userEntity.setEmail("admin@example.com");
+        userEntity.setPassword(passwordEncoder.encode("password"));
+        userEntity.setRole(Roles.BANK);
+        userEntity.setDay_limit(0L);
+        userEntity.setTransaction_limit(0L);
+
+        userService.generateUsers(userEntity);
+
+        AccountEntity accountEntity = new AccountEntity();
+        accountEntity.setBalance(0L);
+        accountEntity.setType(AccountType.ATM);
+        accountEntity.setAbsolute_limit(0L);
+        accountEntity.setUser_uuid(userEntity.getUuid());
+        accountEntity.setIBAN("NL01INHO0000000001");
+
+        accountService.generateAccount(accountEntity);
     }
-
-
-
 }
