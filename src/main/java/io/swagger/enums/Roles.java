@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 public enum Roles implements GrantedAuthority {
     CUSTOMER,
     EMPLOYEE,
+    BANK,
     DISABLED;
 
     @Override

@@ -1,5 +1,6 @@
 package io.swagger.configuration;
 
+import io.swagger.model.Entity.UserEntity;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -18,6 +19,8 @@ import java.util.*;
 public class SwaggerUiConfiguration implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        generateData();
+
         registry.
             addResourceHandler("/swagger-ui/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
@@ -27,5 +30,12 @@ public class SwaggerUiConfiguration implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/swagger-ui/").setViewName("forward:/swagger-ui/index.html");
+    }
+
+    private void generateData(){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername("admin");
+        userEntity.setEmail("admin@example.com");
+        userEntity.;
     }
 }

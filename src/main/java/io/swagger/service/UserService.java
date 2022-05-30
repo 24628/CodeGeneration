@@ -49,4 +49,6 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    public void generateUsers(UserEntity u) { userRepository.save(u); }
 }

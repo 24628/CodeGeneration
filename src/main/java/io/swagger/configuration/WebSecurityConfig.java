@@ -1,6 +1,5 @@
 package io.swagger.configuration;
 
-import io.swagger.filter.ApplicationJsonFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +23,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 
     @Autowired
     jwtTokenFilter jwtTokenFilter;
-
-    @Autowired
-    ApplicationJsonFilter applicationJsonFilter;
 
     private static final String[] AUTH_WHITELIST = {
             "/login",
@@ -54,14 +50,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
                 antMatchers("/login", "/register","/api-docs/**", "/swagger-resources/**", "/swagger-ui/**", "/error/**").permitAll()
                 .anyRequest().authenticated();  // no sessions needed
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class); // add the filter
-
-//        http.addFilterBefore(applicationJsonFilter, );
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(AUTH_WHITELIST);
-
     }
 
     @Bean
