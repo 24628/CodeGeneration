@@ -81,6 +81,7 @@ public class AccountService {
         return account;
     }
 
+    public void generateAccount(AccountEntity account){ accountRepository.save(account); }
 
 
 }
