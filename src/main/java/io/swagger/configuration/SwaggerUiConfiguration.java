@@ -1,7 +1,17 @@
 package io.swagger.configuration;
 
 import io.swagger.model.Entity.UserEntity;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,7 +26,7 @@ import java.util.*;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @Configuration
-public class SwaggerUiConfiguration implements WebMvcConfigurer {
+public class SwaggerUiConfiguration<OpenApiProperties> implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         generateData();
@@ -36,6 +46,8 @@ public class SwaggerUiConfiguration implements WebMvcConfigurer {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername("admin");
         userEntity.setEmail("admin@example.com");
-        userEntity.;
     }
+
+
+
 }
