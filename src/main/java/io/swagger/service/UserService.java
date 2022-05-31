@@ -36,11 +36,7 @@ public class UserService {
     Validator validator;
 
     public void addUser(User body) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserEntity user = userDTO.findByUsername(userDetails.getUsername());
-
-        if(!user.getRole().equals(Roles.EMPLOYEE))
-            throw new InvalidPermissionsException("no permissions to create users");
+        validator.NeedsToBeEmployee();
 
         validator.CanCreateUser(body.getName(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L);
 
@@ -54,7 +50,7 @@ public class UserService {
         DayLimitEntity dayLimit = new DayLimitEntity();
         dayLimit.setActualLimit(body.getDayLimit());
         dayLimit.setCurrent(0L);
-        dayLimit.setUserId(user.getUuid());
+        dayLimit.setUserId(userEntity.getUuid());
 
         dayLimitDTO.save(dayLimit);
         userDTO.save(userEntity);
@@ -65,10 +61,14 @@ public class UserService {
     }
 
     public List<UserEntity> getUsers() {
+        validator.NeedsToBeEmployee();
+
         return userDTO.findAll();
     }
 
     public UserEntity getUserById(String uuid) {
+        validator.NeedsToBeEmployee();
+
         return userDTO.getOne(UUID.fromString(uuid));
     }
 

@@ -8,6 +8,7 @@ import io.swagger.enums.Roles;
 import io.swagger.model.Account;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
+import io.swagger.validator.Validator;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import io.swagger.repository.IAccountDTO;
@@ -31,6 +32,8 @@ public class AccountService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    Validator validator;
 
     //Check if the user has already a saving // normal account
     public void addAccount(Account body) {
@@ -77,12 +80,7 @@ public class AccountService {
     // Als de account role ATM heeft moet deze weg gefilterd worden
     // Stuurt een lijst terug van alle accounts
     public List<AccountEntity> getAccounts() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserEntity user = userService.findUserByName(userDetails.getUsername());
-
-        if (!user.getRole().equals(Roles.EMPLOYEE)) {
-            throw new InvalidPermissionsException("You dont have the correct permissions");
-        }
+        validator.NeedsToBeEmployee();
 
         return accountRepository.getAllByTypeIsNot("ATM");
     }
