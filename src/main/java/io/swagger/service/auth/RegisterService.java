@@ -5,8 +5,13 @@ import io.swagger.api.exceptions.EntityAlreadyExistException;
 import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.Roles;
 import io.swagger.jwt.JwtTokenProvider;
+import io.swagger.model.Entity.DayLimitEntity;
 import io.swagger.model.Entity.UserEntity;
+import io.swagger.model.RegisterBody;
+import io.swagger.model.User;
+import io.swagger.repository.IDayLimitDTO;
 import io.swagger.repository.IUserDTO;
+import io.swagger.service.DayLimitService;
 import io.swagger.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,41 +32,39 @@ public class RegisterService {
     JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    IUserDTO userRepository;
+    IUserDTO userDTO;
 
+    @Autowired
+    IDayLimitDTO dayLimitDTO;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String register(String email, String username, String password, long dayLimit)
+    @Autowired
+    Validator validator;
+
+    public String register(RegisterBody body)
     {
         String token = "";
 
-        if(email.isEmpty() || username.isEmpty() || password.isEmpty())
-            throw new ValidationException("Missing content");
-
-        if(Validator.containsWhiteSpace(email) || Validator.containsWhiteSpace(username) || Validator.containsWhiteSpace(password))
-            throw new ValidationException("No white Spaces!");
-
-        UserEntity userExist = userRepository.findByUsername(username);
-        if(userExist != null)
-            throw new EntityAlreadyExistException("Username already exist in the database");
-
-//        if(EmailValidator.getInstance().isValid(email))
-//            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Email is invalid");
+        validator.CanCreateUser(body.getUsername(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L);
 
         try {
             UserEntity user = new UserEntity();
-            user.setEmail(email);
-            user.setUsername(username);
-            user.setPassword(passwordEncoder.encode(password));
+            user.setEmail(body.getEmail());
+            user.setUsername(body.getUsername());
+            user.setPassword(passwordEncoder.encode(body.getPassword()));
             user.setRole(Roles.CUSTOMER);
-            user.setDay_limit(dayLimit);
             user.setTransaction_limit(500L);
+            userDTO.save(user);
 
-            userRepository.save(user);
+            DayLimitEntity dayLimit = new DayLimitEntity();
+            dayLimit.setActualLimit(body.getDayLimit());
+            dayLimit.setCurrent(0L);
+            dayLimit.setUserId(user.getUuid());
+            dayLimitDTO.save(dayLimit);
 
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword()));
+            token = jwtTokenProvider.createToken(body.getUsername(), userDTO.findByUsername(body.getUsername()).getRole());
         } catch (AuthenticationException e) {
             throw new AuthorizationException();
         }

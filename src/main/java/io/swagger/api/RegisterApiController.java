@@ -45,7 +45,7 @@ public class RegisterApiController implements RegisterApi {
     public String registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required=true, schema=@Schema()) @Valid @RequestBody RegisterBody body) {
 
             try {
-                String token = registerService.register(body.getEmail(), body.getUsername(), body.getPassword(), body.getDayLimit());
+                String token = registerService.register(body);
                 ObjectMapper mapper = new ObjectMapper();
                 String json = "";
 

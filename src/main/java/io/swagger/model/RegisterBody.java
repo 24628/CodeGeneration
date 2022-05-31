@@ -3,12 +3,8 @@ package io.swagger.model;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * RegisterBody
@@ -28,7 +24,7 @@ public class RegisterBody {
     private String password = null;
 
     @JsonProperty("dayLimit")
-    private Integer dayLimit = null;
+    private Long dayLimit = null;
 
     public RegisterBody username(String username) {
         this.username = username;
@@ -90,7 +86,7 @@ public class RegisterBody {
         this.password = password;
     }
 
-    public RegisterBody dayLimit(Integer dayLimit) {
+    public RegisterBody dayLimit(Long dayLimit) {
         this.dayLimit = dayLimit;
         return this;
     }
@@ -102,11 +98,11 @@ public class RegisterBody {
      **/
     @Schema(example = "500", description = "")
 
-    public Integer getDayLimit() {
+    public Long getDayLimit() {
         return dayLimit;
     }
 
-    public void setDayLimit(Integer dayLimit) {
+    public void setDayLimit(Long dayLimit) {
         this.dayLimit = dayLimit;
     }
 

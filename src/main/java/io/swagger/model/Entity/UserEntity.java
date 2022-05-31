@@ -17,7 +17,6 @@ public class UserEntity {
     private String username;
     private String email;
     private String password;
-    private Long dayLimit;
     private Long transactionLimit;
 
     public UserEntity() {
@@ -55,14 +54,6 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Long getDay_limit() {
-        return dayLimit;
-    }
-
-    public void setDay_limit(Long dayLimit) {
-        this.dayLimit = dayLimit;
     }
 
     public Long getTransaction_limit() {

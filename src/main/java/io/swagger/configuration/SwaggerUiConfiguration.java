@@ -3,8 +3,10 @@ package io.swagger.configuration;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
 import io.swagger.model.Entity.AccountEntity;
+import io.swagger.model.Entity.DayLimitEntity;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.service.AccountService;
+import io.swagger.service.DayLimitService;
 import io.swagger.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -26,13 +28,13 @@ import java.util.*;
 public class SwaggerUiConfiguration implements WebMvcConfigurer {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private DayLimitService dayLimitService;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -53,12 +55,18 @@ public class SwaggerUiConfiguration implements WebMvcConfigurer {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername("admin");
         userEntity.setEmail("admin@example.com");
-        userEntity.setPassword(passwordEncoder.encode("password"));
+        userEntity.setPassword("$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu"); //password
         userEntity.setRole(Roles.BANK);
-        userEntity.setDay_limit(0L);
         userEntity.setTransaction_limit(0L);
 
         userService.generateUsers(userEntity);
+
+        DayLimitEntity dayLimit = new DayLimitEntity();
+        dayLimit.setUserId(userEntity.getUuid());
+        dayLimit.setActualLimit(2000L);
+        dayLimit.setCurrent(0L);
+
+        dayLimitService.save(dayLimit);
 
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setBalance(0L);

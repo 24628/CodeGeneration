@@ -103,7 +103,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<List<User>> usersPost();
+    String usersPost(@RequestBody User body);
 
 }
 

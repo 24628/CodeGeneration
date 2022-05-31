@@ -19,42 +19,9 @@ public class User {
     @JsonProperty("id")
     private Integer id = null;
 
-    /**
-     * Gets or Sets type
-     */
-    public enum TypeEnum {
-        CUSTOMER("customer"),
 
-        EMPLOYEE("employee"),
-
-        DISABLED("disabled");
-
-        private String value;
-
-
-        TypeEnum(String value) {
-            this.value = value;
-        }
-
-        @Override
-        @JsonValue
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        @JsonCreator
-        public static TypeEnum fromValue(String text) {
-            for (TypeEnum b : TypeEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-    }
-
-    @JsonProperty("type")
-    private TypeEnum type = null;
+    @JsonProperty("role")
+    private String role = null;
 
     @JsonProperty("name")
     private String name = null;
@@ -91,24 +58,24 @@ public class User {
         this.id = id;
     }
 
-    public User type(TypeEnum type) {
-        this.type = type;
+    public User role(String role) {
+        this.role = role;
         return this;
     }
 
     /**
-     * Get type
+     * Get role
      *
-     * @return type
+     * @return role
      **/
     @Schema(description = "")
 
-    public TypeEnum getType() {
-        return type;
+    public String getRole() {
+        return role;
     }
 
-    public void setType(TypeEnum type) {
-        this.type = type;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public User name(String name) {
@@ -222,7 +189,7 @@ public class User {
         }
         User user = (User) o;
         return Objects.equals(this.id, user.id) &&
-                Objects.equals(this.type, user.type) &&
+                Objects.equals(this.role, user.role) &&
                 Objects.equals(this.name, user.name) &&
                 Objects.equals(this.email, user.email) &&
                 Objects.equals(this.password, user.password) &&
@@ -232,7 +199,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, name, email, password, dayLimit, transactionLimit);
+        return Objects.hash(id, role, name, email, password, dayLimit, transactionLimit);
     }
 
     @Override
@@ -241,7 +208,7 @@ public class User {
         sb.append("class User {\n");
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    type: ").append(toIndentedString(type)).append("\n");
+        sb.append("    role: ").append(toIndentedString(role)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    email: ").append(toIndentedString(email)).append("\n");
         sb.append("    password: ").append(toIndentedString(password)).append("\n");

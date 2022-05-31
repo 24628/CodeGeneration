@@ -5,6 +5,8 @@ import io.swagger.api.interfaces.UsersApi;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.responses.AccountCreatedResponse;
+import io.swagger.responses.UserCreatedResponse;
 import io.swagger.responses.UserDeletedResponse;
 import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -101,13 +103,14 @@ public class UsersApiController implements UsersApi {
         }
     }
 
-    public ResponseEntity<List<User>> usersPost() {
+    public String usersPost(@RequestBody User body) {
 
         try {
-            return new ResponseEntity<List<User>>(objectMapper.readValue("[ {\n  \"password\" : \"password\",\n  \"dayLimit\" : 500,\n  \"name\" : \"name\",\n  \"transactionLimit\" : 6,\n  \"id\" : 0,\n  \"type\" : \"customer\",\n  \"email\" : \"email\"\n}, {\n  \"password\" : \"password\",\n  \"dayLimit\" : 500,\n  \"name\" : \"name\",\n  \"transactionLimit\" : 6,\n  \"id\" : 0,\n  \"type\" : \"customer\",\n  \"email\" : \"email\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+            userService.addUser(body);
+            return this.objectMapper.writeValueAsString(new UserCreatedResponse(HttpStatus.CREATED));
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
-            return new ResponseEntity<List<User>>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return "error";
         }
     }
 
