@@ -1,5 +1,6 @@
 package io.swagger.service;
 
+import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
 import io.swagger.model.Entity.AccountEntity;
@@ -40,25 +41,25 @@ public class TransactionService {
         AccountEntity accountTo = accountRepository.getAccountByIBAN(body.getTo());
 
         if (body.getAmount() > 1)
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Amount has to be higher then 0");
+            throw new ValidationException("Amount has to be higher then 0");
 
         if ((float) body.getAmount() > accountFrom.getBalance())
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "No sufficient funds in the account");
+            throw new ValidationException("No sufficient funds in the account");
 
         //if its an savings account make sure we can only go to the same users own normal account
         if (accountFrom.getType().equals(AccountType.SAVING)
             && accountFrom.getUser_uuid() != accountTo.getUser_uuid())
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Savings accounts can only make transactions to your own account");
+            throw new ValidationException("Savings accounts can only make transactions to your own account");
 
         //if we go from a normal account to a savings account make sure it's the same user and not another user!
         if(accountFrom.getType().equals(AccountType.NORMAL)
             && accountTo.getType().equals(AccountType.SAVING)
             && accountFrom.getUser_uuid() != accountTo.getUser_uuid()
-        ) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot make transactions from normal account to another users saving account");
+        ) throw new ValidationException("Cannot make transactions from normal account to another users saving account");
 
         if(user.getRole().equals(Roles.CUSTOMER)
             && accountFrom.getUser_uuid() != user.getUuid())
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "This is not your own account!");
+            throw new ValidationException("This is not your own account!");
 
         //Create the transactions
         TransactionEntity transaction = new TransactionEntity();

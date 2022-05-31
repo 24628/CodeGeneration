@@ -1,5 +1,8 @@
 package io.swagger.service;
 
+import io.swagger.api.exceptions.EntityAlreadyExistException;
+import io.swagger.api.exceptions.InvalidPermissionsException;
+import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
 import io.swagger.model.Account;
@@ -10,13 +13,11 @@ import org.iban4j.Iban;
 import io.swagger.repository.IAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 import java.util.List;
@@ -41,11 +42,12 @@ public class AccountService {
         for (AccountEntity account: accountEntityList){
             if(account.getType().equals(AccountType.valueOf(body.getType()))){
                 //Throw error body.getType() -> aan geven welk type account niet aan gemaakt mag worden
+                throw new EntityAlreadyExistException("they account of the type " + body.getType() + " already exist on this user");
             }
         }
 
         if (1 > body.getAbsoluteLimit())
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Absolute limit has to be higher then 0");
+            throw new ValidationException("Absolute limit has to be higher then 0");
 
         AccountEntity account = new AccountEntity();
         account.setType(AccountType.valueOf(body.getType()));
@@ -94,7 +96,7 @@ public class AccountService {
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
         if(!user.getRole().equals(Roles.EMPLOYEE) && !user.getUuid().equals(userid)) {
-            // throw error
+            throw new InvalidPermissionsException("Your only allowed to view your own account");
 
         }
 
@@ -105,7 +107,7 @@ public class AccountService {
         AccountEntity account = accountRepository.getAccountByIBAN(IBAN);
 
         if (1 > body.getAbsoluteLimit())
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Absolute limit has to be higher then 0");
+            throw new ValidationException("Absolute limit has to be higher then 0");
 
         account.setAbsolute_limit(body.getAbsoluteLimit());
         account.setType(AccountType.valueOf(body.getType()));

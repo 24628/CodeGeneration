@@ -18,6 +18,42 @@ public class GlobalExceptionHandler {
         return new ErrorEntity(e.getMessage(), "invalid username/password");
     }
 
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseStatusException handleUserNotFound(UserNotFoundException e) {
+        throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(InvalidUsernameOrPassword.class)
+    public InvalidUsernameOrPassword handleInvalidUsernameOrPassword(InvalidUsernameOrPassword e) {
+        throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(AuthorizationException.class)
+    public AuthorizationException handleAuthorization(AuthorizationException e) {
+        throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(EntityAlreadyExistException.class)
+    public EntityAlreadyExistException handleAuthorization(EntityAlreadyExistException e) {
+        throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(ValidationException.class)
+    public ValidationException handleAuthorization(ValidationException e) {
+        throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(InvalidPermissionsException.class)
+    public InvalidPermissionsException handleAuthorization(InvalidPermissionsException e) {
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+    }
+
 
 
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)

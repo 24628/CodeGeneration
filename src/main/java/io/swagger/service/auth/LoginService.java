@@ -1,6 +1,10 @@
 package io.swagger.service.auth;
 
+import io.swagger.api.exceptions.AuthorizationException;
+import io.swagger.api.exceptions.InvalidUsernameOrPassword;
+import io.swagger.api.exceptions.UserNotFoundException;
 import io.swagger.jwt.JwtTokenProvider;
+import io.swagger.model.Entity.UserEntity;
 import io.swagger.repository.IUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,17 +35,21 @@ public class LoginService {
     public String login(String username, String password)
     {
         String token = "";
+        UserEntity user = userRepository.findByUsername(username);
 
-        //@todo make sure password encode works with the stuff otherwise the user cant find the shit
-        if(!passwordEncoder.matches(password,userRepository.findByUsername(username).getPassword())){
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid username/password");
+        if(user == null) {
+            throw new UserNotFoundException(username);
+        }
+
+        if(!passwordEncoder.matches(password,user.getPassword())){
+            throw new InvalidUsernameOrPassword();
         }
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());
         } catch (AuthenticationException e) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid username/password");
+            throw new AuthorizationException();
         }
         return token;
     }

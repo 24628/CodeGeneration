@@ -1,5 +1,8 @@
 package io.swagger.service.auth;
 
+import io.swagger.api.exceptions.AuthorizationException;
+import io.swagger.api.exceptions.EntityAlreadyExistException;
+import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.Roles;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
@@ -34,14 +37,14 @@ public class RegisterService {
         String token = "";
 
         if(email.isEmpty() || username.isEmpty() || password.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Missing content");
+            throw new ValidationException("Missing content");
 
         if(Validator.containsWhiteSpace(email) || Validator.containsWhiteSpace(username) || Validator.containsWhiteSpace(password))
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "No white Spaces!");
+            throw new ValidationException("No white Spaces!");
 
         UserEntity userExist = userRepository.findByUsername(username);
         if(userExist != null)
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Username already exist in the database");
+            throw new EntityAlreadyExistException("Username already exist in the database");
 
 //        if(EmailValidator.getInstance().isValid(email))
 //            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Email is invalid");
@@ -60,7 +63,7 @@ public class RegisterService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());
         } catch (AuthenticationException e) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid username/password");
+            throw new AuthorizationException();
         }
         return token;
     }
