@@ -41,9 +41,12 @@ public class AccountService {
 
         for (AccountEntity account: accountEntityList){
             if(account.getType().equals(AccountType.valueOf(body.getType()))){
-                //Throw error body.getType() -> aan geven welk type account niet aan gemaakt mag worden
                 throw new EntityAlreadyExistException("they account of the type " + body.getType() + " already exist on this user");
             }
+        }
+
+        if(!user.getRole().equals(Roles.EMPLOYEE) && !user.getUuid().equals(UUID.fromString(body.getUserId()))) {
+            throw new InvalidPermissionsException("Your only allowed to view your own account");
         }
 
         if (1 > body.getAbsoluteLimit())
@@ -97,13 +100,19 @@ public class AccountService {
 
         if(!user.getRole().equals(Roles.EMPLOYEE) && !user.getUuid().equals(userid)) {
             throw new InvalidPermissionsException("Your only allowed to view your own account");
-
         }
 
         return accountRepository.getAllByUuidIs(userid);
     }
 
     public AccountEntity updateAccountByIBAN(Account body, String IBAN) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserEntity user = userService.findUserByName(userDetails.getUsername());
+
+        if(!user.getRole().equals(Roles.EMPLOYEE) && !user.getUuid().equals(UUID.fromString(body.getUserId()))) {
+            throw new InvalidPermissionsException("Your only allowed to view your own account");
+        }
+
         AccountEntity account = accountRepository.getAccountByIBAN(IBAN);
 
         if (1 > body.getAbsoluteLimit())
