@@ -65,10 +65,10 @@ public class User {
     @JsonProperty("password")
     private String password = null;
 
-    @JsonProperty("day_limit")
+    @JsonProperty("dayLimit")
     private Long dayLimit = null;
 
-    @JsonProperty("transaction_limit")
+    @JsonProperty("transactionLimit")
     private Long transactionLimit = null;
 
     public User id(Integer id) {

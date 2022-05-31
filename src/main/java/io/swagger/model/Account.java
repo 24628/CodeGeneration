@@ -23,7 +23,7 @@ public class Account {
     @JsonProperty("user_id")
     private String userId = null;
 
-    @JsonProperty("absolute_limit")
+    @JsonProperty("absoluteLimit")
     private Long absoluteLimit = null;
 
     /**

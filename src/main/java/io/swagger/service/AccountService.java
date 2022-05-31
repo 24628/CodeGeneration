@@ -78,7 +78,7 @@ public class AccountService {
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
         if (!user.getRole().equals(Roles.EMPLOYEE)) {
-            // gooi error
+            throw new InvalidPermissionsException("You dont have the correct permissions");
         }
 
         return accountRepository.getAllByTypeIsNot("ATM");

@@ -11,8 +11,8 @@ public class TransactionEntity {
     @Id
     @GeneratedValue
     private UUID uuid;
-    private UUID account_from;
-    private UUID account_to;
+    private UUID accountFrom;
+    private UUID accountTo;
     private UUID user_id;
     private Date date;
     private long amount;
@@ -22,19 +22,19 @@ public class TransactionEntity {
     }
 
     public UUID getAccount_from() {
-        return account_from;
+        return accountFrom;
     }
 
-    public void setAccount_from(UUID account_from) {
-        this.account_from = account_from;
+    public void setAccount_from(UUID accountFrom) {
+        this.accountFrom = accountFrom;
     }
 
     public UUID getAccount_to() {
-        return account_to;
+        return accountTo;
     }
 
-    public void setAccount_to(UUID account_to) {
-        this.account_to = account_to;
+    public void setAccount_to(UUID accountTo) {
+        this.accountTo = accountTo;
     }
 
     public UUID getUser_id() {

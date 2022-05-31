@@ -16,7 +16,7 @@ public class AccountEntity {
     private AccountType type;
     private String IBAN;
     private UUID user_uuid;
-    private Long absolute_limit;
+    private Long absoluteLimit;
     private Long balance;
 
     public Long getBalance() {
@@ -55,11 +55,11 @@ public class AccountEntity {
     }
 
     public Long getAbsolute_limit() {
-        return absolute_limit;
+        return absoluteLimit;
     }
 
-    public void setAbsolute_limit(Long absolute_limit) {
-        this.absolute_limit = absolute_limit;
+    public void setAbsolute_limit(Long absoluteLimit) {
+        this.absoluteLimit = absoluteLimit;
     }
 
     public void setUuid(UUID uuid) {

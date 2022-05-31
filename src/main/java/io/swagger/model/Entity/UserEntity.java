@@ -17,8 +17,8 @@ public class UserEntity {
     private String username;
     private String email;
     private String password;
-    private Long day_limit;
-    private Long transaction_limit;
+    private Long dayLimit;
+    private Long transactionLimit;
 
     public UserEntity() {
     }
@@ -58,19 +58,19 @@ public class UserEntity {
     }
 
     public Long getDay_limit() {
-        return day_limit;
+        return dayLimit;
     }
 
-    public void setDay_limit(Long day_limit) {
-        this.day_limit = day_limit;
+    public void setDay_limit(Long dayLimit) {
+        this.dayLimit = dayLimit;
     }
 
     public Long getTransaction_limit() {
-        return transaction_limit;
+        return transactionLimit;
     }
 
-    public void setTransaction_limit(Long transaction_limit) {
-        this.transaction_limit = transaction_limit;
+    public void setTransaction_limit(Long transactionLimit) {
+        this.transactionLimit = transactionLimit;
     }
 
     public String getPassword() {

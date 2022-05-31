@@ -104,7 +104,7 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<List<User>> usersPost() {
 
         try {
-            return new ResponseEntity<List<User>>(objectMapper.readValue("[ {\n  \"password\" : \"password\",\n  \"day_limit\" : 500,\n  \"name\" : \"name\",\n  \"transaction_limit\" : 6,\n  \"id\" : 0,\n  \"type\" : \"customer\",\n  \"email\" : \"email\"\n}, {\n  \"password\" : \"password\",\n  \"day_limit\" : 500,\n  \"name\" : \"name\",\n  \"transaction_limit\" : 6,\n  \"id\" : 0,\n  \"type\" : \"customer\",\n  \"email\" : \"email\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<List<User>>(objectMapper.readValue("[ {\n  \"password\" : \"password\",\n  \"dayLimit\" : 500,\n  \"name\" : \"name\",\n  \"transactionLimit\" : 6,\n  \"id\" : 0,\n  \"type\" : \"customer\",\n  \"email\" : \"email\"\n}, {\n  \"password\" : \"password\",\n  \"dayLimit\" : 500,\n  \"name\" : \"name\",\n  \"transactionLimit\" : 6,\n  \"id\" : 0,\n  \"type\" : \"customer\",\n  \"email\" : \"email\"\n} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
             return new ResponseEntity<List<User>>(HttpStatus.INTERNAL_SERVER_ERROR);

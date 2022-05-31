@@ -27,7 +27,7 @@ public class RegisterBody {
     @JsonProperty("password")
     private String password = null;
 
-    @JsonProperty("day_limit")
+    @JsonProperty("dayLimit")
     private Integer dayLimit = null;
 
     public RegisterBody username(String username) {

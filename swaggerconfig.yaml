@@ -79,7 +79,7 @@ paths:
                 password:
                   type: string
                   example: password
-                day_limit:
+                dayLimit:
                   type: integer
                   example: 500
       responses:
@@ -436,7 +436,7 @@ components:
             - closed
         user_id:
           type: integer
-        absolute_limit:
+        absoluteLimit:
           type: integer
     User:
       type: object
@@ -455,10 +455,10 @@ components:
           type: string
         password:
           type: string
-        day_limit:
+        dayLimit:
           type: integer
           example: 500
-        transaction_limit:
+        transactionLimit:
           type: integer
     Transaction:
       type: object
