@@ -41,7 +41,6 @@ public class AccountService {
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
         List<AccountEntity>  accountEntityList = accountRepository.getAllByUuidIs(UUID.fromString(body.getUserId()));
-
         for (AccountEntity account: accountEntityList){
             if(account.getType().equals(AccountType.valueOf(body.getType()))){
                 throw new EntityAlreadyExistException("they account of the type " + body.getType() + " already exist on this user");
@@ -62,6 +61,7 @@ public class AccountService {
         account.setIBAN(
                 new Iban.Builder()
                         .countryCode(CountryCode.NL)
+                        .bankCode("INHO")
                         .buildRandom()
                         .toString()
         );

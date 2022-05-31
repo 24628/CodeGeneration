@@ -52,6 +52,6 @@ public class Validator {
         UserEntity user = userDTO.findByUsername(userDetails.getUsername());
 
         if(!user.getRole().equals(Roles.EMPLOYEE))
-            throw new InvalidPermissionsException("no permissions to create users");
+            throw new InvalidPermissionsException("no permissions to access this");
     }
 }

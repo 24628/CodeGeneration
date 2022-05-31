@@ -57,6 +57,8 @@ public class RegisterService {
             user.setTransaction_limit(500L);
             userDTO.save(user);
 
+            System.out.println(user.getUuid());
+
             DayLimitEntity dayLimit = new DayLimitEntity();
             dayLimit.setActualLimit(body.getDayLimit());
             dayLimit.setCurrent(0L);
