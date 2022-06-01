@@ -3,6 +3,7 @@ package io.swagger.service.auth;
 import io.swagger.api.exceptions.AuthorizationException;
 import io.swagger.api.exceptions.InvalidUsernameOrPassword;
 import io.swagger.api.exceptions.UserNotFoundException;
+import io.swagger.helpers.AuthResult;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.repository.IUserDTO;
@@ -32,7 +33,7 @@ public class LoginService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String login(String username, String password)
+    public AuthResult login(String username, String password)
     {
         String token = "";
         UserEntity user = userRepository.findByUsername(username);
@@ -51,6 +52,6 @@ public class LoginService {
         } catch (AuthenticationException e) {
             throw new AuthorizationException();
         }
-        return token;
+        return new AuthResult(token, user);
     }
 }
