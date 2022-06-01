@@ -1,20 +1,17 @@
 package io.swagger.api;
 
 import io.swagger.annotations.Api;
-import io.swagger.api.exceptions.AuthorizationException;
+import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.api.interfaces.UsersApi;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.responses.AccountCreatedResponse;
 import io.swagger.responses.UserCreatedResponse;
 import io.swagger.responses.UserDeletedResponse;
 import io.swagger.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,26 +48,23 @@ public class UsersApiController implements UsersApi {
         this.request = request;
     }
 
-    public String usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) {
-
+    public ResponseEntity<String> usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) {
         try {
             List<UserEntity> users = userService.getUsers();
-
             final ByteArrayOutputStream out = new ByteArrayOutputStream();
             objectMapper.writeValue(out, users);
             final byte[] data = out.toByteArray();
-            return new String(data);
+            return ResponseEntity.ok(new String(data));
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
-            return "test";
-        } catch (AuthorizationException e) {
-            log.error("User not authorised to access this", e);
-            return "test";
+        } catch (InvalidPermissionsException e) {
+            System.out.println("[UsersApiController] User not authorised to access this");
+            return ResponseEntity.status(403).body( "{\"error\": \" User not authorised to access this\"}");
         }
+        return  ResponseEntity.noContent().build();
     }
 
     public String usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id) {
-
         try {
             userService.deleteUser(id);
             return objectMapper.writeValueAsString(new UserDeletedResponse(HttpStatus.ACCEPTED));

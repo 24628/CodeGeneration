@@ -58,17 +58,12 @@ public class UserService {
     }
 
     public UserEntity findUserByName(String username) {
+
         return userDTO.findByUsername(username);
     }
 
-    public List<UserEntity> getUsers() {
-        try{
-            validator.NeedsToBeEmployee();
-        }catch(Exception e){
-            return new ArrayList<UserEntity>();
-        }
-
-
+    public List<UserEntity> getUsers() throws InvalidPermissionsException {
+        validator.NeedsToBeEmployee();
         return userDTO.findAll();
     }
 
@@ -78,10 +73,13 @@ public class UserService {
         return userDTO.getOne(UUID.fromString(uuid));
     }
 
-    public void updateUser(String uuid, User body){
+    public void updateUser(String uuid, User body) throws InvalidPermissionsException{
         UserEntity userToEdit = userDTO.getOne(UUID.fromString(uuid));
         DayLimitEntity dayLimit = dayLimitDTO.getByUserId(userToEdit.getUuid());
 
+        if(!userToEdit.getRole().equals(Roles.EMPLOYEE) && !userToEdit.getUuid().equals(UUID.fromString(uuid))) {
+            throw new InvalidPermissionsException("Your only allowed to view your own account");
+        }
         dayLimit.setActualLimit(body.getDayLimit());
         dayLimit.setCurrent(0L);
         dayLimitDTO.save(dayLimit);
@@ -91,6 +89,9 @@ public class UserService {
     }
 
     public void deleteUser(String uuid) {
+
+        validator.NeedsToBeEmployee();
+
         UserEntity user = userDTO.getOne(UUID.fromString(uuid));
 
         user.setRole(Roles.DISABLED);
