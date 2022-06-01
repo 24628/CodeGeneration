@@ -5,6 +5,7 @@
  */
 package io.swagger.api.interfaces;
 
+import io.swagger.api.exceptions.ValidationException;
 import io.swagger.model.RegisterBody;
 import io.swagger.responses.JwtTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,12 +32,13 @@ public interface RegisterApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Auth" })
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "registerd successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtTokenResponse.class))),
+        @ApiResponse(responseCode = "405", description = "register failed", content = @Content(mediaType = "application/json", schema = @Schema(example  = "Invalid user input"))),
     })
     @RequestMapping(value = "/register",
         produces = { "application/json" },
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required=true, schema=@Schema()) @Valid @RequestBody RegisterBody body);
+    ResponseEntity registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required=true) @Valid @RequestBody RegisterBody body);
 
 }
 

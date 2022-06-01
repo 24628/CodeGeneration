@@ -29,6 +29,14 @@ public class RegisterBody {
     @JsonProperty("dayLimit")
     private Long dayLimit = null;
 
+    public RegisterBody(String username, String name, String email, String password, Long dayLimit) {
+        this.username = username;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.dayLimit = dayLimit;
+    }
+
     public RegisterBody username(String username) {
         this.username = username;
         return this;

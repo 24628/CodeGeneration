@@ -1,66 +1,54 @@
 package io.swagger.unitTesting;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.api.RegisterApiController;
-import io.swagger.api.interfaces.RegisterApi;
-import io.swagger.model.Account;
+import io.swagger.model.Entity.UserEntity;
+import static org.assertj.core.api.Assertions.assertThat;
 import io.swagger.model.RegisterBody;
+import io.swagger.responses.JwtTokenResponse;
 import io.swagger.service.auth.RegisterService;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.platform.runner.JUnitPlatform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
+@RunWith(JUnitPlatform.class)
+class RegisterTest {
 
-@AutoConfigureMockMvc
-public class RegisterTest {
+    @InjectMocks
+    RegisterApiController registerApiController;
 
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private RegisterApi registerApi;
-
-    @BeforeEach
-    public void init() throws Exception {
-//        testUser = createMockUser();
-//        testAccount = createMockAccount(testUser,testIban1, BigDecimal.valueOf(1000), AccountType.CURRENT);
-//        testDestinationAccount = createMockAccount(testUser,testIban2, BigDecimal.valueOf(1000), AccountType.SAVINGS);
-//
-//        //        Login as test employee
-//        MvcResult result = mvc.perform(post("/login")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{\"email_address\": \"testuser@example.com\", \"password\": \"secret\"}"))
-//                .andExpect(status().isOk()
-//                ).andReturn();
-//        String contentAsString = result.getResponse().getContentAsString();
-//
-//        JwtResponse loginResponse = objectMapper.readValue(contentAsString, JwtResponse.class);
-//
-////        Store token
-//        this.jwtToken = loginResponse.getToken();
-    }
+    @Mock
+    RegisterService registerService;
 
     @Test
-    public void RegisterUserShouldReturnJwtToken() {
-        RegisterBody registerBody = new RegisterBody();
-        registerBody.setUsername("obamacare");
-        registerBody.setEmail("obamacare@hotmail.com");
-        registerBody.setPassword("password");
-        registerBody.setDayLimit(20L);
-        registerApiController.registerPost(registerBody);
+    public void testRegister()
+    {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
+        when(registerService.register(any(RegisterBody.class)));//.thenReturn(true);
+
+        RegisterBody body = new RegisterBody("username", "name", "email@email.com", "password", 2000L);
+        ResponseEntity<JwtTokenResponse> responseEntity = registerApiController.registerPost(body);
+
+        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(201);
+//        assertThat(responseEntity.getHeaders().getLocation().getPath()).isEqualTo("/1");
     }
+
 }
