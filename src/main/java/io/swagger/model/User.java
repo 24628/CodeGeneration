@@ -23,6 +23,10 @@ public class User {
     @JsonProperty("role")
     private String role = null;
 
+
+
+    @JsonProperty("username")
+    private String username = null;
     @JsonProperty("name")
     private String name = null;
 
@@ -103,6 +107,14 @@ public class User {
         return this;
     }
 
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
     /**
      * Get email
      *

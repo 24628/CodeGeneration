@@ -15,6 +15,11 @@ public class UserEntity {
     private UUID uuid;
     private Roles role;
     private String username;
+
+
+
+    private String name;
+
     private String email;
     private String password;
     private Long transactionLimit;
@@ -35,6 +40,10 @@ public class UserEntity {
     public void setRole(Roles role) {
         this.role = role;
     }
+
+    public String getName() {return name;}
+
+    public void setName(String name) {this.name = name;}
 
     public String getUsername() {
         return username;

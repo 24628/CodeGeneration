@@ -30,7 +30,6 @@ public class jwtTokenFilter extends OncePerRequestFilter {
         String token = jwtTokenProvider.resolveToken(httpServletRequest);    // retrieve the token from the request
 
         try {
-            System.out.println(token + "is prob null!");
             if (token != null && jwtTokenProvider.validateToken(token)) {        // check if the token is valid
                 System.out.println("ik start hier");
                 Authentication auth = jwtTokenProvider.getAuthentication(token);    // retrieve the user from the database

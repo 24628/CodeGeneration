@@ -68,7 +68,7 @@ public class AccountsApiController implements AccountsApi {
                 return new String(data);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return "OOps";
+                return "Error";
             }
     }
 
@@ -85,7 +85,7 @@ public class AccountsApiController implements AccountsApi {
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
             System.out.println("Couldn't serialize response for content type application/json");
-            return "OOps";
+            return "Error";
 
         }
 
@@ -105,7 +105,7 @@ public class AccountsApiController implements AccountsApi {
             return new String(data);
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
-            return "LOL";
+            return "Error";
         }
 
     }
@@ -124,7 +124,7 @@ public class AccountsApiController implements AccountsApi {
             return new String(data);
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
-            return "LOL";
+            return "Error";
 
         }
     }
@@ -138,11 +138,11 @@ public class AccountsApiController implements AccountsApi {
             return this.objectMapper.writeValueAsString(new AccountCreatedResponse(HttpStatus.CREATED));
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
-            return "error";
+            return "Error";
         }
     }
 
-    public ResponseEntity<Account> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned", schema = @Schema()) @Valid @RequestParam(value = "name", required = false) String name) {
+    public ResponseEntity<Account> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned", schema = @Schema()) @Valid @RequestParam(value = "name", required = true) String name) {
 
         try {
             return new ResponseEntity<Account>(objectMapper.readValue("{\n  \"IBAN\" : \"NL69INHO1234123412\",\n  \"user_id\" : 0,\n  \"absoluteLimit\" : 6,\n  \"type\" : \"normal\"\n}", Account.class), HttpStatus.NOT_IMPLEMENTED);
