@@ -45,24 +45,24 @@ public class LoginApiController implements LoginApi {
     public String loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginBody body) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                String token = loginService.login(body.getUsername(), body.getPassword());
-                ObjectMapper mapper = new ObjectMapper();
-                String json = "";
-
-                try {
-                    json = mapper.writeValueAsString(new JwtTokenResponse(HttpStatus.CREATED, token));
-                }
-                catch (JsonGenerationException | JsonMappingException e) {
-                    json = mapper.writeValueAsString(new JwtTokenResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Oopsie!"));
-                    e.printStackTrace();
-                }
-
-                return json;
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return "test";
-            }
+//            try {
+////                String token = loginService.login(body.getUsername(), body.getPassword());
+////                ObjectMapper mapper = new ObjectMapper();
+////                String json = "";
+////
+////                try {
+////                    json = mapper.writeValueAsString(new JwtTokenResponse(HttpStatus.CREATED, token, userEntity));
+////                }
+////                catch (JsonGenerationException | JsonMappingException e) {
+////                    json = mapper.writeValueAsString(new JwtTokenResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Oopsie!", userEntity));
+////                    e.printStackTrace();
+////                }
+//
+////                return json;
+//            } catch (IOException e) {
+//                log.error("Couldn't serialize response for content type application/json", e);
+//                return "test";
+//            }
         }
         return "oopsie";
     }

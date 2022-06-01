@@ -4,6 +4,7 @@ import io.swagger.api.exceptions.AuthorizationException;
 import io.swagger.api.exceptions.EntityAlreadyExistException;
 import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.Roles;
+import io.swagger.helpers.AuthResult;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.DayLimitEntity;
 import io.swagger.model.Entity.UserEntity;
@@ -42,14 +43,14 @@ public class RegisterService {
     @Autowired
     Validator validator;
 
-    public String register(RegisterBody body)
+    public AuthResult register(RegisterBody body)
     {
         String token = "";
+        UserEntity user = new UserEntity();
 
         validator.CanCreateUser(body.getUsername(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L);
-
         try {
-            UserEntity user = new UserEntity();
+
             user.setEmail(body.getEmail());
             user.setUsername(body.getUsername());
             user.setPassword(passwordEncoder.encode(body.getPassword()));
@@ -70,6 +71,6 @@ public class RegisterService {
         } catch (AuthenticationException e) {
             throw new AuthorizationException();
         }
-        return token;
+        return new AuthResult(token, user);
     }
 }

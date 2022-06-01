@@ -1,10 +1,9 @@
 package io.swagger.api;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import io.swagger.annotations.Api;
 import io.swagger.api.exceptions.SerializeException;
 import io.swagger.api.interfaces.RegisterApi;
+import io.swagger.helpers.AuthResult;
 import io.swagger.responses.JwtTokenResponse;
 import io.swagger.model.RegisterBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,14 +46,14 @@ public class RegisterApiController implements RegisterApi {
     public ResponseEntity<JwtTokenResponse> registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required = true, schema = @Schema()) @Valid @RequestBody RegisterBody body) {
 
         try {
-            String token = registerService.register(body);
+            AuthResult result = registerService.register(body);
 
             return new ResponseEntity<JwtTokenResponse>(
-                    objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                            new JwtTokenResponse(HttpStatus.CREATED, token)),
-                        JwtTokenResponse.class),
-                    HttpStatus.OK
+                objectMapper.readValue(
+                    objectMapper.writeValueAsString(
+                        new JwtTokenResponse(HttpStatus.CREATED, result.getToken(), result.getUser())),
+                    JwtTokenResponse.class),
+                HttpStatus.OK
             );
 
         } catch (IOException e) {
