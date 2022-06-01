@@ -2,13 +2,10 @@ package io.swagger.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.TransactionsApi;
-import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Transaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.responses.AccountCreatedResponse;
 import io.swagger.responses.TransactionCreateResponse;
-import io.swagger.service.AccountService;
 import io.swagger.service.TransactionService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -64,15 +61,14 @@ public class   TransactionsApiController implements TransactionsApi {
 
     }
 
-    public String transactionsPost(@RequestBody Transaction body) {
+    public ResponseEntity<Void> transactionsPost(@RequestBody Transaction body) {
         try {
             transactionService.addTransaction(body);
-            return this.objectMapper.writeValueAsString(new TransactionCreateResponse(HttpStatus.CREATED));
-        } catch (IOException e) {
+            return new ResponseEntity<Void>(HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
             log.error("Couldn't serialize response for content type application/json", e);
-            return "OOps";
         }
-
+        return null;
     }
 
 }

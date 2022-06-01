@@ -13,7 +13,6 @@ public class JwtTokenResponse {
         this.token = token;
         this.userEntity = userEntity;
     }
-
     public String toString() {
         return String.format("{code:%s,{token:%s}}", code.value(), token);
     }

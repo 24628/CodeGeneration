@@ -79,8 +79,11 @@ public class UserService {
     }
 
     public void updateUser(String uuid, User body){
+
+
         UserEntity userToEdit = userDTO.getOne(UUID.fromString(uuid));
         DayLimitEntity dayLimit = dayLimitDTO.getByUserId(userToEdit.getUuid());
+
 
         dayLimit.setActualLimit(body.getDayLimit());
         dayLimit.setCurrent(0L);

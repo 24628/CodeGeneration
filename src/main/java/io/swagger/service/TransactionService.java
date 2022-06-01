@@ -102,8 +102,17 @@ public class TransactionService {
         accountTo.setBalance(accountTo.getBalance() + body.getAmount());
         accountRepository.save(accountTo);
     }
-
+    // todo add filter
     public List<TransactionEntity> getTransactions() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserEntity user = userService.findUserByName(userDetails.getUsername());
+
+        if (user.getRole().equals(Roles.CUSTOMER))
+            return transactionRepository.getAllByAccountFrom(user.getUuid());
+
+        return transactionRepository.findAll();
+    }
+    public List<TransactionEntity> getTransactionsWithFilter(String IBAN) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
