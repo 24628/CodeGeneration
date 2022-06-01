@@ -3,6 +3,7 @@ package io.swagger.api;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import io.swagger.annotations.Api;
+import io.swagger.api.exceptions.SerializeException;
 import io.swagger.api.interfaces.RegisterApi;
 import io.swagger.responses.JwtTokenResponse;
 import io.swagger.model.RegisterBody;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -42,27 +44,22 @@ public class RegisterApiController implements RegisterApi {
         this.request = request;
     }
 
-    public String registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required=true, schema=@Schema()) @Valid @RequestBody RegisterBody body) {
+    public ResponseEntity<JwtTokenResponse> registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required = true, schema = @Schema()) @Valid @RequestBody RegisterBody body) {
 
-            try {
-                String token = registerService.register(body);
-                ObjectMapper mapper = new ObjectMapper();
-                String json = "";
+        try {
+            String token = registerService.register(body);
 
-                try {
-                    json = mapper.writeValueAsString(new JwtTokenResponse(HttpStatus.CREATED, token));
-                }
-                catch (JsonGenerationException | JsonMappingException e) {
-                    json = mapper.writeValueAsString(new JwtTokenResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Oopsie!"));
-                    e.printStackTrace();
-                }
+            return new ResponseEntity<JwtTokenResponse>(
+                    objectMapper.readValue(
+                        objectMapper.writeValueAsString(
+                            new JwtTokenResponse(HttpStatus.CREATED, token)),
+                        JwtTokenResponse.class),
+                    HttpStatus.OK
+            );
 
-                return json;
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return "test";
-            }
-
+        } catch (IOException e) {
+            log.error("Couldn't serialize response for content type application/json", e);
+            throw new SerializeException();
+        }
     }
-
 }

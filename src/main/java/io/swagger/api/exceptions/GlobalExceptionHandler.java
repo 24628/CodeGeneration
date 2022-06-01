@@ -54,6 +54,12 @@ public class GlobalExceptionHandler {
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(SerializeException.class)
+    public SerializeException handleAuthorization(SerializeException e) {
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+
 
 
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)
