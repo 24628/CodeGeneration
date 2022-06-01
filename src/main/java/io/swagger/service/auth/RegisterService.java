@@ -43,13 +43,12 @@ public class RegisterService {
     @Autowired
     Validator validator;
 
-    public AuthResult register(RegisterBody body)
+    public AuthResult register(RegisterBody body) throws AuthenticationException, ValidationException, EntityAlreadyExistException
     {
         String token = "";
         UserEntity user = new UserEntity();
 
-        validator.CanCreateUser(body.getUsername(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L,body.getName());
-        try {
+            validator.CanCreateUser(body.getUsername(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L,body.getName());
 
             user.setEmail(body.getEmail());
             user.setUsername(body.getUsername());
@@ -69,9 +68,7 @@ public class RegisterService {
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword()));
             token = jwtTokenProvider.createToken(body.getUsername(), userDTO.findByUsername(body.getUsername()).getRole());
-        } catch (AuthenticationException e) {
-            throw new AuthorizationException();
-        }
+
         return new AuthResult(token, user);
     }
 }

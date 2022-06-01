@@ -1,7 +1,9 @@
 package io.swagger.api;
 
 import io.swagger.annotations.Api;
+import io.swagger.api.exceptions.EntityAlreadyExistException;
 import io.swagger.api.exceptions.SerializeException;
+import io.swagger.api.exceptions.ValidationException;
 import io.swagger.api.interfaces.RegisterApi;
 import io.swagger.helpers.AuthResult;
 import io.swagger.responses.JwtTokenResponse;
@@ -59,6 +61,12 @@ public class RegisterApiController implements RegisterApi {
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
             throw new SerializeException();
+        }catch (ValidationException e) {
+            System.out.println("[RegisterApiController] Register Failure: " + e.getMessage());
+            return new ResponseEntity("{\"error\":\""+e.getMessage()+"\"}", HttpStatus.BAD_REQUEST);
+        }catch (EntityAlreadyExistException e) {
+            System.out.println("[RegisterApiController] Register Failure: " + e.getMessage());
+            return new ResponseEntity("{\"error\":\""+e.getMessage()+"\"}", HttpStatus.CONFLICT);
         }
     }
 }

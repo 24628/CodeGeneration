@@ -29,7 +29,7 @@ public class Validator {
         return false;
     }
 
-    public void CanCreateUser(String username, String email, String password, Long dayLimit, long transactionLimit, String name){
+    public void CanCreateUser(String username, String email, String password, Long dayLimit, long transactionLimit, String name) throws ValidationException, EntityAlreadyExistException{
         if(email.isEmpty() || name.isEmpty() || password.isEmpty() || username.isEmpty())
             throw new ValidationException("Missing content");
 
