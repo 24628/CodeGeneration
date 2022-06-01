@@ -48,7 +48,7 @@ public class RegisterService {
         String token = "";
         UserEntity user = new UserEntity();
 
-        validator.CanCreateUser(body.getUsername(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L);
+        validator.CanCreateUser(body.getUsername(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L,body.getName());
         try {
 
             user.setEmail(body.getEmail());
@@ -56,6 +56,7 @@ public class RegisterService {
             user.setPassword(passwordEncoder.encode(body.getPassword()));
             user.setRole(Roles.CUSTOMER);
             user.setTransaction_limit(500L);
+            user.setName(body.getName());
             userDTO.save(user);
 
             System.out.println(user.getUuid());

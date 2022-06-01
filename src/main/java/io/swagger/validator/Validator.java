@@ -29,14 +29,14 @@ public class Validator {
         return false;
     }
 
-    public void CanCreateUser(String name, String email, String password, Long dayLimit, long transactionLimit){
-        if(email.isEmpty() || name.isEmpty() || password.isEmpty())
+    public void CanCreateUser(String username, String email, String password, Long dayLimit, long transactionLimit, String name){
+        if(email.isEmpty() || name.isEmpty() || password.isEmpty() || username.isEmpty())
             throw new ValidationException("Missing content");
 
-        if(containsWhiteSpace(email) || containsWhiteSpace(name) || containsWhiteSpace(password))
+        if(containsWhiteSpace(email) || containsWhiteSpace(username) || containsWhiteSpace(password))
             throw new ValidationException("No white Spaces!");
 
-        UserEntity userExist = userDTO.findByUsername(name);
+        UserEntity userExist = userDTO.findByUsername(username);
         if(userExist != null)
             throw new EntityAlreadyExistException("Username already exist in the database");
 

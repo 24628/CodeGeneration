@@ -1,6 +1,7 @@
 package io.swagger.api;
 
 import io.swagger.annotations.Api;
+import io.swagger.api.exceptions.AuthorizationException;
 import io.swagger.api.interfaces.UsersApi;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.User;
@@ -61,6 +62,9 @@ public class UsersApiController implements UsersApi {
             return new String(data);
         } catch (IOException e) {
             log.error("Couldn't serialize response for content type application/json", e);
+            return "test";
+        } catch (AuthorizationException e) {
+            log.error("User not authorised to access this", e);
             return "test";
         }
     }

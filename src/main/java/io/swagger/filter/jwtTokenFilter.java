@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,10 +32,13 @@ public class jwtTokenFilter extends OncePerRequestFilter {
 
         try {
             if (token != null && jwtTokenProvider.validateToken(token)) {        // check if the token is valid
-                System.out.println("ik start hier");
-                Authentication auth = jwtTokenProvider.getAuthentication(token);    // retrieve the user from the database
-                SecurityContextHolder.getContext().setAuthentication(auth);    // apply the user to the security context of the request
-                System.out.println("ik eindig hier");
+                try{
+                    Authentication auth = jwtTokenProvider.getAuthentication(token);    // retrieve the user from the database
+                    SecurityContextHolder.getContext().setAuthentication(auth);    // apply the user to the security context of the request
+                }catch (UsernameNotFoundException e){
+                    System.out.println("[jwtTokenFilter] Authentication token received but probably expired because username is not found!");
+                }
+
             }
 
         } catch (ResponseStatusException ex) {

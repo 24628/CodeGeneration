@@ -17,6 +17,9 @@ public class RegisterBody {
     @JsonProperty("username")
     private String username = null;
 
+    @JsonProperty("name")
+    private String name = null;
+
     @JsonProperty("email")
     private String email = null;
 
@@ -36,8 +39,7 @@ public class RegisterBody {
      *
      * @return username
      **/
-    @Schema(example = "John doe", description = "")
-
+    @Schema(example = "johndoe", description = "")
     public String getUsername() {
         return username;
     }
@@ -45,6 +47,22 @@ public class RegisterBody {
     public void setUsername(String username) {
         this.username = username;
     }
+
+
+    /**
+     * Get name
+     *
+     * @return name
+     **/
+    @Schema(example = "Doe", description = "Lastname, used for performing searches")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 
     public RegisterBody email(String email) {
         this.email = email;
@@ -97,7 +115,6 @@ public class RegisterBody {
      * @return dayLimit
      **/
     @Schema(example = "500", description = "")
-
     public Long getDayLimit() {
         return dayLimit;
     }
@@ -133,6 +150,7 @@ public class RegisterBody {
         sb.append("class RegisterBody {\n");
 
         sb.append("    username: ").append(toIndentedString(username)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    email: ").append(toIndentedString(email)).append("\n");
         sb.append("    password: ").append(toIndentedString(password)).append("\n");
         sb.append("    dayLimit: ").append(toIndentedString(dayLimit)).append("\n");
