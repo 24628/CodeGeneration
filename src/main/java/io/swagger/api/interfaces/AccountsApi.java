@@ -6,10 +6,6 @@
 package io.swagger.api.interfaces;
 
 import io.swagger.model.Account;
-import io.swagger.model.InlineResponse401;
-import io.swagger.model.InlineResponse403;
-import io.swagger.model.InlineResponse404;
-import io.swagger.model.InlineResponse405;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -37,10 +33,7 @@ public interface AccountsApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Successfully returned a list of accounts", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Account.class)))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))) })
+    })
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -51,12 +44,7 @@ public interface AccountsApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-        
-        @ApiResponse(responseCode = "404", description = "404 not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse404.class))) })
+    })
     @RequestMapping(value = "/accounts/IBAN/{IBAN}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -67,14 +55,7 @@ public interface AccountsApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-        
-        @ApiResponse(responseCode = "404", description = "404 not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse404.class))),
-        
-        @ApiResponse(responseCode = "405", description = "Data input is invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse405.class))) })
+    })
     @RequestMapping(value = "/accounts/IBAN/{IBAN}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
@@ -85,12 +66,7 @@ public interface AccountsApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-        
-        @ApiResponse(responseCode = "404", description = "404 not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse404.class))) })
+    })
     @RequestMapping(value = "/accounts/id/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -101,12 +77,7 @@ public interface AccountsApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "The account has been successfully created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-        
-        @ApiResponse(responseCode = "405", description = "Data input is invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse405.class))) })
+    })
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
@@ -118,10 +89,7 @@ public interface AccountsApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))) })
+    })
     @RequestMapping(value = "/accounts/search",
         produces = { "application/json" }, 
         method = RequestMethod.GET)

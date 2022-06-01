@@ -6,9 +6,12 @@
 package io.swagger.api.interfaces;
 
 import io.swagger.model.RegisterBody;
+import io.swagger.responses.JwtTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,11 +30,7 @@ public interface RegisterApi {
     @Operation(summary = "Register", description = "", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Auth" })
     @ApiResponses(value = {
-//        @ApiResponse(responseCode = "201", description = "registerd successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse201.class))),
-//
-//        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-//
-//        @ApiResponse(responseCode = "405", description = "Data input is invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse405.class)))
+        @ApiResponse(responseCode = "201", description = "registerd successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtTokenResponse.class))),
     })
     @RequestMapping(value = "/register",
         produces = { "application/json" },

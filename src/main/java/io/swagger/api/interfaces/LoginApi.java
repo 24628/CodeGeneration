@@ -5,10 +5,8 @@
  */
 package io.swagger.api.interfaces;
 
-import io.swagger.model.InlineResponse201;
-import io.swagger.model.InlineResponse403;
-import io.swagger.model.InlineResponse405;
 import io.swagger.model.LoginBody;
+import io.swagger.responses.JwtTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -32,11 +30,8 @@ public interface LoginApi {
     @Operation(summary = "Login", description = "", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Auth" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "201", description = "Logged in successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse201.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-        
-        @ApiResponse(responseCode = "405", description = "Data input is invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse405.class))) })
+        @ApiResponse(responseCode = "201", description = "Logged in successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtTokenResponse.class))),
+    })
     @RequestMapping(value = "/login",
         produces = { "application/json" }, 
         consumes = { "application/json" }, 

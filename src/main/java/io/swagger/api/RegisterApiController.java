@@ -53,7 +53,7 @@ public class RegisterApiController implements RegisterApi {
                     objectMapper.writeValueAsString(
                         new JwtTokenResponse(HttpStatus.CREATED, result.getToken(), result.getUser())),
                     JwtTokenResponse.class),
-                HttpStatus.OK
+                HttpStatus.CREATED
             );
 
         } catch (IOException e) {

@@ -33,10 +33,7 @@ public interface TransactionsApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "returns a list of all the transactions tht has been made", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Transaction.class)))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))) })
+    })
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -47,12 +44,7 @@ public interface TransactionsApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "creates new transaction and returns the information of the transaction e.g. timestamp, from, to and the amount of the transaction", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Transaction.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-        
-        @ApiResponse(responseCode = "405", description = "Data input is invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse405.class))) })
+    })
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
         method = RequestMethod.POST)

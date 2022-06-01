@@ -30,10 +30,7 @@ public interface UsersApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "The list of users is returned from the database.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))) })
+    })
     @RequestMapping(value = "/users",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -44,14 +41,7 @@ public interface UsersApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "deletes all the data of the user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-        
-        @ApiResponse(responseCode = "404", description = "404 not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse404.class))),
-        
-        @ApiResponse(responseCode = "405", description = "Data input is invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse405.class))) })
+    })
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
@@ -62,12 +52,7 @@ public interface UsersApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "return user data after submitting an existing id", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-        
-        @ApiResponse(responseCode = "404", description = "404 not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse404.class))) })
+    })
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -78,14 +63,7 @@ public interface UsersApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "updates all the data of the user", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))),
-        
-        @ApiResponse(responseCode = "404", description = "404 not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse404.class))),
-        
-        @ApiResponse(responseCode = "405", description = "Data input is invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse405.class))) })
+    })
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
@@ -96,10 +74,7 @@ public interface UsersApi {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "creates a new user based on the fields of the user after checking the inputand the permissions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
-        
-        @ApiResponse(responseCode = "401", description = "Access token is missing or invalid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse401.class))),
-        
-        @ApiResponse(responseCode = "403", description = "403 not Authorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse403.class))) })
+    })
     @RequestMapping(value = "/users",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
