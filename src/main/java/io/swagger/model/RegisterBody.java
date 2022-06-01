@@ -37,6 +37,10 @@ public class RegisterBody {
         this.dayLimit = dayLimit;
     }
 
+    public RegisterBody() {
+
+    }
+
     public RegisterBody username(String username) {
         this.username = username;
         return this;

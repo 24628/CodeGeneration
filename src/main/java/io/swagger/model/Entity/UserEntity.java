@@ -27,6 +27,15 @@ public class UserEntity {
     public UserEntity() {
     }
 
+    public UserEntity(Roles role, String username, String name, String email, String password, Long transactionLimit) {
+        this.role = role;
+        this.username = username;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.transactionLimit = transactionLimit;
+    }
+
     public UUID getUuid() {
         return uuid;
     }

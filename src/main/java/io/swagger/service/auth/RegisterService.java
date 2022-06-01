@@ -45,6 +45,8 @@ public class RegisterService {
 
     public AuthResult register(RegisterBody body)
     {
+        System.out.println("Hier kom ik? vanuit mock register functie in de service");
+
         String token = "";
         UserEntity user = new UserEntity();
 
