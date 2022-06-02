@@ -6,6 +6,7 @@
 package io.swagger.api.interfaces;
 
 import io.swagger.model.*;
+import io.swagger.responses.transactions.TransactionAtmResponse;
 import io.swagger.responses.transactions.TransactionListResponse;
 import io.swagger.responses.transactions.TransactionSingleResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,6 +53,26 @@ public interface TransactionsApi {
         produces = { "application/json" }, 
         method = RequestMethod.POST)
     ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody Transaction body) throws IOException;
+
+    @Operation(summary = "Withdraw money", description = "withdraw money", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Transaction.class))),
+    })
+    @RequestMapping(value = "/atm/withdraw",
+            produces = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<TransactionAtmResponse> atmWithdraw(@RequestBody Atm body) throws IOException;
+
+    @Operation(summary = "Depositing money", description = "depositing money", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Transaction.class))),
+    })
+    @RequestMapping(value = "/atm/deposit",
+            produces = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<TransactionAtmResponse> atmDeposit(@RequestBody Atm body) throws IOException;
 
 }
 

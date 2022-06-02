@@ -1,5 +1,6 @@
 package io.swagger.repository;
 
+import io.swagger.enums.Roles;
 import io.swagger.model.Entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,4 +13,8 @@ public interface IUserDTO extends JpaRepository<UserEntity, UUID> {
     UserEntity findByUsername(String username);
 
     UserEntity findUserEntityByUuid(String uuid);
+
+    UserEntity findUserEntitiesByPinCode(Integer pinCode);
+
+    UserEntity findUserEntityByRoleIs(Roles role);
 }

@@ -2,9 +2,11 @@ package io.swagger.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.TransactionsApi;
+import io.swagger.model.Atm;
 import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Transaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.responses.transactions.TransactionAtmResponse;
 import io.swagger.responses.transactions.TransactionListResponse;
 import io.swagger.responses.transactions.TransactionSingleResponse;
 import io.swagger.service.TransactionService;
@@ -70,6 +72,29 @@ public class TransactionsApiController implements TransactionsApi {
                 HttpStatus.OK
         );
 
+    }
+
+    public ResponseEntity<TransactionAtmResponse> atmWithdraw(Atm body) throws IOException {
+
+        Long amount = transactionService.withdrawMoney(body);
+        return new ResponseEntity<TransactionAtmResponse>(
+                objectMapper.readValue(
+                        objectMapper.writeValueAsString(
+                                new TransactionAtmResponse(HttpStatus.OK, amount)),
+                        TransactionAtmResponse.class),
+                HttpStatus.OK
+        );
+    }
+
+    public ResponseEntity<TransactionAtmResponse> atmDeposit(Atm body) throws IOException {
+        Long amount = transactionService.depositMoney(body);
+        return new ResponseEntity<TransactionAtmResponse>(
+                objectMapper.readValue(
+                        objectMapper.writeValueAsString(
+                                new TransactionAtmResponse(HttpStatus.OK, amount)),
+                        TransactionAtmResponse.class),
+                HttpStatus.OK
+        );
     }
 
 }

@@ -4,8 +4,12 @@ import io.swagger.api.exceptions.EntityAlreadyExistException;
 import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.Roles;
+import io.swagger.helpers.ValidateAtmHelper;
+import io.swagger.model.Atm;
+import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.User;
+import io.swagger.repository.IAccountDTO;
 import io.swagger.repository.IUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +21,9 @@ public class Validator {
 
     @Autowired
     IUserDTO userDTO;
+
+    @Autowired
+    private IAccountDTO accountRepository;
 
     public boolean containsWhiteSpace(final String testCode) {
         if (testCode != null) {
@@ -53,5 +60,21 @@ public class Validator {
 
         if (!user.getRole().equals(Roles.EMPLOYEE))
             throw new InvalidPermissionsException("no permissions to access this");
+    }
+
+    public ValidateAtmHelper isAllowedToAtm(Atm body){
+        UserEntity userEntity = userDTO.findUserEntitiesByPinCode(body.getPinCode());
+        AccountEntity accountEntity = accountRepository.getAccountByIBAN(body.getIban());
+
+        if (userEntity == null)
+            throw new ValidationException("invalid pincode");
+
+        if (accountEntity == null)
+            throw new ValidationException("invalid pincode");
+
+        if (userEntity.getUuid() != accountEntity.getUserId())
+            throw new ValidationException("invalid pincode");
+
+        return new ValidateAtmHelper(userEntity, accountEntity);
     }
 }
