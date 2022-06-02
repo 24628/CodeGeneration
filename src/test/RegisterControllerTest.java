@@ -42,7 +42,8 @@ public class RegisterControllerTest extends SecurityEnabledSetup {
     @MockBean
     private RegisterService registerService;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    @MockBean
+    private ObjectMapper objectMapper;
 
     UserEntity user1 = new UserEntity(Roles.CUSTOMER, "johndoe", "john", "john@example.com", "$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu", 2000L);
     User user2 = new User("johndoe", "john", "johndoe@example.com", "password", 5000L);
@@ -63,7 +64,6 @@ public class RegisterControllerTest extends SecurityEnabledSetup {
         mockMvc.perform(post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
                         .content(json))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
