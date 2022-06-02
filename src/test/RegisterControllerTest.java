@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+import helper.SecurityEnabledSetup;
 import io.swagger.api.RegisterApiController;
 import io.swagger.enums.Roles;
 import io.swagger.model.Entity.UserEntity;
@@ -15,11 +16,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -29,8 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith({SpringExtension.class})
 @SpringBootTest(classes = {RegisterApiController.class, ServletWebServerFactoryAutoConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-public class RegisterControllerTest {
+@AutoConfigureMockMvc(addFilters = false)
+public class RegisterControllerTest extends SecurityEnabledSetup {
 
     @Autowired
     private WebApplicationContext context;
@@ -57,11 +59,13 @@ public class RegisterControllerTest {
 
         String json = "{\"username\":\"johndoe\",\"name\":\"john\",\"email\":\"johndoe@example.com\",\"password\":\"password\",\"dayLimit\":5000,}";
 
-        String content = mapper.writeValueAsString(user2);
+//        String content = mapper.writeValueAsString(user2);
         mockMvc.perform(post("/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
                         .content(json))
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
                 .andExpect((ResultMatcher) jsonPath("$.userEntity.name", is("johndoe")));
