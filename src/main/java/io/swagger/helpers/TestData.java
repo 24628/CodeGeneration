@@ -40,9 +40,9 @@ public class TestData {
   }
 
     public void Generate(){
+        CreateBank();
         generateUsers();
         generateTransactions();
-        CreateBank();
     }
 
     private void generateUsers() {
@@ -54,7 +54,7 @@ public class TestData {
             userEntity.setEmail(user + "@example.com");
             userEntity.setPassword("$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu"); //password all the same password
             userEntity.setRole(Roles.values()[random.nextInt(Roles.values().length)]);
-            userEntity.setTransaction_limit(0L);
+            userEntity.setTransactionLimit(200L);
             userService.generateUsers(userEntity);
             generateAccount(userEntity);
         }
@@ -66,14 +66,14 @@ public class TestData {
         userEntity.setEmail("admin@example.com");
         userEntity.setPassword("$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu"); //password
         userEntity.setRole(Roles.BANK);
-        userEntity.setTransaction_limit(0L);
+        userEntity.setTransactionLimit(0L);
         userService.generateUsers(userEntity);
 
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setBalance(0L);
         accountEntity.setType(AccountType.ATM);
-        accountEntity.setAbsolute_limit(0L);
-        accountEntity.setUser_uuid(userEntity.getUuid());
+        accountEntity.setAbsoluteLimit(0L);
+        accountEntity.setUuid(userEntity.getUuid());
         accountEntity.setIBAN("NL01INHO0000000001");
         accountService.generateAccount(accountEntity);
     }
@@ -84,8 +84,9 @@ public class TestData {
             AccountEntity accountEntity = new AccountEntity();
             accountEntity.setBalance(0L);
             accountEntity.setType(account);
-            accountEntity.setAbsolute_limit(0L);
-            accountEntity.setUser_uuid(user.getUuid());
+            accountEntity.setAbsoluteLimit(0L);
+            accountEntity.setUuid(user.getUuid());
+            accountEntity.setUserId(user.getUuid());
             accountEntity.setIBAN(new Iban.Builder()
                     .countryCode(CountryCode.NL)
                     .bankCode("INHO")
@@ -98,15 +99,14 @@ public class TestData {
     private void generateTransactions() {
 
         List<UserEntity> users = allusers.findAll();
-        Random rnd = new Random();
         for (UserEntity currentuser : users) {
             TransactionEntity transaction = new TransactionEntity();
             UserEntity randomuser = users.get(new Random().nextInt(users.size()));
             transaction.setAmount(random.nextInt((1000 - 100) + 1) + 10);
-            transaction.setAccount_from(allaccounts.getOne(currentuser.getUuid()).getUuid()); // moet account entity pakken
+            transaction.setAccountFrom(allaccounts.getOne(currentuser.getUuid()).getUuid()); // moet account entity pakken
             transaction.setDate(new Date());
             transaction.setUser_id(randomuser.getUuid());
-            transaction.setAccount_to(randomuser.getUuid());
+            transaction.setAccountTo(randomuser.getUuid());
             if (currentuser == randomuser) {
                 continue;
             }
