@@ -5,7 +5,10 @@
  */
 package io.swagger.api.interfaces;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.model.Account;
+import io.swagger.responses.account.AccountListResponse;
+import io.swagger.responses.account.AccountSingleResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -24,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @Validated
@@ -37,7 +42,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    String accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset);
+    ResponseEntity<List<AccountListResponse>> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
 
 
     @Operation(summary = "Returns single account using IBAN", description = "", security = {
@@ -48,7 +53,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/IBAN/{IBAN}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    String accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN);
+    ResponseEntity<AccountSingleResponse> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN) throws IOException;
 
 
     @Operation(summary = "Change account data", description = "", security = {
@@ -59,7 +64,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/IBAN/{IBAN}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
-    String accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN, @RequestBody Account body);
+    ResponseEntity<AccountSingleResponse> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN, @RequestBody Account body) throws IOException;
 
 
     @Operation(summary = "Returns all accounts on user id", description = "", security = {
@@ -70,7 +75,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/id/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    String accountsIdIdGet(@Parameter(in = ParameterIn.PATH, description = "The unique id of the user is taken", required=true, schema=@Schema()) @PathVariable("id") String id);
+    ResponseEntity<List<AccountListResponse>> accountsIdIdGet(@Parameter(in = ParameterIn.PATH, description = "The unique id of the user is taken", required=true, schema=@Schema()) @PathVariable("id") String id) throws IOException;
 
 
     @Operation(summary = "Creating a new account", description = "", security = {
@@ -82,7 +87,7 @@ public interface AccountsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    String accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required=true, schema=@Schema()) @Valid @RequestBody Account body);
+    ResponseEntity<AccountSingleResponse> accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required=true, schema=@Schema()) @Valid @RequestBody Account body) throws IOException;
 
 
     @Operation(summary = "Returns single account using IBAN", description = "", security = {
@@ -93,7 +98,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/search",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Account> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned" ,schema=@Schema()) @Valid @RequestParam(value = "name", required = false) String name);
+    ResponseEntity<AccountSingleResponse> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned" ,schema=@Schema()) @Valid @RequestParam(value = "name", required = false) String name) throws IOException;
 
 }
 

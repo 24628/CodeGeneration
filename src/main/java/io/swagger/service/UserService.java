@@ -36,7 +36,7 @@ public class UserService {
     @Autowired
     Validator validator;
 
-    public void addUser(User body) {
+    public UserEntity addUser(User body) {
         validator.NeedsToBeEmployee();
 
         validator.CanCreateUser(body.getName(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L,body.getName());
@@ -44,7 +44,7 @@ public class UserService {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(body.getName());
         userEntity.setEmail(body.getEmail());
-        userEntity.setTransaction_limit(body.getTransactionLimit());
+        userEntity.setTransactionLimit(body.getTransactionLimit());
         userEntity.setPassword(passwordEncoder.encode(body.getPassword()));
         userEntity.setRole(Roles.valueOf(body.getRole()));
 
@@ -54,7 +54,7 @@ public class UserService {
         dayLimit.setUserId(userEntity.getUuid());
 
         dayLimitDTO.save(dayLimit);
-        userDTO.save(userEntity);
+        return userDTO.save(userEntity);
     }
 
     public UserEntity findUserByName(String username) {
@@ -73,7 +73,7 @@ public class UserService {
         return userDTO.getOne(UUID.fromString(uuid));
     }
 
-    public void updateUser(String uuid, User body) throws InvalidPermissionsException{
+    public UserEntity updateUser(String uuid, User body) throws InvalidPermissionsException{
         UserEntity userToEdit = userDTO.getOne(UUID.fromString(uuid));
         DayLimitEntity dayLimit = dayLimitDTO.getByUserId(userToEdit.getUuid());
 
@@ -84,8 +84,8 @@ public class UserService {
         dayLimit.setCurrent(0L);
         dayLimitDTO.save(dayLimit);
 
-        userToEdit.setTransaction_limit(body.getTransactionLimit());
-        userDTO.save(userToEdit);
+        userToEdit.setTransactionLimit(body.getTransactionLimit());
+        return userDTO.save(userToEdit);
     }
 
     public void deleteUser(String uuid) {

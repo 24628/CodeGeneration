@@ -1,18 +1,8 @@
 package io.swagger.configuration;
 
-import io.swagger.enums.AccountType;
-import io.swagger.enums.Roles;
+
 import io.swagger.helpers.TestData;
-import io.swagger.model.Entity.AccountEntity;
-import io.swagger.model.Entity.DayLimitEntity;
 import io.swagger.model.Entity.TransactionEntity;
-import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.Transaction;
-import io.swagger.model.User;
-import io.swagger.repository.IAccountDTO;
-import io.swagger.repository.IUserDTO;
-import io.swagger.service.AccountService;
-import io.swagger.service.DayLimitService;
 import io.swagger.service.TransactionService;
 import io.swagger.service.UserService;
 import org.iban4j.CountryCode;
@@ -35,7 +25,7 @@ import java.util.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @Configuration
 public class SwaggerUiConfiguration implements WebMvcConfigurer {
-    
+
 
     @Autowired
     private TestData testData;
