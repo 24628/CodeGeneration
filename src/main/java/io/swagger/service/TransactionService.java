@@ -112,4 +112,8 @@ public class TransactionService {
 
         return transactionRepository.findAll();
     }
+
+    public void generateTransaction(TransactionEntity transaction) {
+        transactionRepository.save(transaction);
+    }
 }
