@@ -30,7 +30,7 @@ public class RegisterApiController implements RegisterApi {
 
     private static final Logger log = LoggerFactory.getLogger(RegisterApiController.class);
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final HttpServletRequest request;
 
@@ -38,8 +38,7 @@ public class RegisterApiController implements RegisterApi {
     private RegisterService registerService;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public RegisterApiController(ObjectMapper objectMapper, HttpServletRequest request) {
-        this.objectMapper = objectMapper;
+    public RegisterApiController(HttpServletRequest request) {
         this.request = request;
     }
 

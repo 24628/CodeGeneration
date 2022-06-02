@@ -42,6 +42,14 @@ public class User {
     @JsonProperty("transactionLimit")
     private Long transactionLimit = null;
 
+    public User(String username, String name, String email, String password, long dayLimit) {
+        this.username = username;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.dayLimit = dayLimit;
+    }
+
     public User id(Integer id) {
         this.id = id;
         return this;

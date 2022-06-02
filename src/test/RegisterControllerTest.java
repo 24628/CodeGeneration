@@ -1,71 +1,70 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import io.swagger.api.RegisterApiController;
 import io.swagger.enums.Roles;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.repository.IUserDTO;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import io.swagger.model.User;
+import io.swagger.service.auth.RegisterService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.testng.annotations.BeforeMethod;
+import org.springframework.web.context.WebApplicationContext;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith({SpringExtension.class})
+@SpringBootTest(classes = {RegisterApiController.class, ServletWebServerFactoryAutoConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 public class RegisterControllerTest {
 
+    @Autowired
+    private WebApplicationContext context;
+    @Autowired
     private MockMvc mockMvc;
 
-    ObjectMapper objectMapper = new ObjectMapper();
-    ObjectWriter objectWriter = objectMapper.writer();
+    @MockBean
+    private RegisterService registerService;
 
-    @Mock
-    private IUserDTO iUserDTO;
-
-    @InjectMocks
-    private RegisterApiController registerApiController;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     UserEntity user1 = new UserEntity(Roles.CUSTOMER, "johndoe", "john", "john@example.com", "$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu", 2000L);
-    UserEntity user2 = new UserEntity(Roles.EMPLOYEE, "johndoe2", "john2", "john2@example.com", "$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu", 2000L);
+    User user2 = new User("johndoe", "john", "johndoe@example.com", "password", 5000L);
 
-    @BeforeMethod
-    public void setUp(){
-        MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders
-                .standaloneSetup(registerApiController)
+    @BeforeEach
+    void init() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(context)
+                .apply(springSecurity())
                 .build();
     }
 
     @Test
     public void registerUserWithSuccess() throws Exception {
-//        Mockito.when(iUserDTO.save(user1)).thenReturn(user1);
 
-        String content = objectWriter.writeValueAsString(user1);
+        String json = "{\"username\":\"johndoe\",\"name\":\"john\",\"email\":\"johndoe@example.com\",\"password\":\"password\",\"dayLimit\":5000,}";
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(content);
-
-        mockMvc.perform(mockRequest)
+        String content = mapper.writeValueAsString(user2);
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
                 .andExpect((ResultMatcher) jsonPath("$.userEntity.name", is("johndoe")));
+
     }
 }
