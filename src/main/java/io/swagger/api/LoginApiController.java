@@ -1,14 +1,11 @@
 package io.swagger.api;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import io.swagger.annotations.Api;
-import io.swagger.api.exceptions.SerializeException;
 import io.swagger.api.interfaces.LoginApi;
 import io.swagger.helpers.AuthResult;
 import io.swagger.model.LoginBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.responses.JwtTokenResponse;
+import io.swagger.responses.auth.JwtTokenResponse;
 import io.swagger.service.auth.LoginService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -45,22 +42,15 @@ public class LoginApiController implements LoginApi {
         this.request = request;
     }
 
-    public ResponseEntity<JwtTokenResponse> loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginBody body) {
-        try {
-            AuthResult result = loginService.login(body.getUsername(), body.getPassword());
+    public ResponseEntity<JwtTokenResponse> loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginBody body) throws IOException {
+        AuthResult result = loginService.login(body.getUsername(), body.getPassword());
 
-            return new ResponseEntity<JwtTokenResponse>(
-                objectMapper.readValue(
-                    objectMapper.writeValueAsString(
-                        new JwtTokenResponse(HttpStatus.CREATED, result.getToken(), result.getUser())),
-                    JwtTokenResponse.class),
-                HttpStatus.OK
-            );
-
-        } catch (IOException e) {
-            log.error("Couldn't serialize response for content type application/json", e);
-            throw new SerializeException();
-        }
+        return new ResponseEntity<JwtTokenResponse>(
+            objectMapper.readValue(
+                objectMapper.writeValueAsString(
+                    new JwtTokenResponse(HttpStatus.CREATED, result.getToken(), result.getUser())),
+                JwtTokenResponse.class),
+            HttpStatus.OK
+        );
     }
-
 }

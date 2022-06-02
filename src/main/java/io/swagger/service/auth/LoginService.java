@@ -46,12 +46,9 @@ public class LoginService {
             throw new InvalidUsernameOrPassword();
         }
 
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());
-        } catch (AuthenticationException e) {
-            throw new AuthorizationException();
-        }
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());
+
         return new AuthResult(token, user);
     }
 }

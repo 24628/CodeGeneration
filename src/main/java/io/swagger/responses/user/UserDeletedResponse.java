@@ -1,4 +1,4 @@
-package io.swagger.responses;
+package io.swagger.responses.user;
 
 import org.springframework.http.HttpStatus;
 

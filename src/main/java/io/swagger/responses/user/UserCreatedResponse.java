@@ -1,12 +1,11 @@
-package io.swagger.responses;
+package io.swagger.responses.user;
 
 import org.springframework.http.HttpStatus;
 
-public class AccountCreatedResponse {
-
+public class UserCreatedResponse {
     public final HttpStatus code;
 
-    public AccountCreatedResponse(HttpStatus code) {
+    public UserCreatedResponse(HttpStatus code) {
         this.code = code;
     }
 
@@ -14,3 +13,4 @@ public class AccountCreatedResponse {
         return String.format("{code:%s,{Created successfully}}", code.value());
     }
 }
+

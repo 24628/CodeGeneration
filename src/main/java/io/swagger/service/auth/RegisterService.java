@@ -48,26 +48,24 @@ public class RegisterService {
         String token = "";
         UserEntity user = new UserEntity();
 
-            validator.CanCreateUser(body.getUsername(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L,body.getName());
+        validator.CanCreateUser(body.getUsername(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L,body.getName());
 
-            user.setEmail(body.getEmail());
-            user.setUsername(body.getUsername());
-            user.setPassword(passwordEncoder.encode(body.getPassword()));
-            user.setRole(Roles.CUSTOMER);
-            user.setTransaction_limit(500L);
-            user.setName(body.getName());
-            userDTO.save(user);
+        user.setEmail(body.getEmail());
+        user.setUsername(body.getUsername());
+        user.setPassword(passwordEncoder.encode(body.getPassword()));
+        user.setRole(Roles.CUSTOMER);
+        user.setTransaction_limit(500L);
+        user.setName(body.getName());
+        userDTO.save(user);
 
-            System.out.println(user.getUuid());
+        DayLimitEntity dayLimit = new DayLimitEntity();
+        dayLimit.setActualLimit(body.getDayLimit());
+        dayLimit.setCurrent(0L);
+        dayLimit.setUserId(user.getUuid());
+        dayLimitDTO.save(dayLimit);
 
-            DayLimitEntity dayLimit = new DayLimitEntity();
-            dayLimit.setActualLimit(body.getDayLimit());
-            dayLimit.setCurrent(0L);
-            dayLimit.setUserId(user.getUuid());
-            dayLimitDTO.save(dayLimit);
-
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword()));
-            token = jwtTokenProvider.createToken(body.getUsername(), userDTO.findByUsername(body.getUsername()).getRole());
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword()));
+        token = jwtTokenProvider.createToken(body.getUsername(), userDTO.findByUsername(body.getUsername()).getRole());
 
         return new AuthResult(token, user);
     }

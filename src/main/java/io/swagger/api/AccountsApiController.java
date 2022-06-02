@@ -6,7 +6,7 @@ import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.Entity.AccountEntity;
-import io.swagger.responses.AccountCreatedResponse;
+import io.swagger.responses.account.AccountCreatedResponse;
 import io.swagger.service.AccountService;
 import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;

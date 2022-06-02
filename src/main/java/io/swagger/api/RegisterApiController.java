@@ -1,12 +1,9 @@
 package io.swagger.api;
 
 import io.swagger.annotations.Api;
-import io.swagger.api.exceptions.EntityAlreadyExistException;
-import io.swagger.api.exceptions.SerializeException;
-import io.swagger.api.exceptions.ValidationException;
 import io.swagger.api.interfaces.RegisterApi;
 import io.swagger.helpers.AuthResult;
-import io.swagger.responses.JwtTokenResponse;
+import io.swagger.responses.auth.JwtTokenResponse;
 import io.swagger.model.RegisterBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.auth.RegisterService;
@@ -45,28 +42,15 @@ public class RegisterApiController implements RegisterApi {
         this.request = request;
     }
 
-    public ResponseEntity<JwtTokenResponse> registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required = true, schema = @Schema()) @Valid @RequestBody RegisterBody body) {
+    public ResponseEntity<JwtTokenResponse> registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required = true, schema = @Schema()) @Valid @RequestBody RegisterBody body) throws IOException {
+        AuthResult result = registerService.register(body);
 
-        try {
-            AuthResult result = registerService.register(body);
-
-            return new ResponseEntity<JwtTokenResponse>(
-                objectMapper.readValue(
-                    objectMapper.writeValueAsString(
-                        new JwtTokenResponse(HttpStatus.CREATED, result.getToken(), result.getUser())),
-                    JwtTokenResponse.class),
-                HttpStatus.CREATED
-            );
-
-        } catch (IOException e) {
-            log.error("Couldn't serialize response for content type application/json", e);
-            throw new SerializeException();
-        }catch (ValidationException e) {
-            System.out.println("[RegisterApiController] Register Failure: " + e.getMessage());
-            return new ResponseEntity("{\"error\":\""+e.getMessage()+"\"}", HttpStatus.BAD_REQUEST);
-        }catch (EntityAlreadyExistException e) {
-            System.out.println("[RegisterApiController] Register Failure: " + e.getMessage());
-            return new ResponseEntity("{\"error\":\""+e.getMessage()+"\"}", HttpStatus.CONFLICT);
-        }
+        return new ResponseEntity<JwtTokenResponse>(
+            objectMapper.readValue(
+                objectMapper.writeValueAsString(
+                    new JwtTokenResponse(HttpStatus.CREATED, result.getToken(), result.getUser())),
+                JwtTokenResponse.class),
+            HttpStatus.CREATED
+        );
     }
 }

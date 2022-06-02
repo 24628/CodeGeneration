@@ -6,7 +6,7 @@
 package io.swagger.api.interfaces;
 
 import io.swagger.model.RegisterBody;
-import io.swagger.responses.JwtTokenResponse;
+import io.swagger.responses.auth.JwtTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @Validated
@@ -36,7 +37,7 @@ public interface RegisterApi {
         produces = { "application/json" },
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required=true, schema=@Schema()) @Valid @RequestBody RegisterBody body);
+    ResponseEntity registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required=true, schema=@Schema()) @Valid @RequestBody RegisterBody body) throws IOException;
 
 }
 
