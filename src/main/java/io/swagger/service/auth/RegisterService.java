@@ -54,7 +54,7 @@ public class RegisterService {
         user.setUsername(body.getUsername());
         user.setPassword(passwordEncoder.encode(body.getPassword()));
         user.setRole(Roles.CUSTOMER);
-        user.setTransaction_limit(500L);
+        user.setTransactionLimit(500L);
         user.setName(body.getName());
         userDTO.save(user);
 

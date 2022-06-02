@@ -6,6 +6,8 @@
 package io.swagger.api.interfaces;
 
 import io.swagger.model.*;
+import io.swagger.responses.transactions.TransactionListResponse;
+import io.swagger.responses.transactions.TransactionSingleResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
@@ -37,7 +40,7 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    String transactionsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset);
+    ResponseEntity<List<TransactionListResponse>> transactionsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
 
 
     @Operation(summary = "creates a new transaction", description = "creates a new transaction", security = {
@@ -48,7 +51,7 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    String transactionsPost(@RequestBody Transaction body);
+    ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody Transaction body) throws IOException;
 
 }
 

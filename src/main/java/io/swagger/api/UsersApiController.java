@@ -1,13 +1,13 @@
 package io.swagger.api;
 
 import io.swagger.annotations.Api;
-import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.api.interfaces.UsersApi;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.responses.user.UserCreatedResponse;
 import io.swagger.responses.user.UserDeletedResponse;
+import io.swagger.responses.user.UserListResponse;
+import io.swagger.responses.user.UserSingleResponse;
 import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,74 +41,70 @@ public class UsersApiController implements UsersApi {
 
     @Autowired
     private UserService userService;
+
     @org.springframework.beans.factory.annotation.Autowired
     public UsersApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
     }
 
-    public ResponseEntity<String> usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) {
-        try {
-            List<UserEntity> users = userService.getUsers();
-            final ByteArrayOutputStream out = new ByteArrayOutputStream();
-            objectMapper.writeValue(out, users);
-            final byte[] data = out.toByteArray();
-            return ResponseEntity.ok(new String(data));
-        } catch (IOException e) {
-            log.error("Couldn't serialize response for content type application/json", e);
-        } catch (InvalidPermissionsException e) {
-            System.out.println("[UsersApiController] User not authorised to access this");
-            return ResponseEntity.status(403).body( "{\"error\": \" User not authorised to access this\"}");
-        }
-        return  ResponseEntity.noContent().build();
+    public ResponseEntity<List<UserListResponse>> usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
+        List<UserEntity> users = userService.getUsers();
+
+        return new ResponseEntity<List<UserListResponse>>(
+                objectMapper.readValue(
+                        objectMapper.writeValueAsString(
+                                new UserListResponse(HttpStatus.OK, users)),
+                        List.class),
+                HttpStatus.OK
+        );
     }
 
-    public String usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id) {
-        try {
-            userService.deleteUser(id);
-            return objectMapper.writeValueAsString(new UserDeletedResponse(HttpStatus.ACCEPTED));
-        } catch (IOException e) {
-            log.error("Couldn't serialize response for content type application/json", e);
-            return "oops";
-        }
+    public ResponseEntity<UserDeletedResponse> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id) throws IOException {
+        userService.deleteUser(id);
+
+        return new ResponseEntity<UserDeletedResponse>(
+                objectMapper.readValue(
+                        objectMapper.writeValueAsString(
+                                new UserDeletedResponse(HttpStatus.OK)),
+                        UserDeletedResponse.class),
+                HttpStatus.OK
+        );
     }
 
-    public String usersIdGet(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user", required = true, schema = @Schema()) @PathVariable("id") String id) {
+    public ResponseEntity<UserSingleResponse> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user", required = true, schema = @Schema()) @PathVariable("id") String id) throws IOException {
+        UserEntity user = userService.getUserById(id);
 
-        try {
-            UserEntity users = userService.getUserById(id);
-
-            final ByteArrayOutputStream out = new ByteArrayOutputStream();
-            objectMapper.writeValue(out, users);
-            final byte[] data = out.toByteArray();
-            return new String(data);
-        } catch (IOException e) {
-            log.error("Couldn't serialize response for content type application/json", e);
-            return "oops";
-        }
+        return new ResponseEntity<UserSingleResponse>(
+                objectMapper.readValue(
+                        objectMapper.writeValueAsString(
+                                new UserSingleResponse(HttpStatus.OK, user)),
+                        UserSingleResponse.class),
+                HttpStatus.OK
+        );
 
     }
 
-    public String usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id, @RequestBody User body) {
-
-        try {
-            userService.updateUser(id, body);
-            return objectMapper.writeValueAsString(new UserDeletedResponse(HttpStatus.ACCEPTED));
-        } catch (IOException e) {
-            log.error("Couldn't serialize response for content type application/json", e);
-            return "oops";
-        }
+    public ResponseEntity<UserSingleResponse> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id, @RequestBody User body) throws IOException {
+            UserEntity user =  userService.updateUser(id, body);
+            return new ResponseEntity<UserSingleResponse>(
+                    objectMapper.readValue(
+                            objectMapper.writeValueAsString(
+                                    new UserSingleResponse(HttpStatus.OK, user)),
+                            UserSingleResponse.class),
+                    HttpStatus.OK
+            );
     }
 
-    public String usersPost(@RequestBody User body) {
-
-        try {
-            userService.addUser(body);
-            return this.objectMapper.writeValueAsString(new UserCreatedResponse(HttpStatus.CREATED));
-        } catch (IOException e) {
-            log.error("Couldn't serialize response for content type application/json", e);
-            return "error";
-        }
+    public ResponseEntity<UserSingleResponse> usersPost(@RequestBody User body) throws IOException {
+            UserEntity user=  userService.addUser(body);
+            return new ResponseEntity<UserSingleResponse>(
+                    objectMapper.readValue(
+                            objectMapper.writeValueAsString(
+                                    new UserSingleResponse(HttpStatus.CREATED, user)),
+                            UserSingleResponse.class),
+                    HttpStatus.CREATED
+            );
     }
 
 }

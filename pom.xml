@@ -152,6 +152,10 @@
             <artifactId>iban4j</artifactId>
             <version>3.2.3-RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
 
     </dependencies>
 </project>

@@ -57,7 +57,7 @@ public class SwaggerUiConfiguration implements WebMvcConfigurer {
         userEntity.setEmail("admin@example.com");
         userEntity.setPassword("$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu"); //password
         userEntity.setRole(Roles.BANK);
-        userEntity.setTransaction_limit(0L);
+        userEntity.setTransactionLimit(0L);
 
         userService.generateUsers(userEntity);
 
@@ -71,8 +71,8 @@ public class SwaggerUiConfiguration implements WebMvcConfigurer {
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setBalance(0L);
         accountEntity.setType(AccountType.ATM);
-        accountEntity.setAbsolute_limit(0L);
-        accountEntity.setUser_uuid(userEntity.getUuid());
+        accountEntity.setAbsoluteLimit(0L);
+        accountEntity.setUserId(userEntity.getUuid());
         accountEntity.setIBAN("NL01INHO0000000001");
 
         accountService.generateAccount(accountEntity);

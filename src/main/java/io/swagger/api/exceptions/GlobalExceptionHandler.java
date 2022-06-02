@@ -1,8 +1,6 @@
 package io.swagger.api.exceptions;
 
-import io.swagger.model.Entity.ErrorEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,16 +12,16 @@ import java.io.IOException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ErrorEntity handleBadInput(IllegalArgumentException e) {
-        return new ErrorEntity(e.getMessage(), "invalid username/password");
-    }
-
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(IOException.class)
     public ResponseStatusException handleUserNotFound(IOException e) {
         throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseStatusException handleUserNotFound(EntityNotFoundException e) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
@@ -68,22 +66,9 @@ public class GlobalExceptionHandler {
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
-
-
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler(ResponseStatusException.class)
-//    public void handleBadUsernameOrPassword() {
-//        throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid username/password");
-//    }
-
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseStatusException handleAccessDenied() {
         throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Insufficient rights");
     }
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    @ExceptionHandler(ResponseStatusException.class)
-//    public void handleInternalServerError(String message) {
-//        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "internal server error");
-//    }
 }
