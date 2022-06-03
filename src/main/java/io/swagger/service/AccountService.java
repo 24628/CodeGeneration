@@ -80,7 +80,7 @@ public class AccountService {
     public List<AccountEntity> getAccounts() {
         validator.NeedsToBeEmployee();
 
-        return accountRepository.getAllByTypeIsNot("ATM");
+        return accountRepository.getAllByTypeIsNot(AccountType.ATM);
     }
 
 
