@@ -84,5 +84,15 @@ public interface UsersApi {
         method = RequestMethod.POST)
     ResponseEntity<UserSingleResponse> usersPost(@RequestBody User body) throws IOException;
 
+    @Operation(summary = "", description = "All users with no accounts", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "creates a new user based on the fields of the user after checking the inputand the permissions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
+    })
+    @RequestMapping(value = "/users/accounts",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<UserListResponse>>  usersGetAllUserWithNoAccount(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
+
 }
 

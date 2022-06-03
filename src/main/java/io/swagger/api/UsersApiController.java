@@ -107,4 +107,17 @@ public class UsersApiController implements UsersApi {
             );
     }
 
+    @Override
+    public ResponseEntity<List<UserListResponse>> usersGetAllUserWithNoAccount(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
+        List<UserEntity> foundUsers = userService.getUsersWithNoAccount();
+
+        return new ResponseEntity<List<UserListResponse>>(
+                objectMapper.readValue(
+                        objectMapper.writeValueAsString(
+                                new UserListResponse(HttpStatus.OK, foundUsers)),
+                        List.class),
+                HttpStatus.OK
+        );
+    }
+
 }

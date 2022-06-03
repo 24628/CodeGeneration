@@ -4,12 +4,14 @@ import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.enums.Roles;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.User;
+import io.swagger.repository.IAccountDTO;
 import io.swagger.repository.IUserDTO;
 import io.swagger.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +20,9 @@ public class UserService {
 
     @Autowired
     private IUserDTO userDTO;
+
+    @Autowired
+    private IAccountDTO accountDTO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -80,4 +85,21 @@ public class UserService {
     }
 
     public void generateUsers(UserEntity u) { userDTO.save(u); }
+
+
+    public List<UserEntity> getUsersWithNoAccount() {
+        List<UserEntity> userEntityList = userDTO.findAllByRoleIs(Roles.CUSTOMER);
+        ArrayList<UserEntity> foundUsers = new ArrayList<>();
+
+        for (UserEntity user : userEntityList) {
+            if(!accountDTO.findByUserIdIs(user.getUuid())){
+                foundUsers.add(user);
+            }
+
+            if(foundUsers.size() > 10)
+                break;
+        }
+
+        return foundUsers;
+    }
 }
