@@ -23,6 +23,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,12 +53,16 @@ public class TransactionService {
 
     @Autowired
     Validator validator;
+
     public TransactionEntity addTransaction(TransactionRequest body) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
-        AccountEntity accountFrom = accountRepository.getAccountByIBAN(body.getFrom());
-        AccountEntity accountTo = accountRepository.getAccountByIBAN(body.getTo());
+        AccountEntity accountFrom = accountRepository.getOne(UUID.fromString(body.getFrom()));
+        AccountEntity accountTo = accountRepository.getOne(UUID.fromString(body.getTo()));
+
+        System.out.println(accountFrom.getUuid());
+        System.out.println(accountTo.getUuid());
 
         if (accountFrom == null)
             throw new EntityNotFoundException("Account from ");
@@ -62,16 +73,16 @@ public class TransactionService {
         UserEntity userFrom = userService.getUserById(accountFrom.getUserId().toString());
 
         //amount to deposit has to be higher then 0
-        if (body.getAmount() > 1)
+        if (body.getAmount() < 1)
             throw new ValidationException("Amount has to be higher then 0");
 
         //de account balance nadat de deposit er van afgaat mag niet lager zijn dan de absolute limit van het account
-        if ((accountFrom.getBalance() - (long) body.getAmount()) > accountFrom.getAbsoluteLimit())
+        if ((accountFrom.getBalance() - (long) body.getAmount()) < accountFrom.getAbsoluteLimit())
             throw new ValidationException("the account value will go below the absolute limit");
 
         //als left to transact 0 is dan zjn we over de limit van de day limit en mogen er geen transactie limits gemaakt worden
         Long daylimit = CheckdayLimit(userFrom);
-        if( userFrom.getDayLimit() > daylimit){
+        if (userFrom.getDayLimit() > daylimit) {
             throw new DayLimitReachedException(daylimit);
         }
 
@@ -132,12 +143,12 @@ public class TransactionService {
         UserEntity bank = userDTO.findUserEntityByRoleIs(Roles.BANK);
 
 
-        if ((accountEntity.getBalance() - (long) body.getAmount()) > accountEntity.getAbsoluteLimit())
+        if ((accountEntity.getBalance() - (long) body.getAmount()) < accountEntity.getAbsoluteLimit())
             throw new ValidationException("the account value will go below the absolute limit");
         //als left to transact 0 is dan zjn we over de limit van de day limit en mogen er geen transactie limits gemaakt worden
 
         Long daylimit = CheckdayLimit(userEntity);
-        if( body.getAmount() > daylimit){
+        if (body.getAmount() > daylimit) {
             throw new DayLimitReachedException(daylimit);
         }
 
@@ -158,14 +169,18 @@ public class TransactionService {
 
         return body.getAmount();
     }
-    private long CheckdayLimit(UserEntity user){
+
+    // de dag van vandaag
+    private long CheckdayLimit(UserEntity user) {
         long daylimit = 0;
-        List<TransactionEntity> transactions = transactionDTO.getAllByAccountFrom(user.getUuid());
-        for(var totaal :transactions){
-            daylimit += totaal.getAmount() ;
+        List<TransactionEntity> transactions = transactionDTO.getAllByAccountFromAndDate(user.getUuid(), LocalDateTime.from(LocalDate.now(ZoneId.of("Europe/Paris")).atStartOfDay(ZoneId.of("Europe/Paris"))));
+        for (var totaal : transactions) {
+            daylimit += totaal.getAmount();
         }
-        return daylimit;
+
+        return user.getDayLimit() - daylimit;
     }
+
     public Long depositMoney(AtmRequest body) {
         ValidateAtmHelper res = validator.isAllowedToAtm(body);
         AccountEntity accountEntity = res.getAccountEntity();
@@ -196,13 +211,13 @@ public class TransactionService {
         AccountEntity accountEntityFrom = accountRepository.getAccountByIBAN(body.getIbanFrom());
         AccountEntity accountEntityTo = accountRepository.getAccountByIBAN(body.getIbanTo());
 
-        if(accountEntityTo == null && accountEntityFrom == null)
+        if (accountEntityTo == null && accountEntityFrom == null)
             return transactionRepository.findAllByAmountBetweenAndDateBetween(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter());
 
-        if(accountEntityTo == null)
+        if (accountEntityTo == null)
             return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFrom(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityFrom.getUuid());
 
-        if(accountEntityFrom == null)
+        if (accountEntityFrom == null)
             return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountTo(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityTo.getUuid());
 
         return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFromAndAccountTo(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityFrom.getUuid(), accountEntityTo.getUuid());

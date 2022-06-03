@@ -14,7 +14,8 @@ import java.util.UUID;
 @Repository
 public interface ITransactionDTO extends JpaRepository<TransactionEntity, UUID> {
 
-    List<TransactionEntity> getAllByAccountFrom(UUID uuid);
+    List<TransactionEntity> getAllByAccountFromAndDate(UUID accountFrom, LocalDateTime date);
+    List<TransactionEntity> getAllByAccountFrom(UUID account);
 
     List<TransactionEntity> findAllBy();
 

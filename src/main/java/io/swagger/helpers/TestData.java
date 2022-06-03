@@ -47,7 +47,7 @@ public class TestData {
     }
 
     private void generateUsers() {
-        String[] names = {"Bob", "Karel", "hans", "piet"};
+        String[] names = {"bob", "karel", "hans", "piet"};
         for (String user : names) {
             UserEntity userEntity = new UserEntity();
             userEntity.setUsername(user);
@@ -85,12 +85,12 @@ public class TestData {
         AccountType[] accounttypes = new AccountType[]{AccountType.SAVING, AccountType.NORMAL};
         for (var account : accounttypes) {
             AccountEntity accountEntity = new AccountEntity();
-            accountEntity.setBalance(0L);
+            accountEntity.setBalance(1000L);
             accountEntity.setType(account);
             accountEntity.setAbsoluteLimit(0L);
             accountEntity.setUuid(user.getUuid());
             accountEntity.setUserId(user.getUuid());
-            accountEntity.setAbsoluteLimit(1000L);
+            accountEntity.setAbsoluteLimit(0L);
             accountEntity.setIBAN(new Iban.Builder()
                     .countryCode(CountryCode.NL)
                     .bankCode("INHO")
