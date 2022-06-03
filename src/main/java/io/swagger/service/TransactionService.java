@@ -1,6 +1,8 @@
 package io.swagger.service;
 
+import io.swagger.api.exceptions.DayLimitReachedException;
 import io.swagger.api.exceptions.EntityNotFoundException;
+import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
@@ -34,11 +36,21 @@ public class TransactionService {
     private UserService userService;
 
     @Autowired
+    ITransactionDTO transactionDTO;
+    @Autowired
     IUserDTO userDTO;
 
     @Autowired
     private IAccountDTO accountRepository;
 
+    private long CheckdayLimit(UserEntity user){
+        long daylimit = 0;
+        List<TransactionEntity> transactions = transactionDTO.getAllByAccountFrom(user.getUuid());
+        for(var totaal :transactions){
+            daylimit += totaal.getAmount() ;
+        }
+        return daylimit;
+    }
     @Autowired
     Validator validator;
     public TransactionEntity addTransaction(TransactionRequest body) {
@@ -65,8 +77,10 @@ public class TransactionService {
             throw new ValidationException("the account value will go below the absolute limit");
 
         //als left to transact 0 is dan zjn we over de limit van de day limit en mogen er geen transactie limits gemaakt worden
-//        if((float) body.getAmount() > leftToTransact)
-//            throw new ValidationException("over the daily transaction limit");
+        Long daylimit = CheckdayLimit(userFrom);
+        if( userFrom.getDayLimit() > CheckdayLimit(userFrom)){
+            throw new DayLimitReachedException(daylimit);
+        }
 
         // als de body hoger is dan de transactie limit dan gooien we een error
         if ((float) body.getAmount() > userFrom.getTransactionLimit())
