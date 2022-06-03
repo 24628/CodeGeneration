@@ -5,10 +5,9 @@ import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.Roles;
 import io.swagger.helpers.ValidateAtmHelper;
-import io.swagger.model.Atm;
+import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.User;
 import io.swagger.repository.IAccountDTO;
 import io.swagger.repository.IUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +61,7 @@ public class Validator {
             throw new InvalidPermissionsException("no permissions to access this");
     }
 
-    public ValidateAtmHelper isAllowedToAtm(Atm body){
+    public ValidateAtmHelper isAllowedToAtm(AtmRequest body){
         UserEntity userEntity = userDTO.findUserEntitiesByPinCode(body.getPinCode());
         AccountEntity accountEntity = accountRepository.getAccountByIBAN(body.getIban());
 

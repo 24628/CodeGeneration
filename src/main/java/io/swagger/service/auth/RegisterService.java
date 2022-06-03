@@ -6,7 +6,7 @@ import io.swagger.enums.Roles;
 import io.swagger.helpers.AuthResult;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.RegisterBody;
+import io.swagger.model.Request.RegisterRequest;
 import io.swagger.repository.IUserDTO;
 import io.swagger.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class RegisterService {
     @Autowired
     Validator validator;
 
-    public AuthResult register(RegisterBody body) throws AuthenticationException, ValidationException, EntityAlreadyExistException
+    public AuthResult register(RegisterRequest body) throws AuthenticationException, ValidationException, EntityAlreadyExistException
     {
         String token = "";
         UserEntity user = new UserEntity();

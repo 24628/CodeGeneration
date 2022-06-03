@@ -3,7 +3,7 @@ package io.swagger.service;
 import io.swagger.api.exceptions.*;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
-import io.swagger.model.Account;
+import io.swagger.model.Request.AccountRequest;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.validator.Validator;
@@ -11,11 +11,9 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import io.swagger.repository.IAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -34,7 +32,7 @@ public class AccountService {
     Validator validator;
 
     //Check if the user has already a saving // normal account
-    public AccountEntity addAccount(Account body) {
+    public AccountEntity addAccount(AccountRequest body) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
@@ -103,7 +101,7 @@ public class AccountService {
         return accountRepository.getAllByUuidIs(userid);
     }
 
-    public AccountEntity updateAccountByIBAN(Account body, String IBAN) {
+    public AccountEntity updateAccountByIBAN(AccountRequest body, String IBAN) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 

@@ -1,4 +1,4 @@
-package io.swagger.model;
+package io.swagger.model.Request;
 
 import java.util.Objects;
 
@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 
 
-public class Account {
+public class AccountRequest {
     @JsonProperty("IBAN")
     private String IBAN = null;
 
@@ -41,7 +41,7 @@ public class Account {
         this.IBAN = IBAN;
     }
 
-    public Account type(String type) {
+    public AccountRequest type(String type) {
         this.type = type;
         return this;
     }
@@ -61,7 +61,7 @@ public class Account {
         this.type = type;
     }
 
-    public Account userId(String userId) {
+    public AccountRequest userId(String userId) {
         this.userId = userId;
         return this;
     }
@@ -81,7 +81,7 @@ public class Account {
         this.userId = userId;
     }
 
-    public Account absoluteLimit(Long absoluteLimit) {
+    public AccountRequest absoluteLimit(Long absoluteLimit) {
         this.absoluteLimit = absoluteLimit;
         return this;
     }
@@ -111,11 +111,11 @@ public class Account {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Account account = (Account) o;
-        return Objects.equals(this.IBAN, account.IBAN) &&
-                Objects.equals(this.type, account.type) &&
-                Objects.equals(this.userId, account.userId) &&
-                Objects.equals(this.absoluteLimit, account.absoluteLimit);
+        AccountRequest accountRequest = (AccountRequest) o;
+        return Objects.equals(this.IBAN, accountRequest.IBAN) &&
+                Objects.equals(this.type, accountRequest.type) &&
+                Objects.equals(this.userId, accountRequest.userId) &&
+                Objects.equals(this.absoluteLimit, accountRequest.absoluteLimit);
     }
 
     @Override

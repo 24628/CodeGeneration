@@ -3,7 +3,7 @@ package io.swagger.api;
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.LoginApi;
 import io.swagger.helpers.AuthResult;
-import io.swagger.model.LoginBody;
+import io.swagger.model.Request.LoginRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.responses.auth.JwtTokenResponse;
 import io.swagger.service.auth.LoginService;
@@ -42,7 +42,7 @@ public class LoginApiController implements LoginApi {
         this.request = request;
     }
 
-    public ResponseEntity<JwtTokenResponse> loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginBody body) throws IOException {
+    public ResponseEntity<JwtTokenResponse> loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginRequest body) throws IOException {
         AuthResult result = loginService.login(body.getUsername(), body.getPassword());
 
         return new ResponseEntity<JwtTokenResponse>(

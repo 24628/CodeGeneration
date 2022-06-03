@@ -5,12 +5,12 @@ import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
 import io.swagger.helpers.ValidateAtmHelper;
-import io.swagger.model.Atm;
+import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.Transaction;
-import io.swagger.model.TransactionAdvancedSearchRequest;
+import io.swagger.model.Request.TransactionRequest;
+import io.swagger.model.Request.TransactionAdvancedSearchRequest;
 import io.swagger.repository.IAccountDTO;
 import io.swagger.repository.ITransactionDTO;
 import io.swagger.repository.IUserDTO;
@@ -21,7 +21,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +41,7 @@ public class TransactionService {
 
     @Autowired
     Validator validator;
-    public TransactionEntity addTransaction(Transaction body) {
+    public TransactionEntity addTransaction(TransactionRequest body) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
@@ -118,7 +117,7 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
-    public Long withdrawMoney(Atm body) {
+    public Long withdrawMoney(AtmRequest body) {
         ValidateAtmHelper res = validator.isAllowedToAtm(body);
         AccountEntity accountEntity = res.getAccountEntity();
         UserEntity userEntity = res.getUserEntity();
@@ -150,7 +149,7 @@ public class TransactionService {
         return body.getAmount();
     }
 
-    public Long depositMoney(Atm body) {
+    public Long depositMoney(AtmRequest body) {
         ValidateAtmHelper res = validator.isAllowedToAtm(body);
         AccountEntity accountEntity = res.getAccountEntity();
         AccountEntity atm = accountRepository.findByTypeIs(AccountType.ATM);

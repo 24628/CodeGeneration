@@ -1,13 +1,12 @@
-package io.swagger.model;
+package io.swagger.model.Request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Objects;
 
 @Validated
-public class Atm {
+public class AtmRequest {
 
     @JsonProperty("iban")
     private String iban = null;
@@ -49,9 +48,9 @@ public class Atm {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Atm atm = (Atm) o;
-        return Objects.equals(this.iban, atm.iban) &&
-                Objects.equals(this.pinCode, atm.pinCode);
+        AtmRequest atmRequest = (AtmRequest) o;
+        return Objects.equals(this.iban, atmRequest.iban) &&
+                Objects.equals(this.pinCode, atmRequest.pinCode);
     }
 
     @Override

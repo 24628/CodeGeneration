@@ -1,10 +1,9 @@
 package io.swagger.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.AccountsApi;
 import io.swagger.jwt.JwtTokenProvider;
-import io.swagger.model.Account;
+import io.swagger.model.Request.AccountRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.responses.account.AccountListResponse;
@@ -88,7 +87,7 @@ public class AccountsApiController implements AccountsApi {
             @Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken",
                     required = true,
                     schema = @Schema()) @PathVariable("IBAN") String IBAN,
-            @RequestBody Account body) throws IOException {
+            @RequestBody AccountRequest body) throws IOException {
 
         AccountEntity account = accountService.updateAccountByIBAN(body, IBAN);
         return new ResponseEntity<AccountSingleResponse>(
@@ -118,7 +117,7 @@ public class AccountsApiController implements AccountsApi {
 
     public ResponseEntity<AccountSingleResponse> accountsPost(@Parameter(in = ParameterIn.DEFAULT,
             description = "This endpoint creates a new account that can be used to transfer and withdraw money.",
-            required = true, schema = @Schema()) @RequestBody Account body) throws IOException {
+            required = true, schema = @Schema()) @RequestBody AccountRequest body) throws IOException {
 
         AccountEntity account = accountService.addAccount(body);
         return new ResponseEntity<AccountSingleResponse>(

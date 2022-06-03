@@ -3,7 +3,7 @@ package io.swagger.service;
 import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.enums.Roles;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.User;
+import io.swagger.model.Request.UserRequest;
 import io.swagger.repository.IAccountDTO;
 import io.swagger.repository.IUserDTO;
 import io.swagger.validator.Validator;
@@ -30,7 +30,7 @@ public class UserService {
     @Autowired
     Validator validator;
 
-    public UserEntity addUser(User body) {
+    public UserEntity addUser(UserRequest body) {
         validator.NeedsToBeEmployee();
 
         validator.CanCreateUser(body.getName(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L,body.getName());
@@ -61,7 +61,7 @@ public class UserService {
         return userDTO.getOne(UUID.fromString(uuid));
     }
 
-    public UserEntity updateUser(String uuid, User body) throws InvalidPermissionsException{
+    public UserEntity updateUser(String uuid, UserRequest body) throws InvalidPermissionsException{
         UserEntity userToEdit = userDTO.getOne(UUID.fromString(uuid));
 
 

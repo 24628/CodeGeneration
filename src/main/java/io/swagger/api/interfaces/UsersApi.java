@@ -5,7 +5,7 @@
  */
 package io.swagger.api.interfaces;
 
-import io.swagger.model.*;
+import io.swagger.model.Request.UserRequest;
 import io.swagger.responses.user.UserDeletedResponse;
 import io.swagger.responses.user.UserListResponse;
 import io.swagger.responses.user.UserSingleResponse;
@@ -33,7 +33,7 @@ public interface UsersApi {
     @Operation(summary = "", description = "Returns a list of users", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "The list of users is returned from the database.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
+        @ApiResponse(responseCode = "200", description = "The list of users is returned from the database.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserRequest.class)))),
     })
     @RequestMapping(value = "/users",
         produces = { "application/json" }, 
@@ -55,7 +55,7 @@ public interface UsersApi {
     @Operation(summary = "", description = "gets a single user data", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "return user data after submitting an existing id", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+        @ApiResponse(responseCode = "200", description = "return user data after submitting an existing id", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserRequest.class))),
     })
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" }, 
@@ -66,28 +66,28 @@ public interface UsersApi {
     @Operation(summary = "", description = "Updates user data", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "updates all the data of the user", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
+        @ApiResponse(responseCode = "200", description = "updates all the data of the user", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserRequest.class)))),
     })
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<UserSingleResponse> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required=true, schema=@Schema()) @PathVariable("id") String id, @RequestBody User body) throws IOException;
+    ResponseEntity<UserSingleResponse> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required=true, schema=@Schema()) @PathVariable("id") String id, @RequestBody UserRequest body) throws IOException;
 
 
     @Operation(summary = "", description = "creates a new users", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "creates a new user based on the fields of the user after checking the inputand the permissions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
+        @ApiResponse(responseCode = "200", description = "creates a new user based on the fields of the user after checking the inputand the permissions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserRequest.class)))),
     })
     @RequestMapping(value = "/users",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<UserSingleResponse> usersPost(@RequestBody User body) throws IOException;
+    ResponseEntity<UserSingleResponse> usersPost(@RequestBody UserRequest body) throws IOException;
 
     @Operation(summary = "", description = "All users with no accounts", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "creates a new user based on the fields of the user after checking the inputand the permissions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
+            @ApiResponse(responseCode = "200", description = "creates a new user based on the fields of the user after checking the inputand the permissions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserRequest.class)))),
     })
     @RequestMapping(value = "/users/accounts",
             produces = { "application/json" },

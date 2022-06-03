@@ -2,11 +2,11 @@ package io.swagger.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.TransactionsApi;
-import io.swagger.model.Atm;
+import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Entity.TransactionEntity;
-import io.swagger.model.Transaction;
+import io.swagger.model.Request.TransactionRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.model.TransactionAdvancedSearchRequest;
+import io.swagger.model.Request.TransactionAdvancedSearchRequest;
 import io.swagger.responses.transactions.TransactionAtmResponse;
 import io.swagger.responses.transactions.TransactionListResponse;
 import io.swagger.responses.transactions.TransactionSingleResponse;
@@ -62,7 +62,7 @@ public class TransactionsApiController implements TransactionsApi {
 
     }
 
-    public ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody Transaction body) throws IOException {
+    public ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody TransactionRequest body) throws IOException {
 
         TransactionEntity transaction = transactionService.addTransaction(body);
         return new ResponseEntity<TransactionSingleResponse>(
@@ -75,7 +75,7 @@ public class TransactionsApiController implements TransactionsApi {
 
     }
 
-    public ResponseEntity<TransactionAtmResponse> atmWithdraw(Atm body) throws IOException {
+    public ResponseEntity<TransactionAtmResponse> atmWithdraw(AtmRequest body) throws IOException {
 
         Long amount = transactionService.withdrawMoney(body);
         return new ResponseEntity<TransactionAtmResponse>(
@@ -87,7 +87,7 @@ public class TransactionsApiController implements TransactionsApi {
         );
     }
 
-    public ResponseEntity<TransactionAtmResponse> atmDeposit(Atm body) throws IOException {
+    public ResponseEntity<TransactionAtmResponse> atmDeposit(AtmRequest body) throws IOException {
         Long amount = transactionService.depositMoney(body);
         return new ResponseEntity<TransactionAtmResponse>(
                 objectMapper.readValue(

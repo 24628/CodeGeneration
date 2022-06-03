@@ -3,7 +3,7 @@ package io.swagger.api;
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.UsersApi;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.User;
+import io.swagger.model.Request.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.responses.user.UserDeletedResponse;
 import io.swagger.responses.user.UserListResponse;
@@ -85,7 +85,7 @@ public class UsersApiController implements UsersApi {
 
     }
 
-    public ResponseEntity<UserSingleResponse> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id, @RequestBody User body) throws IOException {
+    public ResponseEntity<UserSingleResponse> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id, @RequestBody UserRequest body) throws IOException {
             UserEntity user =  userService.updateUser(id, body);
             return new ResponseEntity<UserSingleResponse>(
                     objectMapper.readValue(
@@ -96,7 +96,7 @@ public class UsersApiController implements UsersApi {
             );
     }
 
-    public ResponseEntity<UserSingleResponse> usersPost(@RequestBody User body) throws IOException {
+    public ResponseEntity<UserSingleResponse> usersPost(@RequestBody UserRequest body) throws IOException {
             UserEntity user=  userService.addUser(body);
             return new ResponseEntity<UserSingleResponse>(
                     objectMapper.readValue(

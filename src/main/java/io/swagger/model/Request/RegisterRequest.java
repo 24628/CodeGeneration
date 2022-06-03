@@ -1,32 +1,22 @@
-package io.swagger.model;
+package io.swagger.model.Request;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * User
+ * RegisterBody
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 
 
-public class User {
-    @JsonProperty("id")
-    private Integer id = null;
-
-
-    @JsonProperty("role")
-    private String role = null;
-
-
-
+public class RegisterRequest {
     @JsonProperty("username")
     private String username = null;
+
     @JsonProperty("name")
     private String name = null;
 
@@ -39,61 +29,32 @@ public class User {
     @JsonProperty("dayLimit")
     private Long dayLimit = null;
 
-    @JsonProperty("transactionLimit")
-    private Long transactionLimit = null;
-
-    public User id(Integer id) {
-        this.id = id;
+    public RegisterRequest username(String username) {
+        this.username = username;
         return this;
     }
 
     /**
-     * Get id
+     * Get username
      *
-     * @return id
+     * @return username
      **/
-    @Schema(description = "")
-
-    public Integer getId() {
-        return id;
+    @Schema(example = "johndoe", description = "")
+    public String getUsername() {
+        return username;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public User role(String role) {
-        this.role = role;
-        return this;
-    }
-
-    /**
-     * Get role
-     *
-     * @return role
-     **/
-    @Schema(description = "")
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public User name(String name) {
-        this.name = name;
-        return this;
-    }
 
     /**
      * Get name
      *
      * @return name
      **/
-    @Schema(description = "")
-
+    @Schema(example = "Doe", description = "Lastname, used for performing searches")
     public String getName() {
         return name;
     }
@@ -102,25 +63,18 @@ public class User {
         this.name = name;
     }
 
-    public User email(String email) {
+
+    public RegisterRequest email(String email) {
         this.email = email;
         return this;
     }
 
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
     /**
      * Get email
      *
      * @return email
      **/
-    @Schema(description = "")
+    @Schema(example = "johndoe@example.com", description = "")
 
     public String getEmail() {
         return email;
@@ -130,7 +84,7 @@ public class User {
         this.email = email;
     }
 
-    public User password(String password) {
+    public RegisterRequest password(String password) {
         this.password = password;
         return this;
     }
@@ -140,7 +94,7 @@ public class User {
      *
      * @return password
      **/
-    @Schema(description = "")
+    @Schema(example = "password", description = "")
 
     public String getPassword() {
         return password;
@@ -150,7 +104,7 @@ public class User {
         this.password = password;
     }
 
-    public User dayLimit(Long dayLimit) {
+    public RegisterRequest dayLimit(Long dayLimit) {
         this.dayLimit = dayLimit;
         return this;
     }
@@ -161,33 +115,12 @@ public class User {
      * @return dayLimit
      **/
     @Schema(example = "500", description = "")
-
     public Long getDayLimit() {
         return dayLimit;
     }
 
     public void setDayLimit(Long dayLimit) {
         this.dayLimit = dayLimit;
-    }
-
-    public User transactionLimit(Long transactionLimit) {
-        this.transactionLimit = transactionLimit;
-        return this;
-    }
-
-    /**
-     * Get transactionLimit
-     *
-     * @return transactionLimit
-     **/
-    @Schema(description = "")
-
-    public Long getTransactionLimit() {
-        return transactionLimit;
-    }
-
-    public void setTransactionLimit(Long transactionLimit) {
-        this.transactionLimit = transactionLimit;
     }
 
 
@@ -199,33 +132,28 @@ public class User {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        User user = (User) o;
-        return Objects.equals(this.id, user.id) &&
-                Objects.equals(this.role, user.role) &&
-                Objects.equals(this.name, user.name) &&
-                Objects.equals(this.email, user.email) &&
-                Objects.equals(this.password, user.password) &&
-                Objects.equals(this.dayLimit, user.dayLimit) &&
-                Objects.equals(this.transactionLimit, user.transactionLimit);
+        RegisterRequest registerRequest = (RegisterRequest) o;
+        return Objects.equals(this.username, registerRequest.username) &&
+                Objects.equals(this.email, registerRequest.email) &&
+                Objects.equals(this.password, registerRequest.password) &&
+                Objects.equals(this.dayLimit, registerRequest.dayLimit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, role, name, email, password, dayLimit, transactionLimit);
+        return Objects.hash(username, email, password, dayLimit);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class User {\n");
+        sb.append("class RegisterBody {\n");
 
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    role: ").append(toIndentedString(role)).append("\n");
+        sb.append("    username: ").append(toIndentedString(username)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    email: ").append(toIndentedString(email)).append("\n");
         sb.append("    password: ").append(toIndentedString(password)).append("\n");
         sb.append("    dayLimit: ").append(toIndentedString(dayLimit)).append("\n");
-        sb.append("    transactionLimit: ").append(toIndentedString(transactionLimit)).append("\n");
         sb.append("}");
         return sb.toString();
     }

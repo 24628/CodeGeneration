@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.RegisterApi;
 import io.swagger.helpers.AuthResult;
 import io.swagger.responses.auth.JwtTokenResponse;
-import io.swagger.model.RegisterBody;
+import io.swagger.model.Request.RegisterRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.auth.RegisterService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,7 +42,7 @@ public class RegisterApiController implements RegisterApi {
         this.request = request;
     }
 
-    public ResponseEntity<JwtTokenResponse> registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required = true, schema = @Schema()) @Valid @RequestBody RegisterBody body) throws IOException {
+    public ResponseEntity<JwtTokenResponse> registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required = true, schema = @Schema()) @Valid @RequestBody RegisterRequest body) throws IOException {
         AuthResult result = registerService.register(body);
 
         return new ResponseEntity<JwtTokenResponse>(

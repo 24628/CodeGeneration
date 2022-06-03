@@ -5,7 +5,7 @@
  */
 package io.swagger.api.interfaces;
 
-import io.swagger.model.RegisterBody;
+import io.swagger.model.Request.RegisterRequest;
 import io.swagger.responses.auth.JwtTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,7 +37,7 @@ public interface RegisterApi {
         produces = { "application/json" },
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required=true, schema=@Schema()) @Valid @RequestBody RegisterBody body) throws IOException;
+    ResponseEntity registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required=true, schema=@Schema()) @Valid @RequestBody RegisterRequest body) throws IOException;
 
 }
 

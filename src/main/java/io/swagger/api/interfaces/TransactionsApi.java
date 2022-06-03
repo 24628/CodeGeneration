@@ -5,7 +5,9 @@
  */
 package io.swagger.api.interfaces;
 
-import io.swagger.model.*;
+import io.swagger.model.Request.AtmRequest;
+import io.swagger.model.Request.TransactionAdvancedSearchRequest;
+import io.swagger.model.Request.TransactionRequest;
 import io.swagger.responses.transactions.TransactionAtmResponse;
 import io.swagger.responses.transactions.TransactionListResponse;
 import io.swagger.responses.transactions.TransactionSingleResponse;
@@ -36,7 +38,7 @@ public interface TransactionsApi {
     @Operation(summary = "", description = "Returns a list of transactions", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "returns a list of all the transactions tht has been made", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Transaction.class)))),
+        @ApiResponse(responseCode = "200", description = "returns a list of all the transactions tht has been made", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TransactionRequest.class)))),
     })
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
@@ -47,37 +49,37 @@ public interface TransactionsApi {
     @Operation(summary = "creates a new transaction", description = "creates a new transaction", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "creates new transaction and returns the information of the transaction e.g. timestamp, from, to and the amount of the transaction", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Transaction.class))),
+        @ApiResponse(responseCode = "200", description = "creates new transaction and returns the information of the transaction e.g. timestamp, from, to and the amount of the transaction", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
     })
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody Transaction body) throws IOException;
+    ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody TransactionRequest body) throws IOException;
 
     @Operation(summary = "Withdraw money", description = "withdraw money", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Transaction.class))),
+            @ApiResponse(responseCode = "200", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
     })
     @RequestMapping(value = "/atm/withdraw",
             produces = { "application/json" },
             method = RequestMethod.POST)
-    ResponseEntity<TransactionAtmResponse> atmWithdraw(@RequestBody Atm body) throws IOException;
+    ResponseEntity<TransactionAtmResponse> atmWithdraw(@RequestBody AtmRequest body) throws IOException;
 
     @Operation(summary = "Depositing money", description = "depositing money", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Transaction.class))),
+            @ApiResponse(responseCode = "201", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
     })
     @RequestMapping(value = "/atm/deposit",
             produces = { "application/json" },
             method = RequestMethod.POST)
-    ResponseEntity<TransactionAtmResponse> atmDeposit(@RequestBody Atm body) throws IOException;
+    ResponseEntity<TransactionAtmResponse> atmDeposit(@RequestBody AtmRequest body) throws IOException;
 
     @Operation(summary = "", description = "Advanced search for transactions", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "advance search for transactions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Transaction.class)))),
+            @ApiResponse(responseCode = "200", description = "advance search for transactions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TransactionRequest.class)))),
     })
     @RequestMapping(value = "/transactions/search",
             produces = { "application/json" },

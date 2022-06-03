@@ -5,8 +5,7 @@
  */
 package io.swagger.api.interfaces;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.model.Account;
+import io.swagger.model.Request.AccountRequest;
 import io.swagger.responses.account.AccountListResponse;
 import io.swagger.responses.account.AccountSingleResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +36,7 @@ public interface AccountsApi {
     @Operation(summary = "Returns a list of accounts", description = "Successfully returns a list of all users and the acoounts with it. A saving account or the current account.", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Successfully returned a list of accounts", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Account.class)))),
+        @ApiResponse(responseCode = "200", description = "Successfully returned a list of accounts", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AccountRequest.class)))),
     })
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
@@ -48,7 +47,7 @@ public interface AccountsApi {
     @Operation(summary = "Returns single account using IBAN", description = "", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
     })
     @RequestMapping(value = "/accounts/IBAN/{IBAN}",
         produces = { "application/json" }, 
@@ -59,18 +58,18 @@ public interface AccountsApi {
     @Operation(summary = "Change account data", description = "", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
     })
     @RequestMapping(value = "/accounts/IBAN/{IBAN}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<AccountSingleResponse> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN, @RequestBody Account body) throws IOException;
+    ResponseEntity<AccountSingleResponse> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN, @RequestBody AccountRequest body) throws IOException;
 
 
     @Operation(summary = "Returns all accounts on user id", description = "", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
     })
     @RequestMapping(value = "/accounts/id/{id}",
         produces = { "application/json" }, 
@@ -81,19 +80,19 @@ public interface AccountsApi {
     @Operation(summary = "Creating a new account", description = "", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "201", description = "The account has been successfully created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+        @ApiResponse(responseCode = "201", description = "The account has been successfully created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
     })
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<AccountSingleResponse> accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required=true, schema=@Schema()) @Valid @RequestBody Account body) throws IOException;
+    ResponseEntity<AccountSingleResponse> accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required=true, schema=@Schema()) @Valid @RequestBody AccountRequest body) throws IOException;
 
 
     @Operation(summary = "Returns single account using IBAN", description = "", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Account.class))),
+        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
     })
     @RequestMapping(value = "/accounts/search",
         produces = { "application/json" }, 

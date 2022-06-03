@@ -1,14 +1,10 @@
-package io.swagger.model;
+package io.swagger.model.Request;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * LoginBody
@@ -17,14 +13,14 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 
 
-public class LoginBody {
+public class LoginRequest {
     @JsonProperty("username")
     private String username = null;
 
     @JsonProperty("password")
     private String password = null;
 
-    public LoginBody username(String username) {
+    public LoginRequest username(String username) {
         this.username = username;
         return this;
     }
@@ -44,7 +40,7 @@ public class LoginBody {
         this.username = username;
     }
 
-    public LoginBody password(String password) {
+    public LoginRequest password(String password) {
         this.password = password;
         return this;
     }
@@ -73,9 +69,9 @@ public class LoginBody {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        LoginBody loginBody = (LoginBody) o;
-        return Objects.equals(this.username, loginBody.username) &&
-                Objects.equals(this.password, loginBody.password);
+        LoginRequest loginRequest = (LoginRequest) o;
+        return Objects.equals(this.username, loginRequest.username) &&
+                Objects.equals(this.password, loginRequest.password);
     }
 
     @Override

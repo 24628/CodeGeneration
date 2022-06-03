@@ -5,7 +5,7 @@
  */
 package io.swagger.api.interfaces;
 
-import io.swagger.model.LoginBody;
+import io.swagger.model.Request.LoginRequest;
 import io.swagger.responses.auth.JwtTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,7 +37,7 @@ public interface LoginApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginBody body) throws IOException;
+    ResponseEntity loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginRequest body) throws IOException;
 
 }
 
