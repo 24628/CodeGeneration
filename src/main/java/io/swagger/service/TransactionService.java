@@ -43,14 +43,7 @@ public class TransactionService {
     @Autowired
     private IAccountDTO accountRepository;
 
-    private long CheckdayLimit(UserEntity user){
-        long daylimit = 0;
-        List<TransactionEntity> transactions = transactionDTO.getAllByAccountFrom(user.getUuid());
-        for(var totaal :transactions){
-            daylimit += totaal.getAmount() ;
-        }
-        return daylimit;
-    }
+
     @Autowired
     Validator validator;
     public TransactionEntity addTransaction(TransactionRequest body) {
@@ -78,7 +71,7 @@ public class TransactionService {
 
         //als left to transact 0 is dan zjn we over de limit van de day limit en mogen er geen transactie limits gemaakt worden
         Long daylimit = CheckdayLimit(userFrom);
-        if( userFrom.getDayLimit() > CheckdayLimit(userFrom)){
+        if( userFrom.getDayLimit() > daylimit){
             throw new DayLimitReachedException(daylimit);
         }
 
@@ -143,7 +136,10 @@ public class TransactionService {
             throw new ValidationException("the account value will go below the absolute limit");
         //als left to transact 0 is dan zjn we over de limit van de day limit en mogen er geen transactie limits gemaakt worden
 
-        //@todo make day limit check
+        Long daylimit = CheckdayLimit(userEntity);
+        if( body.getAmount() > daylimit){
+            throw new DayLimitReachedException(daylimit);
+        }
 
         // als de body hoger is dan de transactie limit dan gooien we een error
         if ((float) body.getAmount() > userEntity.getTransactionLimit())
@@ -162,7 +158,14 @@ public class TransactionService {
 
         return body.getAmount();
     }
-
+    private long CheckdayLimit(UserEntity user){
+        long daylimit = 0;
+        List<TransactionEntity> transactions = transactionDTO.getAllByAccountFrom(user.getUuid());
+        for(var totaal :transactions){
+            daylimit += totaal.getAmount() ;
+        }
+        return daylimit;
+    }
     public Long depositMoney(AtmRequest body) {
         ValidateAtmHelper res = validator.isAllowedToAtm(body);
         AccountEntity accountEntity = res.getAccountEntity();

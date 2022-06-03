@@ -48,16 +48,9 @@ public class UsersApiController implements UsersApi {
         this.request = request;
     }
 
-    public ResponseEntity<List<UserListResponse>> usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
+    public List<UserEntity> usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
         List<UserEntity> users = userService.getUsers();
-
-        return new ResponseEntity<List<UserListResponse>>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new UserListResponse(HttpStatus.OK, users)),
-                        List.class),
-                HttpStatus.OK
-        );
+        return users;
     }
 
     public ResponseEntity<UserDeletedResponse> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id) throws IOException {
@@ -86,25 +79,25 @@ public class UsersApiController implements UsersApi {
     }
 
     public ResponseEntity<UserSingleResponse> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id, @RequestBody UserRequest body) throws IOException {
-            UserEntity user =  userService.updateUser(id, body);
-            return new ResponseEntity<UserSingleResponse>(
-                    objectMapper.readValue(
-                            objectMapper.writeValueAsString(
-                                    new UserSingleResponse(HttpStatus.OK, user)),
-                            UserSingleResponse.class),
-                    HttpStatus.OK
-            );
+        UserEntity user = userService.updateUser(id, body);
+        return new ResponseEntity<UserSingleResponse>(
+                objectMapper.readValue(
+                        objectMapper.writeValueAsString(
+                                new UserSingleResponse(HttpStatus.OK, user)),
+                        UserSingleResponse.class),
+                HttpStatus.OK
+        );
     }
 
     public ResponseEntity<UserSingleResponse> usersPost(@RequestBody UserRequest body) throws IOException {
-            UserEntity user=  userService.addUser(body);
-            return new ResponseEntity<UserSingleResponse>(
-                    objectMapper.readValue(
-                            objectMapper.writeValueAsString(
-                                    new UserSingleResponse(HttpStatus.CREATED, user)),
-                            UserSingleResponse.class),
-                    HttpStatus.CREATED
-            );
+        UserEntity user = userService.addUser(body);
+        return new ResponseEntity<UserSingleResponse>(
+                objectMapper.readValue(
+                        objectMapper.writeValueAsString(
+                                new UserSingleResponse(HttpStatus.CREATED, user)),
+                        UserSingleResponse.class),
+                HttpStatus.CREATED
+        );
     }
 
     @Override

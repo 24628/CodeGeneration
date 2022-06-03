@@ -5,8 +5,8 @@
  */
 package io.swagger.api.interfaces;
 
+import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Request.AccountRequest;
-import io.swagger.responses.account.AccountListResponse;
 import io.swagger.responses.account.AccountSingleResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,7 +41,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<AccountListResponse>> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
+    List<AccountEntity> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
 
 
     @Operation(summary = "Returns single account using IBAN", description = "", security = {
@@ -74,7 +74,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/id/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<AccountListResponse>> accountsIdIdGet(@Parameter(in = ParameterIn.PATH, description = "The unique id of the user is taken", required=true, schema=@Schema()) @PathVariable("id") String id) throws IOException;
+    List<AccountEntity> accountsIdIdGet(@Parameter(in = ParameterIn.PATH, description = "The unique id of the user is taken", required=true, schema=@Schema()) @PathVariable("id") String id) throws IOException;
 
 
     @Operation(summary = "Creating a new account", description = "", security = {

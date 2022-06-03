@@ -6,7 +6,6 @@ import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Request.AccountRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.Entity.AccountEntity;
-import io.swagger.responses.account.AccountListResponse;
 import io.swagger.responses.account.AccountSingleResponse;
 import io.swagger.service.AccountService;
 import io.swagger.service.UserService;
@@ -56,18 +55,11 @@ public class AccountsApiController implements AccountsApi {
         this.request = request;
     }
 
-    public ResponseEntity<List<AccountListResponse>> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,
-                                                                 @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid
+    public List<AccountEntity> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,
+                                           @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid
                                                                  @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
         List<AccountEntity> accounts = accountService.getAccounts();
-
-        return new ResponseEntity<List<AccountListResponse>>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new AccountListResponse(HttpStatus.OK, accounts)),
-                        List.class),
-                HttpStatus.OK
-        );
+        return accounts;
     }
 
     public ResponseEntity<AccountSingleResponse> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required = true, schema = @Schema()) @PathVariable("IBAN") String IBAN) throws IOException {
@@ -100,19 +92,13 @@ public class AccountsApiController implements AccountsApi {
 
     }
 
-    public ResponseEntity<List<AccountListResponse>> accountsIdIdGet(@Parameter(in = ParameterIn.PATH,
+    public List<AccountEntity> accountsIdIdGet(@Parameter(in = ParameterIn.PATH,
             description = "The unique id of the user is taken",
             required = true,
             schema = @Schema()) @PathVariable("id") String id) throws IOException {
 
         List<AccountEntity> accounts = accountService.getAccountByUserId(UUID.fromString(id));
-        return new ResponseEntity<List<AccountListResponse>>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new AccountListResponse(HttpStatus.OK, accounts)),
-                        List.class),
-                HttpStatus.OK
-        );
+       return accounts;
     }
 
     public ResponseEntity<AccountSingleResponse> accountsPost(@Parameter(in = ParameterIn.DEFAULT,

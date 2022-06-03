@@ -13,6 +13,7 @@ import org.iban4j.Iban;
 import io.swagger.service.AccountService;
 import io.swagger.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
@@ -33,7 +34,8 @@ public class TestData {
     private IUserDTO allusers;
     @Autowired
     private IAccountDTO allaccounts;
-
+    @Autowired
+    PasswordEncoder passwordEncoder;
     private Random random;
 
   public TestData(){
@@ -57,6 +59,7 @@ public class TestData {
             userEntity.setRole(Roles.values()[random.nextInt(Roles.values().length)]);
             userEntity.setTransactionLimit(200L);
             userEntity.setDayLimit(500L);
+            userEntity.setPinCode(1234);
             userService.generateUsers(userEntity);
             generateAccount(userEntity);
         }
@@ -89,6 +92,7 @@ public class TestData {
             accountEntity.setAbsoluteLimit(0L);
             accountEntity.setUuid(user.getUuid());
             accountEntity.setUserId(user.getUuid());
+            accountEntity.setAbsoluteLimit(1000L);
             accountEntity.setIBAN(new Iban.Builder()
                     .countryCode(CountryCode.NL)
                     .bankCode("INHO")

@@ -5,6 +5,7 @@
  */
 package io.swagger.api.interfaces;
 
+import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.Request.UserRequest;
 import io.swagger.responses.user.UserDeletedResponse;
 import io.swagger.responses.user.UserListResponse;
@@ -38,7 +39,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<UserListResponse>> usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
+    List<UserEntity> usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
 
 
     @Operation(summary = "", description = "delete user data", security = {
