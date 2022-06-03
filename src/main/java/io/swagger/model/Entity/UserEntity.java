@@ -23,4 +23,5 @@ public class UserEntity {
     private String email;
     private String password;
     private Long transactionLimit;
+    private long dayLimit;
 }

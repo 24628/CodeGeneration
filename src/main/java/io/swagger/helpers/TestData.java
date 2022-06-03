@@ -56,6 +56,7 @@ public class TestData {
             userEntity.setPassword("$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu"); //password all the same password
             userEntity.setRole(Roles.values()[random.nextInt(Roles.values().length)]);
             userEntity.setTransactionLimit(200L);
+            userEntity.setDayLimit(500L);
             userService.generateUsers(userEntity);
             generateAccount(userEntity);
         }
@@ -93,7 +94,6 @@ public class TestData {
                     .bankCode("INHO")
                     .buildRandom()
                     .toString());
-            accountEntity.setDaylimit(200L);
             accountService.generateAccount(accountEntity);
         }
     }

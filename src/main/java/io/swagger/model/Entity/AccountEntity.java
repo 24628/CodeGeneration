@@ -22,5 +22,4 @@ public class AccountEntity {
     private UUID userId;
     private Long absoluteLimit;
     private Long balance;
-    private Long daylimit;
 }
