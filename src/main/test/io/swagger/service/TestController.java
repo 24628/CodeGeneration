@@ -25,7 +25,7 @@ public class TestController extends AccountServiceTest{
 
     @Test
     public void testEmployee() throws Exception {
-        mockMvc.perform(get("/employee")).andExpect(status().isOk())
+        mockMvc.perform(get("/login")).andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"));
 
     }
