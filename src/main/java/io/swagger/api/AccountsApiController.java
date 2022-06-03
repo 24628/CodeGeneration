@@ -56,31 +56,18 @@ public class AccountsApiController implements AccountsApi {
         this.request = request;
     }
 
-    public ResponseEntity<List<AccountListResponse>> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,
-                                                                 @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid
+    public ResponseEntity<AccountListResponse> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,
+                                                           @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid
                                                                  @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
         List<AccountEntity> accounts = accountService.getAccounts();
-
-        return new ResponseEntity<List<AccountListResponse>>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new AccountListResponse(HttpStatus.OK, accounts)),
-                        List.class),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(new AccountListResponse(HttpStatus.OK, accounts));
     }
 
-    public ResponseEntity<AccountSingleResponse> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required = true, schema = @Schema()) @PathVariable("IBAN") String IBAN) throws IOException {
+    public ResponseEntity<AccountSingleResponse> accountsIbanIbanGet(
+            @Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required = true, schema = @Schema())
+            @PathVariable("IBAN") String IBAN) throws IOException {
         AccountEntity account = accountService.getAccountByIBAN(IBAN);
-
-        return new ResponseEntity<AccountSingleResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new AccountSingleResponse(HttpStatus.CREATED, account)),
-                        AccountSingleResponse.class),
-                HttpStatus.OK
-        );
-
+        return ResponseEntity.ok(new AccountSingleResponse(HttpStatus.OK, account));
     }
 
     public ResponseEntity<AccountSingleResponse> accountsIbanIbanPut(
@@ -88,56 +75,29 @@ public class AccountsApiController implements AccountsApi {
                     required = true,
                     schema = @Schema()) @PathVariable("IBAN") String IBAN,
             @RequestBody AccountRequest body) throws IOException {
-
         AccountEntity account = accountService.updateAccountByIBAN(body, IBAN);
-        return new ResponseEntity<AccountSingleResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new AccountSingleResponse(HttpStatus.OK, account)),
-                        AccountSingleResponse.class),
-                HttpStatus.OK
-        );
-
+        return ResponseEntity.ok(new AccountSingleResponse(HttpStatus.OK, account));
     }
 
-    public ResponseEntity<List<AccountListResponse>> accountsIdIdGet(@Parameter(in = ParameterIn.PATH,
+    public ResponseEntity<AccountListResponse> accountsIdIdGet(@Parameter(in = ParameterIn.PATH,
             description = "The unique id of the user is taken",
             required = true,
             schema = @Schema()) @PathVariable("id") String id) throws IOException {
-
         List<AccountEntity> accounts = accountService.getAccountByUserId(UUID.fromString(id));
-        return new ResponseEntity<List<AccountListResponse>>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new AccountListResponse(HttpStatus.OK, accounts)),
-                        List.class),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(new AccountListResponse(HttpStatus.OK, accounts));
     }
 
     public ResponseEntity<AccountSingleResponse> accountsPost(@Parameter(in = ParameterIn.DEFAULT,
             description = "This endpoint creates a new account that can be used to transfer and withdraw money.",
             required = true, schema = @Schema()) @RequestBody AccountRequest body) throws IOException {
-
         AccountEntity account = accountService.addAccount(body);
-        return new ResponseEntity<AccountSingleResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new AccountSingleResponse(HttpStatus.CREATED, account)),
-                        AccountSingleResponse.class),
-                HttpStatus.CREATED
-        );
+        return ResponseEntity.ok(new AccountSingleResponse(HttpStatus.CREATED, account));
     }
 
-    public ResponseEntity<AccountSingleResponse> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned", schema = @Schema()) @Valid @RequestParam(value = "name", required = true) String name) throws IOException {
-
+    public ResponseEntity<AccountSingleResponse> accountsSearchGet(
+            @Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned", schema = @Schema())
+            @Valid @RequestParam(value = "name", required = true) String name) throws IOException {
         AccountEntity account = accountService.findAccountByUserName(name);
-        return new ResponseEntity<AccountSingleResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new AccountSingleResponse(HttpStatus.OK, account)),
-                        AccountSingleResponse.class),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(new AccountSingleResponse(HttpStatus.OK, account));
     }
 }

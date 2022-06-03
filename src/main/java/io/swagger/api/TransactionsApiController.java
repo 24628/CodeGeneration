@@ -48,60 +48,33 @@ public class TransactionsApiController implements TransactionsApi {
         this.request = request;
     }
 
-    public ResponseEntity<List<TransactionListResponse>> transactionsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
-
+    public ResponseEntity<TransactionListResponse> transactionsGet(
+            @Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema())
+            @Valid @RequestParam(value = "limit", required = false) Integer limit,
+            @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema())
+            @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
         List<TransactionEntity> transactions = transactionService.getTransactions();
-
-        return new ResponseEntity<List<TransactionListResponse>>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new TransactionListResponse(HttpStatus.OK, transactions)),
-                        List.class),
-                HttpStatus.OK
-        );
-
+        return ResponseEntity.ok(new TransactionListResponse(HttpStatus.OK, transactions));
     }
 
     public ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody TransactionRequest body) throws IOException {
-
         TransactionEntity transaction = transactionService.addTransaction(body);
-        return new ResponseEntity<TransactionSingleResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new TransactionSingleResponse(HttpStatus.CREATED, transaction)),
-                        TransactionSingleResponse.class),
-                HttpStatus.OK
-        );
-
+        return ResponseEntity.ok(new TransactionSingleResponse(HttpStatus.OK, transaction));
     }
 
     public ResponseEntity<TransactionAtmResponse> atmWithdraw(AtmRequest body) throws IOException {
-
         Long amount = transactionService.withdrawMoney(body);
-        return new ResponseEntity<TransactionAtmResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new TransactionAtmResponse(HttpStatus.OK, amount)),
-                        TransactionAtmResponse.class),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(new TransactionAtmResponse(HttpStatus.OK, amount));
     }
 
     public ResponseEntity<TransactionAtmResponse> atmDeposit(AtmRequest body) throws IOException {
         Long amount = transactionService.depositMoney(body);
-        return new ResponseEntity<TransactionAtmResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new TransactionAtmResponse(HttpStatus.OK, amount)),
-                        TransactionAtmResponse.class),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(new TransactionAtmResponse(HttpStatus.OK, amount));
     }
 
     @Override
     public ResponseEntity<List<TransactionListResponse>> transactionsGetAdvancedSearch(Integer limit, Integer offset, TransactionAdvancedSearchRequest body) throws IOException {
         List<TransactionEntity> transactions = transactionService.advanceSearch(body);
-
         return (ResponseEntity<List<TransactionListResponse>>) transactions;
     }
 
