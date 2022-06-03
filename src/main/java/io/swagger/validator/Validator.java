@@ -50,8 +50,7 @@ public class Validator {
     public void NeedsToBeEmployee(){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userDTO.findByUsername(userDetails.getUsername());
-
-        if(!user.getRole().equals(Roles.EMPLOYEE))
+        if(user == null && !user.getRole().equals(Roles.EMPLOYEE))
             throw new InvalidPermissionsException("no permissions to access this");
     }
 }
