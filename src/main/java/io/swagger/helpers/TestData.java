@@ -92,6 +92,7 @@ public class TestData {
                     .bankCode("INHO")
                     .buildRandom()
                     .toString());
+            accountEntity.setDaylimit(200L);
             accountService.generateAccount(accountEntity);
         }
     }

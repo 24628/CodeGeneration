@@ -17,7 +17,7 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 
 
-public class Transaction {
+public class  Transaction {
     @JsonProperty("id")
     private String id = null;
 
@@ -35,6 +35,7 @@ public class Transaction {
 
     @JsonProperty("amount")
     private Integer amount = null;
+
 
     public Transaction id(String id) {
         this.id = id;
