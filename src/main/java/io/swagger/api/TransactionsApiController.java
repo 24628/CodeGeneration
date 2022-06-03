@@ -6,6 +6,7 @@ import io.swagger.model.Atm;
 import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Transaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.model.TransactionAdvancedSearchRequest;
 import io.swagger.responses.transactions.TransactionAtmResponse;
 import io.swagger.responses.transactions.TransactionListResponse;
 import io.swagger.responses.transactions.TransactionSingleResponse;
@@ -95,6 +96,13 @@ public class TransactionsApiController implements TransactionsApi {
                         TransactionAtmResponse.class),
                 HttpStatus.OK
         );
+    }
+
+    @Override
+    public ResponseEntity<List<TransactionListResponse>> transactionsGetAdvancedSearch(Integer limit, Integer offset, TransactionAdvancedSearchRequest body) throws IOException {
+        List<TransactionEntity> transactions = transactionService.advanceSearch(body);
+
+        return (ResponseEntity<List<TransactionListResponse>>) transactions;
     }
 
 }

@@ -74,5 +74,20 @@ public interface TransactionsApi {
             method = RequestMethod.POST)
     ResponseEntity<TransactionAtmResponse> atmDeposit(@RequestBody Atm body) throws IOException;
 
+    @Operation(summary = "", description = "Advanced search for transactions", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "advance search for transactions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Transaction.class)))),
+    })
+    @RequestMapping(value = "/transactions/search",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<TransactionListResponse>> transactionsGetAdvancedSearch(
+            @Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema())
+            @Valid @RequestParam(value = "limit", required = false) Integer limit,
+            @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema())
+            @Valid @RequestParam(value = "offset", required = false) Integer offset,
+            @RequestBody TransactionAdvancedSearchRequest body) throws IOException;
+
 }
 

@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -21,6 +22,6 @@ public class TransactionEntity {
     private UUID accountFrom;
     private UUID accountTo;
     private UUID user_id;
-    private Date date;
+    private LocalDateTime date;
     private long amount;
 }

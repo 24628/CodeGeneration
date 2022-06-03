@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -105,7 +106,7 @@ public class TestData {
             UserEntity randomuser = users.get(new Random().nextInt(users.size()));
             transaction.setAmount(random.nextInt((1000 - 100) + 1) + 10);
             transaction.setAccountFrom(allaccounts.getOne(currentuser.getUuid()).getUuid()); // moet account entity pakken
-            transaction.setDate(new Date());
+            transaction.setDate(LocalDateTime.now());
             transaction.setUser_id(randomuser.getUuid());
             transaction.setAccountTo(randomuser.getUuid());
             if (currentuser == randomuser) {

@@ -10,19 +10,17 @@ import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.Transaction;
-import io.swagger.model.User;
+import io.swagger.model.TransactionAdvancedSearchRequest;
 import io.swagger.repository.IAccountDTO;
 import io.swagger.repository.ITransactionDTO;
 import io.swagger.repository.IUserDTO;
 import io.swagger.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -93,7 +91,7 @@ public class TransactionService {
         //Create the transactions
         TransactionEntity transaction = new TransactionEntity();
         transaction.setAmount(body.getAmount());
-        transaction.setDate(new Date());
+        transaction.setDate(LocalDateTime.now());
         transaction.setAccountFrom(UUID.fromString(body.getFrom()));
         transaction.setAccountTo(UUID.fromString(body.getTo()));
         transaction.setUser_id(user.getUuid());
@@ -140,7 +138,7 @@ public class TransactionService {
 
         TransactionEntity transaction = new TransactionEntity();
         transaction.setAmount(body.getAmount());
-        transaction.setDate(new Date());
+        transaction.setDate(LocalDateTime.now());
         transaction.setAccountFrom(accountEntity.getUuid());
         transaction.setAccountTo(atm.getUuid());
         transaction.setUser_id(bank.getUuid());
@@ -161,7 +159,7 @@ public class TransactionService {
         TransactionEntity transaction = new TransactionEntity();
         transaction.setAccountFrom(atm.getUuid());
         transaction.setAmount(body.getAmount());
-        transaction.setDate(new Date());
+        transaction.setDate(LocalDateTime.now());
         transaction.setAccountTo(accountEntity.getUuid());
         transaction.setUser_id(bank.getUuid());
         transactionRepository.save(transaction);
@@ -174,5 +172,23 @@ public class TransactionService {
 
     public void generateTransaction(TransactionEntity transaction) {
         transactionRepository.save(transaction);
+    }
+
+    public List<TransactionEntity> advanceSearch(TransactionAdvancedSearchRequest body) {
+        validator.NeedsToBeEmployee();
+
+        AccountEntity accountEntityFrom = accountRepository.getAccountByIBAN(body.getIbanFrom());
+        AccountEntity accountEntityTo = accountRepository.getAccountByIBAN(body.getIbanTo());
+
+        if(accountEntityTo == null && accountEntityFrom == null)
+            return transactionRepository.findAllByAmountBetweenAndDateBetween(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter());
+
+        if(accountEntityTo == null)
+            return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFrom(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityFrom.getUuid());
+
+        if(accountEntityFrom == null)
+            return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountTo(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityTo.getUuid());
+
+        return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFromAndAccountTo(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityFrom.getUuid(), accountEntityTo.getUuid());
     }
 }
