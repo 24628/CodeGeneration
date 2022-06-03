@@ -1,23 +1,19 @@
 package io.swagger.service;
 
 import io.swagger.api.exceptions.EntityNotFoundException;
-import io.swagger.api.exceptions.UserNotFoundException;
 import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
 import io.swagger.helpers.ValidateAtmHelper;
 import io.swagger.model.Atm;
 import io.swagger.model.Entity.AccountEntity;
-import io.swagger.model.Entity.DayLimitEntity;
 import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.Transaction;
 import io.swagger.model.User;
 import io.swagger.repository.IAccountDTO;
-import io.swagger.repository.IDayLimitDTO;
 import io.swagger.repository.ITransactionDTO;
 import io.swagger.repository.IUserDTO;
-import io.swagger.responses.transactions.TransactionAtmResponse;
 import io.swagger.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,9 +43,6 @@ public class TransactionService {
     private IAccountDTO accountRepository;
 
     @Autowired
-    private IDayLimitDTO dayLimitDTO;
-
-    @Autowired
     Validator validator;
     public TransactionEntity addTransaction(Transaction body) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -66,9 +59,6 @@ public class TransactionService {
 
         UserEntity userFrom = userService.getUserById(accountFrom.getUserId().toString());
 
-        DayLimitEntity dayLimit = dayLimitDTO.getByUserId(accountFrom.getUserId());
-        long leftToTransact = dayLimit.getActualLimit() - dayLimit.getCurrent();
-
         //amount to deposit has to be higher then 0
         if (body.getAmount() > 1)
             throw new ValidationException("Amount has to be higher then 0");
@@ -78,8 +68,8 @@ public class TransactionService {
             throw new ValidationException("the account value will go below the absolute limit");
 
         //als left to transact 0 is dan zjn we over de limit van de day limit en mogen er geen transactie limits gemaakt worden
-        if ((float) body.getAmount() > leftToTransact)
-            throw new ValidationException("over the daily transaction limit");
+//        if((float) body.getAmount() > leftToTransact)
+//            throw new ValidationException("over the daily transaction limit");
 
         // als de body hoger is dan de transactie limit dan gooien we een error
         if ((float) body.getAmount() > userFrom.getTransactionLimit())
@@ -109,9 +99,6 @@ public class TransactionService {
         transaction.setUser_id(user.getUuid());
         transactionRepository.save(transaction);
 
-        dayLimit.setCurrent(dayLimit.getCurrent() + body.getAmount());
-        dayLimitDTO.save(dayLimit);
-
         //update balance from
         accountFrom.setBalance(accountFrom.getBalance() - body.getAmount());
         accountRepository.save(accountFrom);
@@ -140,14 +127,12 @@ public class TransactionService {
         AccountEntity atm = accountRepository.findByTypeIs(AccountType.ATM);
         UserEntity bank = userDTO.findUserEntityByRoleIs(Roles.BANK);
 
-        DayLimitEntity dayLimit = dayLimitDTO.getByUserId(accountEntity.getUserId());
-        long leftToTransact = dayLimit.getActualLimit() - dayLimit.getCurrent();
 
         if ((accountEntity.getBalance() - (long) body.getAmount()) > accountEntity.getAbsoluteLimit())
             throw new ValidationException("the account value will go below the absolute limit");
         //als left to transact 0 is dan zjn we over de limit van de day limit en mogen er geen transactie limits gemaakt worden
-        if ((float) body.getAmount() > leftToTransact)
-            throw new ValidationException("over the daily transaction limit");
+
+        //@todo make day limit check
 
         // als de body hoger is dan de transactie limit dan gooien we een error
         if ((float) body.getAmount() > userEntity.getTransactionLimit())
@@ -185,5 +170,9 @@ public class TransactionService {
         accountRepository.save(accountEntity);
 
         return body.getAmount();
+    }
+
+    public void generateTransaction(TransactionEntity transaction) {
+        transactionRepository.save(transaction);
     }
 }

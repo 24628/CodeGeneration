@@ -67,7 +67,7 @@ public interface TransactionsApi {
     @Operation(summary = "Depositing money", description = "depositing money", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Transaction.class))),
+            @ApiResponse(responseCode = "201", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Transaction.class))),
     })
     @RequestMapping(value = "/atm/deposit",
             produces = { "application/json" },
