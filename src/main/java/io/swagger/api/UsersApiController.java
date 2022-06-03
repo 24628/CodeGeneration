@@ -72,7 +72,7 @@ public class UsersApiController implements UsersApi {
     }
 
     public ResponseEntity<UserSingleResponse> usersIdPut(
-            @Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) 
+            @Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema())
             @PathVariable("id") String id, @RequestBody UserRequest body) throws IOException {
         UserEntity user = userService.updateUser(id, body);
         return ResponseEntity.ok(new UserSingleResponse(HttpStatus.OK, user));
