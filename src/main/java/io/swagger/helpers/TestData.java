@@ -34,8 +34,6 @@ public class TestData {
     private IUserDTO allusers;
     @Autowired
     private IAccountDTO allaccounts;
-    @Autowired
-    PasswordEncoder passwordEncoder;
     private Random random;
 
   public TestData(){
