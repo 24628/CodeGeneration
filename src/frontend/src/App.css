@@ -1,6 +1,3 @@
-.App {
-  text-align: center;
-}
 
 .App-logo {
   height: 40vmin;
@@ -12,9 +9,12 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+.App{
 
-.App-header {
-  background-color: #282c34;
+  background-color: #60dafb;
+  min-height: 100vh;
+}
+.Router {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
