@@ -45,12 +45,6 @@ public class RegisterApiController implements RegisterApi {
     public ResponseEntity<JwtTokenResponse> registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required = true, schema = @Schema()) @Valid @RequestBody RegisterRequest body) throws IOException {
         AuthResult result = registerService.register(body);
 
-        return new ResponseEntity<JwtTokenResponse>(
-            objectMapper.readValue(
-                objectMapper.writeValueAsString(
-                    new JwtTokenResponse(HttpStatus.CREATED, result.getToken(), result.getUser())),
-                JwtTokenResponse.class),
-            HttpStatus.CREATED
-        );
+        return ResponseEntity.ok(new JwtTokenResponse(HttpStatus.CREATED, result.getToken(), result.getUser()));
     }
 }

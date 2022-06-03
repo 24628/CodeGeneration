@@ -48,69 +48,45 @@ public class UsersApiController implements UsersApi {
         this.request = request;
     }
 
-    public List<UserEntity> usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
+    public ResponseEntity<UserListResponse> usersGet(
+            @Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema())
+            @Valid @RequestParam(value = "limit", required = false) Integer limit,
+            @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema())
+            @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
         List<UserEntity> users = userService.getUsers();
-        return users;
+        return ResponseEntity.ok(new UserListResponse(HttpStatus.CREATED, users));
     }
 
-    public ResponseEntity<UserDeletedResponse> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id) throws IOException {
+    public ResponseEntity<UserDeletedResponse> usersIdDelete(
+            @Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema())
+            @PathVariable("id") String id) throws IOException {
         userService.deleteUser(id);
-
-        return new ResponseEntity<UserDeletedResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new UserDeletedResponse(HttpStatus.OK)),
-                        UserDeletedResponse.class),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(new UserDeletedResponse(HttpStatus.OK));
     }
 
-    public ResponseEntity<UserSingleResponse> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user", required = true, schema = @Schema()) @PathVariable("id") String id) throws IOException {
+    public ResponseEntity<UserSingleResponse> usersIdGet(
+            @Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user", required = true, schema = @Schema())
+            @PathVariable("id") String id) throws IOException {
         UserEntity user = userService.getUserById(id);
-
-        return new ResponseEntity<UserSingleResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new UserSingleResponse(HttpStatus.OK, user)),
-                        UserSingleResponse.class),
-                HttpStatus.OK
-        );
-
+        return ResponseEntity.ok(new UserSingleResponse(HttpStatus.OK, user));
     }
 
-    public ResponseEntity<UserSingleResponse> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema()) @PathVariable("id") String id, @RequestBody UserRequest body) throws IOException {
+    public ResponseEntity<UserSingleResponse> usersIdPut(
+            @Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema())
+            @PathVariable("id") String id, @RequestBody UserRequest body) throws IOException {
         UserEntity user = userService.updateUser(id, body);
-        return new ResponseEntity<UserSingleResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new UserSingleResponse(HttpStatus.OK, user)),
-                        UserSingleResponse.class),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(new UserSingleResponse(HttpStatus.OK, user));
     }
 
     public ResponseEntity<UserSingleResponse> usersPost(@RequestBody UserRequest body) throws IOException {
         UserEntity user = userService.addUser(body);
-        return new ResponseEntity<UserSingleResponse>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new UserSingleResponse(HttpStatus.CREATED, user)),
-                        UserSingleResponse.class),
-                HttpStatus.CREATED
-        );
+        return ResponseEntity.ok(new UserSingleResponse(HttpStatus.CREATED, user));
     }
 
     @Override
-    public ResponseEntity<List<UserListResponse>> usersGetAllUserWithNoAccount(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
+    public ResponseEntity<UserListResponse> usersGetAllUserWithNoAccount(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
         List<UserEntity> foundUsers = userService.getUsersWithNoAccount();
-
-        return new ResponseEntity<List<UserListResponse>>(
-                objectMapper.readValue(
-                        objectMapper.writeValueAsString(
-                                new UserListResponse(HttpStatus.OK, foundUsers)),
-                        List.class),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(new UserListResponse(HttpStatus.CREATED, foundUsers));
     }
 
 }

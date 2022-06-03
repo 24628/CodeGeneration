@@ -44,13 +44,6 @@ public class LoginApiController implements LoginApi {
 
     public ResponseEntity<JwtTokenResponse> loginPost(@Parameter(in = ParameterIn.DEFAULT, description = "logging in to an existing account", required=true, schema=@Schema()) @Valid @RequestBody LoginRequest body) throws IOException {
         AuthResult result = loginService.login(body.getUsername(), body.getPassword());
-
-        return new ResponseEntity<JwtTokenResponse>(
-            objectMapper.readValue(
-                objectMapper.writeValueAsString(
-                    new JwtTokenResponse(HttpStatus.CREATED, result.getToken(), result.getUser())),
-                JwtTokenResponse.class),
-            HttpStatus.OK
-        );
+        return ResponseEntity.ok(new JwtTokenResponse(HttpStatus.CREATED, result.getToken(), result.getUser()));
     }
 }
