@@ -1,19 +1,27 @@
 package io.swagger.validator;
 
+import io.swagger.api.exceptions.DayLimitReachedException;
 import io.swagger.api.exceptions.EntityAlreadyExistException;
 import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.Roles;
 import io.swagger.helpers.ValidateAtmHelper;
+import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.repository.IAccountDTO;
+import io.swagger.repository.ITransactionDTO;
 import io.swagger.repository.IUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
 
 @Component
 public class Validator {
@@ -23,6 +31,9 @@ public class Validator {
 
     @Autowired
     private IAccountDTO accountRepository;
+
+    @Autowired
+    ITransactionDTO transactionDTO;
 
     public boolean containsWhiteSpace(final String testCode) {
         if (testCode != null) {
@@ -75,5 +86,21 @@ public class Validator {
             throw new ValidationException("invalid pincode");
 
         return new ValidateAtmHelper(userEntity, accountEntity);
+    }
+
+    public void CheckDayLimit(UserEntity user, Long amount) {
+        long limit = 0;
+        List<TransactionEntity> transactions = transactionDTO.getAllByAccountFromAndDate(
+                user.getUuid(),
+                LocalDateTime.from(LocalDate.now(ZoneId.of("Europe/Paris")).atStartOfDay(ZoneId.of("Europe/Paris")))
+        );
+        for (TransactionEntity transaction : transactions) {
+            limit += transaction.getAmount();
+        }
+
+        Long dayLimit = user.getDayLimit() - limit;
+        if (amount > dayLimit) {
+            throw new DayLimitReachedException(dayLimit);
+        }
     }
 }

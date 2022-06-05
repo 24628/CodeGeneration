@@ -46,11 +46,8 @@ public class TransactionService {
     ITransactionDTO transactionDTO;
     @Autowired
     IUserDTO userDTO;
-
     @Autowired
     private IAccountDTO accountRepository;
-
-
     @Autowired
     Validator validator;
 
@@ -81,10 +78,7 @@ public class TransactionService {
             throw new ValidationException("the account value will go below the absolute limit");
 
         //als left to transact 0 is dan zjn we over de limit van de day limit en mogen er geen transactie limits gemaakt worden
-        Long daylimit = CheckdayLimit(userFrom);
-        if (userFrom.getDayLimit() > daylimit) {
-            throw new DayLimitReachedException(daylimit);
-        }
+        validator.CheckDayLimit(userFrom, (long)body.getAmount());
 
         // als de body hoger is dan de transactie limit dan gooien we een error
         if ((float) body.getAmount() > userFrom.getTransactionLimit())
@@ -147,10 +141,7 @@ public class TransactionService {
             throw new ValidationException("the account value will go below the absolute limit");
         //als left to transact 0 is dan zjn we over de limit van de day limit en mogen er geen transactie limits gemaakt worden
 
-        Long daylimit = CheckdayLimit(userEntity);
-        if (body.getAmount() > daylimit) {
-            throw new DayLimitReachedException(daylimit);
-        }
+        validator.CheckDayLimit(userEntity, body.getAmount());
 
         // als de body hoger is dan de transactie limit dan gooien we een error
         if ((float) body.getAmount() > userEntity.getTransactionLimit())
@@ -170,16 +161,7 @@ public class TransactionService {
         return body.getAmount();
     }
 
-    // de dag van vandaag
-    private long CheckdayLimit(UserEntity user) {
-        long daylimit = 0;
-        List<TransactionEntity> transactions = transactionDTO.getAllByAccountFromAndDate(user.getUuid(), LocalDateTime.from(LocalDate.now(ZoneId.of("Europe/Paris")).atStartOfDay(ZoneId.of("Europe/Paris"))));
-        for (var totaal : transactions) {
-            daylimit += totaal.getAmount();
-        }
 
-        return user.getDayLimit() - daylimit;
-    }
 
     public Long depositMoney(AtmRequest body) {
         ValidateAtmHelper res = validator.isAllowedToAtm(body);
