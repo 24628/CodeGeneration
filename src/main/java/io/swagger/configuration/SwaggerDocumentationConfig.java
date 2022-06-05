@@ -33,6 +33,7 @@ public class SwaggerDocumentationConfig {
                 .directModelSubstitute(org.threeten.bp.OffsetDateTime.class, java.util.Date.class)
                 .securitySchemes(Collections.singletonList(apiKey()))
                 .securityContexts(securityContext())
+                .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo());
 
     }
