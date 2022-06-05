@@ -1,11 +1,9 @@
 package io.swagger.service;
 
-import io.swagger.api.exceptions.EntityAlreadyExistException;
-import io.swagger.api.exceptions.InvalidPermissionsException;
-import io.swagger.api.exceptions.ValidationException;
+import io.swagger.api.exceptions.*;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
-import io.swagger.model.Account;
+import io.swagger.model.Request.AccountRequest;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.validator.Validator;
@@ -13,11 +11,9 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import io.swagger.repository.IAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -36,7 +32,7 @@ public class AccountService {
     Validator validator;
 
     //Check if the user has already a saving // normal account
-    public void addAccount(Account body) {
+    public AccountEntity addAccount(AccountRequest body) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
@@ -56,7 +52,7 @@ public class AccountService {
 
         AccountEntity account = new AccountEntity();
         account.setType(AccountType.valueOf(body.getType()));
-        account.setAbsolute_limit(body.getAbsoluteLimit());
+        account.setAbsoluteLimit(body.getAbsoluteLimit());
         account.setBalance(0L); // Always start with 0 with transactions we can up that
         account.setIBAN(
                 new Iban.Builder()
@@ -67,12 +63,14 @@ public class AccountService {
         );
 
         if (user.getRole().equals(Roles.CUSTOMER))
-            account.setUser_uuid(user.getUuid());
+            account.setUserId(user.getUuid());
 
         if (user.getRole().equals(Roles.EMPLOYEE))
-            account.setUser_uuid(UUID.fromString(body.getUserId()));
+            account.setUserId(UUID.fromString(body.getUserId()));
 
         accountRepository.save(account);
+
+        return account;
     }
 
     // haalt alle accounts op uit de database
@@ -82,7 +80,7 @@ public class AccountService {
     public List<AccountEntity> getAccounts() {
         validator.NeedsToBeEmployee();
 
-        return accountRepository.getAllByTypeIsNot("ATM");
+        return accountRepository.getAllByTypeIsNot(AccountType.ATM);
     }
 
 
@@ -103,7 +101,7 @@ public class AccountService {
         return accountRepository.getAllByUuidIs(userid);
     }
 
-    public AccountEntity updateAccountByIBAN(Account body, String IBAN) {
+    public AccountEntity updateAccountByIBAN(AccountRequest body, String IBAN) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
@@ -116,7 +114,7 @@ public class AccountService {
         if (1 > body.getAbsoluteLimit())
             throw new ValidationException("Absolute limit has to be higher then 0");
 
-        account.setAbsolute_limit(body.getAbsoluteLimit());
+        account.setAbsoluteLimit(body.getAbsoluteLimit());
         account.setType(AccountType.valueOf(body.getType()));
 
         accountRepository.save(account);
@@ -129,4 +127,18 @@ public class AccountService {
     }
 
 
+    public AccountEntity findAccountByUserName(String name) {
+
+        UserEntity userEntity = userService.findUserByName(name);
+
+        if(userEntity == null)
+            throw new UserNotFoundException(name);
+
+        AccountEntity account = accountRepository.getAccountEntityByUserIdAndTypeIsNot(userEntity.getUuid(), AccountType.SAVING);
+
+        if(account == null)
+            throw new EntityNotFoundException("Account ");
+
+        return account;
+    }
 }

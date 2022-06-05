@@ -48,7 +48,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
             "/webjars/**",
             // -- Swagger UI v3 (OpenAPI)
             "/api-docs/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/atm/withdraw",
+            "/atm/deposit"
             // other public endpoints of your API may be appended to this array
     };
 

@@ -1,5 +1,6 @@
 package io.swagger.repository;
 
+import io.swagger.enums.AccountType;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,11 @@ public interface IAccountDTO extends JpaRepository<AccountEntity, UUID> {
 
      List<AccountEntity> getAllByUuidIs(UUID userid);
 
-     List<AccountEntity> getAllByTypeIsNot(String type);
+     List<AccountEntity> getAllByTypeIsNot(AccountType type);
 
-     AccountEntity getAccountEntityBy();
+     AccountEntity getAccountEntityByUserIdAndTypeIsNot(UUID userId, AccountType type);
+
+     AccountEntity findByTypeIs(AccountType type);
+
+     Boolean findByUserIdIs(UUID userId);
 }

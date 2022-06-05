@@ -1,13 +1,12 @@
 package io.swagger.configuration;
 
-import io.swagger.enums.AccountType;
-import io.swagger.enums.Roles;
-import io.swagger.model.Entity.AccountEntity;
-import io.swagger.model.Entity.DayLimitEntity;
-import io.swagger.model.Entity.UserEntity;
-import io.swagger.service.AccountService;
-import io.swagger.service.DayLimitService;
+
+import io.swagger.helpers.TestData;
+import io.swagger.model.Entity.TransactionEntity;
+import io.swagger.service.TransactionService;
 import io.swagger.service.UserService;
+import org.iban4j.CountryCode;
+import org.iban4j.Iban;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,21 +26,16 @@ import java.util.*;
 @Configuration
 public class SwaggerUiConfiguration implements WebMvcConfigurer {
 
-    @Autowired
-    private UserService userService;
 
     @Autowired
-    private AccountService accountService;
-
-    @Autowired
-    private DayLimitService dayLimitService;
+    private TestData testData;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         generateData();
-
+        testData.Generate();
         registry.
-            addResourceHandler("/swagger-ui/**")
+                addResourceHandler("/swagger-ui/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
                 .resourceChain(false);
     }
@@ -51,30 +45,13 @@ public class SwaggerUiConfiguration implements WebMvcConfigurer {
         registry.addViewController("/swagger-ui/").setViewName("forward:/swagger-ui/index.html");
     }
 
-    private void generateData(){
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername("admin");
-        userEntity.setEmail("admin@example.com");
-        userEntity.setPassword("$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu"); //password
-        userEntity.setRole(Roles.BANK);
-        userEntity.setTransaction_limit(0L);
+    private void generateData() {
 
-        userService.generateUsers(userEntity);
+//        DayLimitEntity dayLimit = new DayLimitEntity();
+//        dayLimit.setUserId(userEntity.getUuid());
+//        dayLimit.setActualLimit(2000L);
+//        dayLimit.setCurrent(0L);
+//        dayLimitService.save(dayLimit);
 
-        DayLimitEntity dayLimit = new DayLimitEntity();
-        dayLimit.setUserId(userEntity.getUuid());
-        dayLimit.setActualLimit(2000L);
-        dayLimit.setCurrent(0L);
-
-        dayLimitService.save(dayLimit);
-
-        AccountEntity accountEntity = new AccountEntity();
-        accountEntity.setBalance(0L);
-        accountEntity.setType(AccountType.ATM);
-        accountEntity.setAbsolute_limit(0L);
-        accountEntity.setUser_uuid(userEntity.getUuid());
-        accountEntity.setIBAN("NL01INHO0000000001");
-
-        accountService.generateAccount(accountEntity);
     }
 }

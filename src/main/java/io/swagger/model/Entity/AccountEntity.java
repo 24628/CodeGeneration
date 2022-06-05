@@ -1,13 +1,17 @@
 package io.swagger.model.Entity;
 
 import io.swagger.enums.AccountType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class AccountEntity {
 
     @Id
@@ -15,58 +19,7 @@ public class AccountEntity {
     private UUID uuid;
     private AccountType type;
     private String IBAN;
-    private UUID user_uuid;
+    private UUID userId;
     private Long absoluteLimit;
     private Long balance;
-
-    public Long getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Long balance) {
-        this.balance = balance;
-    }
-
-    public AccountEntity() {
-    }
-
-    public AccountType getType() {
-        return type;
-    }
-
-    public void setType(AccountType type) {
-        this.type = type;
-    }
-
-    public String getIBAN() {
-        return IBAN;
-    }
-
-    public void setIBAN(String IBAN) {
-        this.IBAN = IBAN;
-    }
-
-    public UUID getUser_uuid() {
-        return user_uuid;
-    }
-
-    public void setUser_uuid(UUID user_uuid) {
-        this.user_uuid = user_uuid;
-    }
-
-    public Long getAbsolute_limit() {
-        return absoluteLimit;
-    }
-
-    public void setAbsolute_limit(Long absoluteLimit) {
-        this.absoluteLimit = absoluteLimit;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
 }

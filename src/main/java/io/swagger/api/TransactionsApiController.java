@@ -2,10 +2,14 @@ package io.swagger.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.TransactionsApi;
+import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Entity.TransactionEntity;
-import io.swagger.model.Transaction;
+import io.swagger.model.Request.TransactionRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.responses.TransactionCreateResponse;
+import io.swagger.model.Request.TransactionAdvancedSearchRequest;
+import io.swagger.responses.transactions.TransactionAtmResponse;
+import io.swagger.responses.transactions.TransactionListResponse;
+import io.swagger.responses.transactions.TransactionSingleResponse;
 import io.swagger.service.TransactionService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -21,14 +25,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @RestController
 @Api(tags = "Transactions")
-public class   TransactionsApiController implements TransactionsApi {
+public class TransactionsApiController implements TransactionsApi {
 
     private static final Logger log = LoggerFactory.getLogger(TransactionsApiController.class);
 
@@ -45,30 +48,34 @@ public class   TransactionsApiController implements TransactionsApi {
         this.request = request;
     }
 
-    public String transactionsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) {
-
-        try {
-            List<TransactionEntity> transactions = transactionService.getTransactions();
-
-            final ByteArrayOutputStream out = new ByteArrayOutputStream();
-            objectMapper.writeValue(out, transactions);
-            final byte[] data = out.toByteArray();
-            return new String(data);
-        } catch (IOException e) {
-            log.error("Couldn't serialize response for content type application/json", e);
-            return "OOps";
-        }
-
+    public ResponseEntity<TransactionListResponse> transactionsGet(
+            @Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema())
+            @Valid @RequestParam(value = "limit", required = false) Integer limit,
+            @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema())
+            @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
+        List<TransactionEntity> transactions = transactionService.getTransactions();
+        return ResponseEntity.ok(new TransactionListResponse(HttpStatus.OK, transactions));
     }
 
-    public ResponseEntity<Void> transactionsPost(@RequestBody Transaction body) {
-        try {
-            transactionService.addTransaction(body);
-            return new ResponseEntity<Void>(HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            log.error("Couldn't serialize response for content type application/json", e);
-        }
-        return null;
+    public ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody TransactionRequest body) throws IOException {
+        TransactionEntity transaction = transactionService.addTransaction(body);
+        return ResponseEntity.ok(new TransactionSingleResponse(HttpStatus.OK, transaction));
+    }
+
+    public ResponseEntity<TransactionAtmResponse> atmWithdraw(AtmRequest body) throws IOException {
+        Long amount = transactionService.withdrawMoney(body);
+        return ResponseEntity.ok(new TransactionAtmResponse(HttpStatus.OK, amount));
+    }
+
+    public ResponseEntity<TransactionAtmResponse> atmDeposit(AtmRequest body) throws IOException {
+        Long amount = transactionService.depositMoney(body);
+        return ResponseEntity.ok(new TransactionAtmResponse(HttpStatus.OK, amount));
+    }
+
+    @Override
+    public ResponseEntity<List<TransactionListResponse>> transactionsGetAdvancedSearch(Integer limit, Integer offset, TransactionAdvancedSearchRequest body) throws IOException {
+        List<TransactionEntity> transactions = transactionService.advanceSearch(body);
+        return (ResponseEntity<List<TransactionListResponse>>) transactions;
     }
 
 }

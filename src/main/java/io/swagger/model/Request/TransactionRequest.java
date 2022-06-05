@@ -1,14 +1,10 @@
-package io.swagger.model;
+package io.swagger.model.Request;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * Transaction
@@ -17,7 +13,7 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 
 
-public class Transaction {
+public class TransactionRequest {
     @JsonProperty("id")
     private String id = null;
 
@@ -36,7 +32,8 @@ public class Transaction {
     @JsonProperty("amount")
     private Integer amount = null;
 
-    public Transaction id(String id) {
+
+    public TransactionRequest id(String id) {
         this.id = id;
         return this;
     }
@@ -56,7 +53,7 @@ public class Transaction {
         this.id = id;
     }
 
-    public Transaction from(String from) {
+    public TransactionRequest from(String from) {
         this.from = from;
         return this;
     }
@@ -76,7 +73,7 @@ public class Transaction {
         this.from = from;
     }
 
-    public Transaction to(String to) {
+    public TransactionRequest to(String to) {
         this.to = to;
         return this;
     }
@@ -96,7 +93,7 @@ public class Transaction {
         this.to = to;
     }
 
-    public Transaction userId(String userId) {
+    public TransactionRequest userId(String userId) {
         this.userId = userId;
         return this;
     }
@@ -116,7 +113,7 @@ public class Transaction {
         this.userId = userId;
     }
 
-    public Transaction date(Object date) {
+    public TransactionRequest date(Object date) {
         this.date = date;
         return this;
     }
@@ -136,7 +133,7 @@ public class Transaction {
         this.date = date;
     }
 
-    public Transaction amount(Integer amount) {
+    public TransactionRequest amount(Integer amount) {
         this.amount = amount;
         return this;
     }
@@ -165,13 +162,13 @@ public class Transaction {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Transaction transaction = (Transaction) o;
-        return Objects.equals(this.id, transaction.id) &&
-                Objects.equals(this.from, transaction.from) &&
-                Objects.equals(this.to, transaction.to) &&
-                Objects.equals(this.userId, transaction.userId) &&
-                Objects.equals(this.date, transaction.date) &&
-                Objects.equals(this.amount, transaction.amount);
+        TransactionRequest transactionRequest = (TransactionRequest) o;
+        return Objects.equals(this.id, transactionRequest.id) &&
+                Objects.equals(this.from, transactionRequest.from) &&
+                Objects.equals(this.to, transactionRequest.to) &&
+                Objects.equals(this.userId, transactionRequest.userId) &&
+                Objects.equals(this.date, transactionRequest.date) &&
+                Objects.equals(this.amount, transactionRequest.amount);
     }
 
     @Override
