@@ -1,4 +1,4 @@
-package io.swagger.service;
+package service;
 
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
