@@ -2,6 +2,7 @@ package io.swagger.service;
 
 import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.enums.Roles;
+import io.swagger.helpers.OffsetPageableUUID;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.Request.UserRequest;
 import io.swagger.repository.IAccountDTO;
@@ -50,9 +51,9 @@ public class UserService {
         return userDTO.findByUsername(username);
     }
 
-    public List<UserEntity> getUsers() throws InvalidPermissionsException {
+    public List<UserEntity> getUsers(Integer limit,Integer offset) throws InvalidPermissionsException {
         validator.NeedsToBeEmployee();
-        return userDTO.findAll();
+        return userDTO.findAll(new OffsetPageableUUID(limit,offset)).getContent();
     }
 
     public UserEntity getUserById(String uuid) {
@@ -87,8 +88,8 @@ public class UserService {
     public void generateUsers(UserEntity u) { userDTO.save(u); }
 
 
-    public List<UserEntity> getUsersWithNoAccount() {
-        List<UserEntity> userEntityList = userDTO.findAllByRoleIs(Roles.CUSTOMER);
+    public List<UserEntity> getUsersWithNoAccount(Integer offset,Integer limit) {
+        List<UserEntity> userEntityList = userDTO.findAllByRoleIs(Roles.CUSTOMER, new OffsetPageableUUID(limit,offset));
         ArrayList<UserEntity> foundUsers = new ArrayList<>();
 
         for (UserEntity user : userEntityList) {

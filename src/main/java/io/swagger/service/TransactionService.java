@@ -6,6 +6,7 @@ import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
+import io.swagger.helpers.OffsetPageableDate;
 import io.swagger.helpers.ValidateAtmHelper;
 import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Entity.AccountEntity;
@@ -119,14 +120,20 @@ public class TransactionService {
         return transaction;
     }
 
+    public List<TransactionEntity> getTransactions(Integer offset,Integer limit) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserEntity user = userService.findUserByName(userDetails.getUsername());
+        if (user.getRole().equals(Roles.BANK) || user.getRole().equals(Roles.EMPLOYEE))
+            return transactionRepository.findAll(new OffsetPageableDate(limit,offset)).getContent();
+
+        return transactionRepository.getAllByAccountFrom(user.getUuid(),new OffsetPageableDate(limit,offset));
+    }
     public List<TransactionEntity> getTransactions() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
-
-        if (user.getRole().equals(Roles.CUSTOMER))
-            return transactionRepository.getAllByAccountFrom(user.getUuid());
-
-        return transactionRepository.findAll();
+        if (user.getRole().equals(Roles.BANK) || user.getRole().equals(Roles.EMPLOYEE))
+            return transactionRepository.findAll();
+        return transactionRepository.getAllByAccountFrom(user.getUuid());
     }
 
     public Long withdrawMoney(AtmRequest body) {
@@ -187,21 +194,21 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
-    public List<TransactionEntity> advanceSearch(TransactionAdvancedSearchRequest body) {
+    public List<TransactionEntity> advanceSearch(TransactionAdvancedSearchRequest body,int limit, int offset) {
         validator.NeedsToBeEmployee();
 
         AccountEntity accountEntityFrom = accountRepository.getAccountByIBAN(body.getIbanFrom());
         AccountEntity accountEntityTo = accountRepository.getAccountByIBAN(body.getIbanTo());
 
         if (accountEntityTo == null && accountEntityFrom == null)
-            return transactionRepository.findAllByAmountBetweenAndDateBetween(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter());
+            return transactionRepository.findAllByAmountBetweenAndDateBetween(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(),new OffsetPageableDate(limit,offset));
 
         if (accountEntityTo == null)
-            return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFrom(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityFrom.getUuid());
+            return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFrom(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityFrom.getUuid(),new OffsetPageableDate(limit,offset));
 
         if (accountEntityFrom == null)
-            return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountTo(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityTo.getUuid());
+            return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountTo(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityTo.getUuid(),new OffsetPageableDate(limit,offset));
 
-        return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFromAndAccountTo(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityFrom.getUuid(), accountEntityTo.getUuid());
+        return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFromAndAccountTo(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityFrom.getUuid(), accountEntityTo.getUuid(),new OffsetPageableDate(limit,offset));
     }
 }

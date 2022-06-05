@@ -1,13 +1,12 @@
 package io.swagger.repository;
 
-import io.swagger.model.Entity.AccountEntity;
+import io.swagger.helpers.OffsetPageableDate;
 import io.swagger.model.Entity.TransactionEntity;
-import io.swagger.model.Entity.UserEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,12 +14,13 @@ import java.util.UUID;
 public interface ITransactionDTO extends JpaRepository<TransactionEntity, UUID> {
 
     List<TransactionEntity> getAllByAccountFromAndDate(UUID accountFrom, LocalDateTime date);
+    List<TransactionEntity> getAllByAccountFrom(UUID account,Pageable pg);
     List<TransactionEntity> getAllByAccountFrom(UUID account);
 
-    List<TransactionEntity> findAllBy();
+    List<TransactionEntity> findAllBy(Pageable pg);
 
-    List<TransactionEntity> findAllByAmountBetweenAndDateBetweenAndAccountFromAndAccountTo(long amount, long amount2, LocalDateTime date, LocalDateTime date2, UUID accountFrom, UUID accountTo);
-    List<TransactionEntity> findAllByAmountBetweenAndDateBetweenAndAccountFrom(long amount, long amount2, LocalDateTime date, LocalDateTime date2, UUID accountFrom);
-    List<TransactionEntity> findAllByAmountBetweenAndDateBetweenAndAccountTo(long amount, long amount2, LocalDateTime date, LocalDateTime date2, UUID accountTo);
-    List<TransactionEntity> findAllByAmountBetweenAndDateBetween(long amount, long amount2, LocalDateTime date, LocalDateTime date2);
+    List<TransactionEntity> findAllByAmountBetweenAndDateBetweenAndAccountFromAndAccountTo(long amount, long amount2, LocalDateTime date, LocalDateTime date2, UUID accountFrom, UUID accountTo, OffsetPageableDate offsetPageableDate);
+    List<TransactionEntity> findAllByAmountBetweenAndDateBetweenAndAccountFrom(long amount, long amount2, LocalDateTime date, LocalDateTime date2, UUID accountFrom, OffsetPageableDate offsetPageableDate);
+    List<TransactionEntity> findAllByAmountBetweenAndDateBetweenAndAccountTo(long amount, long amount2, LocalDateTime date, LocalDateTime date2, UUID accountTo, OffsetPageableDate offsetPageableDate);
+    List<TransactionEntity> findAllByAmountBetweenAndDateBetween(long amount, long amount2, LocalDateTime date, LocalDateTime date2, OffsetPageableDate offsetPageableDate);
 }

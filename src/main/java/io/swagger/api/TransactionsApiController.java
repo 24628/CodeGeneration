@@ -53,7 +53,7 @@ public class TransactionsApiController implements TransactionsApi {
             @Valid @RequestParam(value = "limit", required = false) Integer limit,
             @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema())
             @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
-        List<TransactionEntity> transactions = transactionService.getTransactions();
+        List<TransactionEntity> transactions = transactionService.getTransactions(offset,limit);
         return ResponseEntity.ok(new TransactionListResponse(HttpStatus.OK, transactions));
     }
 
@@ -74,7 +74,7 @@ public class TransactionsApiController implements TransactionsApi {
 
     @Override
     public ResponseEntity<List<TransactionListResponse>> transactionsGetAdvancedSearch(Integer limit, Integer offset, TransactionAdvancedSearchRequest body) throws IOException {
-        List<TransactionEntity> transactions = transactionService.advanceSearch(body);
+        List<TransactionEntity> transactions = transactionService.advanceSearch(body,limit,offset);
         return (ResponseEntity<List<TransactionListResponse>>) transactions;
     }
 

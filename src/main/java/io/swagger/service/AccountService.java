@@ -78,7 +78,7 @@ public class AccountService {
     // Zorg dat alleen employee dit mag doen
     // Als de account role ATM heeft moet deze weg gefilterd worden
     // Stuurt een lijst terug van alle accounts
-    public List<AccountEntity> getAccounts(int offset, int limit) {
+    public List<AccountEntity> getAccounts(Integer offset, Integer limit) {
         validator.NeedsToBeEmployee();
         return accountRepository.getAllByTypeIsNot(AccountType.ATM, new OffsetPageableUUID(limit,offset));
     }

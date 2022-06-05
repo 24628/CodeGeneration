@@ -9,13 +9,19 @@ public class OffsetPageableDate implements Pageable {
 
     // Constructor could be expanded if sorting is needed
     private Sort sort = new Sort(Sort.Direction.DESC, "date");
-    public OffsetPageableDate(int limit, int offset) {
-        if (limit < 1) {
+    public OffsetPageableDate(Integer limit, Integer offset) {
+        if(offset == null)
+            offset = 0;
+
+        if(limit == null)
+            limit = 9999;
+
+        if (limit < 1)
             throw new IllegalArgumentException("Limit must not be less than one!");
-        }
-        if (offset < 0) {
+
+        if (offset < 0)
             throw new IllegalArgumentException("Offset index must not be less than zero!");
-        }
+
         this.limit = limit;
         this.offset = offset;
     }
