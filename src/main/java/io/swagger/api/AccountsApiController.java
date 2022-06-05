@@ -59,7 +59,7 @@ public class AccountsApiController implements AccountsApi {
     public ResponseEntity<AccountListResponse> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,
                                                            @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid
                                                                  @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
-        List<AccountEntity> accounts = accountService.getAccounts();
+        List<AccountEntity> accounts = accountService.getAccounts(offset,limit);
         return ResponseEntity.ok(new AccountListResponse(HttpStatus.OK, accounts));
     }
 

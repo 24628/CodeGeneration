@@ -3,6 +3,7 @@ package io.swagger.service;
 import io.swagger.api.exceptions.*;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
+import io.swagger.helpers.OffsetPageableUUID;
 import io.swagger.model.Request.AccountRequest;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
@@ -77,10 +78,9 @@ public class AccountService {
     // Zorg dat alleen employee dit mag doen
     // Als de account role ATM heeft moet deze weg gefilterd worden
     // Stuurt een lijst terug van alle accounts
-    public List<AccountEntity> getAccounts() {
+    public List<AccountEntity> getAccounts(int offset, int limit) {
         validator.NeedsToBeEmployee();
-
-        return accountRepository.getAllByTypeIsNot(AccountType.ATM);
+        return accountRepository.getAllByTypeIsNot(AccountType.ATM, new OffsetPageableUUID(limit,offset));
     }
 
 
