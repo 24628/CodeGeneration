@@ -28,10 +28,10 @@ import java.io.IOException;
 @Validated
 public interface LoginApi {
 
-    @Operation(summary = "Login", description = "", security = {
+    @Operation(summary = "Login", description = "this endpoint checks if the username and password are correct. if it is correct return the account", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Auth" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "201", description = "Logged in successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtTokenResponse.class))),
+        @ApiResponse(responseCode = "200", description = " user logged in successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtTokenResponse.class))),
     })
     @RequestMapping(value = "/login",
         produces = { "application/json" }, 

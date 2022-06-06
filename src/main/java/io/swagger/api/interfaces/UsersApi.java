@@ -41,7 +41,7 @@ public interface UsersApi {
     ResponseEntity<UserListResponse> usersGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
 
 
-    @Operation(summary = "", description = "delete user data", security = {
+    @Operation(summary = "delete user data", description = "delete user data based on the userid", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "deletes all the data of the user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
@@ -49,7 +49,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<UserDeletedResponse> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required=true, schema=@Schema()) @PathVariable("id") String id) throws IOException;
+    ResponseEntity<UserDeletedResponse> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "delete the user based on the user id", required=true, schema=@Schema()) @PathVariable("id") String id) throws IOException;
 
 
     @Operation(summary = "", description = "gets a single user data", security = {
@@ -63,7 +63,7 @@ public interface UsersApi {
     ResponseEntity<UserSingleResponse> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user", required=true, schema=@Schema()) @PathVariable("id") String id) throws IOException;
 
 
-    @Operation(summary = "", description = "Updates user data", security = {
+    @Operation(summary = "", description = "updates the data of the user after checking the permissions. the transaction limit can be edited of a customer", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "updates all the data of the user", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserRequest.class)))),
@@ -74,7 +74,7 @@ public interface UsersApi {
     ResponseEntity<UserSingleResponse> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required=true, schema=@Schema()) @PathVariable("id") String id, @RequestBody UserRequest body) throws IOException;
 
 
-    @Operation(summary = "", description = "creates a new users", security = {
+    @Operation(summary = "creates a new users", description = "create a new user after checking the permissons ", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "creates a new user based on the fields of the user after checking the inputand the permissions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserRequest.class)))),
@@ -84,7 +84,7 @@ public interface UsersApi {
         method = RequestMethod.POST)
     ResponseEntity<UserSingleResponse> usersPost(@RequestBody UserRequest body) throws IOException;
 
-    @Operation(summary = "", description = "All users with no accounts", security = {
+    @Operation(summary = "All users with no accounts", description = "creates a new user after checking if the user has accounts, saving or normal", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Users" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "creates a new user based on the fields of the user after checking the inputand the permissions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserRequest.class)))),

@@ -37,7 +37,7 @@ import java.util.List;
 @Validated
 public interface TransactionsApi {
 
-    @Operation(summary = "", description = "Returns a list of transactions", security = {
+    @Operation(summary = "return all transactions", description = "first check the usertype, if the user has the sufficient right it can get all the transactions that has been made. And if it is a normal customer you will see your on transaction of your account", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "returns a list of all the transactions tht has been made", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TransactionRequest.class)))),
@@ -48,7 +48,7 @@ public interface TransactionsApi {
     ResponseEntity<TransactionListResponse> transactionsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
 
 
-    @Operation(summary = "creates a new transaction", description = "creates a new transaction", security = {
+    @Operation(summary = "creates a new transaction", description = "this endpoint creates a new transaction. First perform checks that you are sending it to the right accounttype. e.g. savings to normal account. Then check balance and the limits. if everything passes the transaction will be valid and execute", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "creates new transaction and returns the information of the transaction e.g. timestamp, from, to and the amount of the transaction", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
@@ -58,7 +58,7 @@ public interface TransactionsApi {
         method = RequestMethod.POST)
     ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody TransactionRequest body) throws IOException;
 
-    @Operation(summary = "Withdraw money", description = "withdraw money", security = {
+    @Operation(summary = "Withdraw money", description = "withdraw money orm the account if the balance is suffient and check the limits e.g. transaction limit, daylimit. if valid proceed with the transaction", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
@@ -68,17 +68,17 @@ public interface TransactionsApi {
             method = RequestMethod.POST)
     ResponseEntity<TransactionAtmResponse> atmWithdraw(@RequestBody AtmRequest body) throws IOException;
 
-    @Operation(summary = "Depositing money", description = "depositing money", security = {
+    @Operation(summary = "Depositing money", description = "this endpoint deposits money on the account. It checks if the inserted pincode is correct and if is deposits money on the accounttype which has been selected", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
+            @ApiResponse(responseCode = "201", description = "the money has been deposited", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
     })
     @RequestMapping(value = "/atm/deposit",
             produces = { "application/json" },
             method = RequestMethod.POST)
     ResponseEntity<TransactionAtmResponse> atmDeposit(@RequestBody AtmRequest body) throws IOException;
 
-    @Operation(summary = "", description = "Advanced search for transactions", security = {
+    @Operation(summary = "Advanced search for transactions", description = "filter the transaction based in the submitted input e.g. datebefore transaction, lessthantransaction amount or bigger than transactionamount, iban of the account the money was send to or from", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "advance search for transactions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TransactionRequest.class)))),
