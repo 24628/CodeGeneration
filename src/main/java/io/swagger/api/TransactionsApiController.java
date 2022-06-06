@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
@@ -72,10 +73,18 @@ public class TransactionsApiController implements TransactionsApi {
         return ResponseEntity.ok(new TransactionAtmResponse(HttpStatus.OK, amount));
     }
 
-    @Override
-    public ResponseEntity<List<TransactionListResponse>> transactionsGetAdvancedSearch(Integer limit, Integer offset, TransactionAdvancedSearchRequest body) throws IOException {
-        List<TransactionEntity> transactions = transactionService.advanceSearch(body,limit,offset);
-        return (ResponseEntity<List<TransactionListResponse>>) transactions;
+    public ResponseEntity<TransactionListResponse> transactionsGetAdvancedSearch(
+            Integer limit,
+            Integer offset,
+            Long lessThenTransAmount,
+            Long greaterThanTransAmount,
+            LocalDateTime dateBefore,
+            LocalDateTime dateAfter,
+            String ibanTo,
+            String ibanFrom
+    ) throws IOException {
+        List<TransactionEntity> transactions = transactionService.advanceSearch(limit, offset, lessThenTransAmount, greaterThanTransAmount, dateBefore, dateAfter, ibanTo, ibanFrom);
+        return ResponseEntity.ok(new TransactionListResponse(HttpStatus.OK, transactions));
     }
 
 }

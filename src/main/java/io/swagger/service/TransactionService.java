@@ -194,21 +194,21 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
-    public List<TransactionEntity> advanceSearch(TransactionAdvancedSearchRequest body,int limit, int offset) {
+    public List<TransactionEntity> advanceSearch(Integer limit, Integer offset, Long lessThenTransAmount, Long greaterThanTransAmount, LocalDateTime dateBefore, LocalDateTime dateAfter, String ibanTo, String ibanFrom) {
         validator.NeedsToBeEmployee();
 
-        AccountEntity accountEntityFrom = accountRepository.getAccountByIBAN(body.getIbanFrom());
-        AccountEntity accountEntityTo = accountRepository.getAccountByIBAN(body.getIbanTo());
+        AccountEntity accountEntityFrom = accountRepository.getAccountByIBAN(ibanFrom);
+        AccountEntity accountEntityTo = accountRepository.getAccountByIBAN(ibanTo);
 
         if (accountEntityTo == null && accountEntityFrom == null)
-            return transactionRepository.findAllByAmountBetweenAndDateBetween(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(),new OffsetPageableDate(limit,offset));
+            return transactionRepository.findAllByAmountBetweenAndDateBetween(lessThenTransAmount, greaterThanTransAmount, dateBefore, dateAfter,new OffsetPageableDate(limit,offset));
 
         if (accountEntityTo == null)
-            return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFrom(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityFrom.getUuid(),new OffsetPageableDate(limit,offset));
+            return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFrom(lessThenTransAmount, greaterThanTransAmount, dateBefore, dateAfter, accountEntityFrom.getUuid(),new OffsetPageableDate(limit,offset));
 
         if (accountEntityFrom == null)
-            return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountTo(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityTo.getUuid(),new OffsetPageableDate(limit,offset));
+            return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountTo(lessThenTransAmount, greaterThanTransAmount, dateBefore, dateAfter, accountEntityTo.getUuid(),new OffsetPageableDate(limit,offset));
 
-        return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFromAndAccountTo(body.getLessThanTransAmount(), body.getGreaterThanTransAmount(), body.getDateBefore(), body.getDateAfter(), accountEntityFrom.getUuid(), accountEntityTo.getUuid(),new OffsetPageableDate(limit,offset));
+        return transactionRepository.findAllByAmountBetweenAndDateBetweenAndAccountFromAndAccountTo(lessThenTransAmount, greaterThanTransAmount, dateBefore, dateAfter, accountEntityFrom.getUuid(), accountEntityTo.getUuid(),new OffsetPageableDate(limit,offset));
     }
 }

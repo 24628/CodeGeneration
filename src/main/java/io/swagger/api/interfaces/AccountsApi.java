@@ -89,7 +89,7 @@ public interface AccountsApi {
     ResponseEntity<AccountSingleResponse> accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required=true, schema=@Schema()) @Valid @RequestBody AccountRequest body) throws IOException;
 
 
-    @Operation(summary = "Returns single account using IBAN", description = "", security = {
+    @Operation(summary = "Returns single account using username", description = "", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),

@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
@@ -84,12 +86,23 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions/search",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<TransactionListResponse>> transactionsGetAdvancedSearch(
+    ResponseEntity<TransactionListResponse> transactionsGetAdvancedSearch(
             @Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema())
             @Valid @RequestParam(value = "limit", required = false) Integer limit,
             @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema())
             @Valid @RequestParam(value = "offset", required = false) Integer offset,
-            @RequestBody TransactionAdvancedSearchRequest body) throws IOException;
-
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on less then transaction amount" ,schema=@Schema())
+            @Valid @RequestParam(value = "lessThenTransAmount", required = false) Long lessThenTransAmount,
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on greater then transaction amount" ,schema=@Schema())
+            @Valid @RequestParam(value = "greaterThanTransAmount", required = false) Long greaterThanTransAmount,
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on date before the transaction took place" ,schema=@Schema())
+            @Valid @RequestParam(value = "dateBefore", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateBefore,
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on date after the transaction took place" ,schema=@Schema())
+            @Valid @RequestParam(value = "dateAfter", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateAfter,
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on the iban to" ,schema=@Schema())
+            @Valid @RequestParam(value = "ibanTo", required = false) String ibanTo,
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on the iban from" ,schema=@Schema())
+            @Valid @RequestParam(value = "ibanFrom", required = false) String ibanFrom
+    ) throws IOException;
 }
 
