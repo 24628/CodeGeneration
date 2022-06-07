@@ -21,5 +21,5 @@ public interface IUserDTO extends JpaRepository<UserEntity, UUID> {
 
     UserEntity findUserEntityByRoleIs(Roles role);
 
-    List<UserEntity> findAllByRoleIs(Roles role, Pageable offsetPageableUUID);
+    List<UserEntity> findAllByRoleIs(Roles role);
 }

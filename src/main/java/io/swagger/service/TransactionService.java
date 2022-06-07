@@ -104,8 +104,8 @@ public class TransactionService {
         TransactionEntity transaction = new TransactionEntity();
         transaction.setAmount(body.getAmount());
         transaction.setDate(LocalDateTime.now());
-        transaction.setAccountFrom(UUID.fromString(body.getFrom()));
-        transaction.setAccountTo(UUID.fromString(body.getTo()));
+        transaction.setAccountFrom(body.getFrom());
+        transaction.setAccountTo(body.getTo());
         transaction.setUser_id(user.getUuid());
         transactionRepository.save(transaction);
 
@@ -157,8 +157,8 @@ public class TransactionService {
         TransactionEntity transaction = new TransactionEntity();
         transaction.setAmount(body.getAmount());
         transaction.setDate(LocalDateTime.now());
-        transaction.setAccountFrom(accountEntity.getUuid());
-        transaction.setAccountTo(atm.getUuid());
+        transaction.setAccountFrom(accountEntity.getIBAN());
+        transaction.setAccountTo(atm.getIBAN());
         transaction.setUser_id(bank.getUuid());
         transactionRepository.save(transaction);
 
@@ -177,10 +177,10 @@ public class TransactionService {
         UserEntity bank = userDTO.findUserEntityByRoleIs(Roles.BANK);
 
         TransactionEntity transaction = new TransactionEntity();
-        transaction.setAccountFrom(atm.getUuid());
+        transaction.setAccountFrom(atm.getIBAN());
         transaction.setAmount(body.getAmount());
         transaction.setDate(LocalDateTime.now());
-        transaction.setAccountTo(accountEntity.getUuid());
+        transaction.setAccountTo(accountEntity.getIBAN());
         transaction.setUser_id(bank.getUuid());
         transactionRepository.save(transaction);
 
