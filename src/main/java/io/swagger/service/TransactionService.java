@@ -175,7 +175,7 @@ public class TransactionService {
         AccountEntity accountEntity = res.getAccountEntity();
         AccountEntity atm = accountRepository.findByTypeIs(AccountType.ATM);
         UserEntity bank = userDTO.findUserEntityByRoleIs(Roles.BANK);
-
+        
         TransactionEntity transaction = new TransactionEntity();
         transaction.setAccountFrom(atm.getUuid());
         transaction.setAmount(body.getAmount());

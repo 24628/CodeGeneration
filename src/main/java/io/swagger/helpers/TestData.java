@@ -47,6 +47,7 @@ public class TestData {
     }
 
     private void generateUsers() {
+        Roles [] roles = new Roles[]{Roles.EMPLOYEE,Roles.CUSTOMER,Roles.DISABLED};
         String[] names = {"bob", "karel", "hans", "piet"};
         for (String user : names) {
             UserEntity userEntity = new UserEntity();
@@ -54,7 +55,7 @@ public class TestData {
             userEntity.setName(user);
             userEntity.setEmail(user + "@example.com");
             userEntity.setPassword("$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu"); //password all the same password
-            userEntity.setRole(Roles.values()[random.nextInt(Roles.values().length)]);
+            userEntity.setRole(Roles.values()[random.nextInt(roles.length)]);
             userEntity.setTransactionLimit(200L);
             userEntity.setDayLimit(500L);
             userEntity.setPinCode(1234);
