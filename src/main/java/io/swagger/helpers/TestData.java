@@ -108,10 +108,10 @@ public class TestData {
             TransactionEntity transaction = new TransactionEntity();
             UserEntity randomuser = users.get(new Random().nextInt(users.size()));
             transaction.setAmount(random.nextInt((1000 - 100) + 1) + 10);
-            transaction.setAccountFrom(allaccounts.getOne(currentuser.getUuid()).getUuid()); // moet account entity pakken
+            transaction.setAccountFrom(allaccounts.getOne(currentuser.getUuid()).getIBAN()); // moet account entity pakken
             transaction.setDate(LocalDateTime.now());
             transaction.setUser_id(randomuser.getUuid());
-            transaction.setAccountTo(randomuser.getUuid());
+            transaction.setAccountTo(allaccounts.getOne(randomuser.getUuid()).getIBAN());
             if (currentuser == randomuser) {
                 continue;
             }

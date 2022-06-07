@@ -19,8 +19,8 @@ public class TransactionEntity {
     @Id
     @GeneratedValue
     private UUID uuid;
-    private UUID accountFrom;
-    private UUID accountTo;
+    private String accountFrom;
+    private String accountTo;
     private UUID user_id;
     private LocalDateTime date;
     private long amount;
