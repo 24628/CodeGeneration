@@ -43,7 +43,9 @@ public class jwtTokenFilter extends OncePerRequestFilter {
 
         } catch (ResponseStatusException ex) {
             SecurityContextHolder.clearContext();                // if the token is invalid, clear the security context
-            httpServletResponse.sendError(ex.getStatus().value(), "current token" + token);
+            httpServletResponse.setStatus(401);
+            httpServletResponse.sendError(ex.getStatus().value(), "Token not authorised");
+            System.out.println(httpServletRequest.getMethod());
 //            httpServletResponse.sendError(ex.getStatus().value(), ex.getMessage());
             return;
         }

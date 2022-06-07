@@ -83,7 +83,10 @@ public class AccountsApiController implements AccountsApi {
             description = "The unique id of the user is taken",
             required = true,
             schema = @Schema()) @PathVariable("id") String id) throws IOException {
-        List<AccountEntity> accounts = accountService.getAccountByUserId(UUID.fromString(id));
+        String newid = id.replaceAll("-","").replaceAll(
+                "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
+                "$1-$2-$3-$4-$5");
+        List<AccountEntity> accounts = accountService.getAccountByUserId(UUID.fromString(newid));
         return ResponseEntity.ok(new AccountListResponse(HttpStatus.OK, accounts));
     }
 
