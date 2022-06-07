@@ -53,6 +53,10 @@ public class Validator {
         if (email.isEmpty() || name.isEmpty() || password.isEmpty() || username.isEmpty())
             throw new ValidationException("Missing content");
 
+
+        System.out.println(username);
+        System.out.println(containsWhiteSpace(username));
+
         if (containsWhiteSpace(email) || containsWhiteSpace(username) || containsWhiteSpace(password))
             throw new ValidationException("No white Spaces!");
 

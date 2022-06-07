@@ -28,6 +28,7 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @RestController
@@ -82,6 +83,7 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<UserSingleResponse> usersIdPut(
             @Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema())
             @PathVariable("id") String id, @RequestBody UserRequest body) throws IOException {
+        authorized.CanOnlyEditOwnAccount(UUID.fromString(id));
         UserEntity user = userService.updateUser(id, body);
         return ResponseEntity.ok(new UserSingleResponse(HttpStatus.OK, user));
     }

@@ -64,8 +64,6 @@ public class AccountServiceTest {
                 .transactionLimit(2000L)
                 .build();
 
-        given(iUserDTO.save(userEntity)).willReturn(userEntity);
-
         accountEntity = AccountEntity.builder()
                 .IBAN("testIban123")
                 .uuid(UUID.randomUUID())

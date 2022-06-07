@@ -5,6 +5,7 @@ import io.swagger.helpers.OffsetPageableUUID;
 import io.swagger.model.Entity.UserEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public interface IUserDTO extends JpaRepository<UserEntity, UUID> {
 
     UserEntity findUserEntitiesByPinCode(Integer pinCode);
 
+    List<UserEntity> findAllByRoleIsNot(Roles role, Pageable pg);
     UserEntity findUserEntityByRoleIs(Roles role);
 
     List<UserEntity> findAllByRoleIs(Roles role);

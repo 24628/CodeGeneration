@@ -123,6 +123,7 @@ public class TransactionService {
     public List<TransactionEntity> getTransactions(String iban,Integer offset,Integer limit) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
+
         if (user.getRole().equals(Roles.BANK) || user.getRole().equals(Roles.EMPLOYEE))
             return transactionRepository.findAll(new OffsetPageableDate(limit,offset)).getContent();
 
