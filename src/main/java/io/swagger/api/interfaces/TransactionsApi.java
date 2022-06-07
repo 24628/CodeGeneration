@@ -71,7 +71,7 @@ public interface TransactionsApi {
     @Operation(summary = "Depositing money", description = "this endpoint deposits money on the account. It checks if the inserted pincode is correct and if is deposits money on the accounttype which has been selected", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "the money has been deposited", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
+            @ApiResponse(responseCode = "200", description = "the money has been deposited", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
     })
     @RequestMapping(value = "/atm/deposit",
             produces = { "application/json" },
