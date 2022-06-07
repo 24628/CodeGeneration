@@ -17,8 +17,8 @@ public class UserEntity {
     @GeneratedValue
     private UUID uuid;
     private Integer pinCode;
-    private Roles role;
-    private String username;
+    protected Roles role;
+    protected String username;
     private String name;
     private String email;
     private String password;

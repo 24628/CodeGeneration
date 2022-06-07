@@ -6,6 +6,7 @@ import io.swagger.enums.Roles;
 import io.swagger.helpers.AuthResult;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
+import io.swagger.model.Entity.UserLoginEntity;
 import io.swagger.model.Request.RegisterRequest;
 import io.swagger.repository.IUserDTO;
 import io.swagger.validator.Validator;
@@ -53,6 +54,10 @@ public class RegisterService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword()));
         token = jwtTokenProvider.createToken(body.getUsername(), userDTO.findByUsername(body.getUsername()).getRole());
 
-        return new AuthResult(token, user);
+        UserLoginEntity userInfo = new UserLoginEntity();
+        userInfo.setUsername(user.getUsername());
+        userInfo.setRole(user.getRole());
+
+        return new AuthResult(token, userInfo);
     }
 }

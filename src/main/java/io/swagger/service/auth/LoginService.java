@@ -6,6 +6,7 @@ import io.swagger.api.exceptions.UserNotFoundException;
 import io.swagger.helpers.AuthResult;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
+import io.swagger.model.Entity.UserLoginEntity;
 import io.swagger.repository.IUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,10 +46,13 @@ public class LoginService {
         if(!passwordEncoder.matches(password,user.getPassword())){
             throw new InvalidUsernameOrPassword();
         }
+        UserLoginEntity userInfo = new UserLoginEntity();
+        userInfo.setUsername(user.getUsername());
+        userInfo.setRole(user.getRole());
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());
 
-        return new AuthResult(token, user);
+        return new AuthResult(token, userInfo);
     }
 }
