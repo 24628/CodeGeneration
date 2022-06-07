@@ -35,7 +35,7 @@ public class AccountService {
 
     //Check if the user has already a saving // normal account
     public AccountEntity addAccount(AccountRequest body) {
-        List<AccountEntity>  accountEntityList = accountRepository.getAllByUuidIs(UUID.fromString(body.getUserId()));
+        List<AccountEntity>  accountEntityList = accountRepository.getAllByUserId(UUID.fromString(body.getUserId()));
         for (AccountEntity account: accountEntityList){
             if(account.getType().equals(AccountType.valueOf(body.getType()))){
                 throw new EntityAlreadyExistException("they account of the type " + body.getType() + " already exist on this user");
@@ -74,7 +74,7 @@ public class AccountService {
     }
 
     public List<AccountEntity> getAccountByUserId(UUID userid) {
-        return accountRepository.getAllByUuidIs(userid);
+        return accountRepository.getAllByUserId(userid);
     }
 
     public AccountEntity updateAccountByIBAN(AccountRequest body, String IBAN) {

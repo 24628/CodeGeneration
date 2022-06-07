@@ -153,7 +153,7 @@ public class AccountServiceTest {
 
     @Test
     public void ShouldThrowAccountEntityAlreadyExistCauseCanNotHaveMultipleNormalAccounts(){
-        given(iAccountDTO.getAllByUuidIs(userEntity.getUuid()))
+        given(iAccountDTO.getAllByUserId(userEntity.getUuid()))
                 .willReturn(List.of(accountEntity,accountEntity3));
 
         org.junit.jupiter.api.Assertions.assertThrows(EntityAlreadyExistException.class, () -> {

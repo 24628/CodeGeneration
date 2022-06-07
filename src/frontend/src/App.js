@@ -9,7 +9,9 @@ import SideNav from "./components/SideNav";
 import React from "react";
 import MainCardSidebar from "./components/MainCardSidebar";
 import MainCardNoSide from "./components/MainCardNoSide";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Account from "./pages/Account";
+import Transaction from "./pages/Transaction";
 function App() {
     new DataFetch().init(); // initiate datafetch
 
@@ -36,6 +38,8 @@ function App() {
           <Container fluid={true}>
               <Routes>
                   <Route path="/login" element={<MainCardNoSide element={<Login/>}/>}/>
+                  <Route path="/account/:iban" element={<MainCardSidebar element={<Account/>}/>}/>
+                  <Route path="/transaction" element={<MainCardSidebar element={<Transaction/>}/>}/>
                   <Route path="/" element={<MainCardSidebar element={<Home/>}/>}/>
               </Routes>
 

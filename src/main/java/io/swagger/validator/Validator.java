@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class Validator {
@@ -34,6 +35,8 @@ public class Validator {
 
     @Autowired
     ITransactionDTO transactionDTO;
+
+
 
     public boolean containsWhiteSpace(final String testCode) {
         if (testCode != null) {
@@ -67,8 +70,9 @@ public class Validator {
 
 
     public ValidateAtmHelper isAllowedToAtm(AtmRequest body){
-        UserEntity userEntity = userDTO.findUserEntitiesByPinCode(body.getPinCode());
+
         AccountEntity accountEntity = accountRepository.getAccountByIBAN(body.getIban());
+        UserEntity userEntity = userDTO.findUserEntityByUuid(accountEntity.getUserId());
 
         if (userEntity == null)
             throw new ValidationException("invalid pincode");
@@ -76,8 +80,8 @@ public class Validator {
         if (accountEntity == null)
             throw new ValidationException("invalid pincode");
 
-        if (userEntity.getUuid() != accountEntity.getUserId())
-            throw new ValidationException("invalid pincode");
+        if (!userEntity.getPinCode().equals( body.getPinCode()))
+            throw new ValidationException("invalid pincode entered");
 
         return new ValidateAtmHelper(userEntity, accountEntity);
     }

@@ -126,15 +126,14 @@ public class TransactionService {
         if (user.getRole().equals(Roles.BANK) || user.getRole().equals(Roles.EMPLOYEE))
             return transactionRepository.findAll(new OffsetPageableDate(limit,offset)).getContent();
 
-        return transactionRepository.getAllByAccountFrom(user.getUuid(),new OffsetPageableDate(limit,offset));
+        return transactionRepository.getAllByAccountFromOrAccountTo(user.getUuid(),user.getUuid(),new OffsetPageableDate(limit,offset));
     }
     public List<TransactionEntity> getTransactions() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
         if (user.getRole().equals(Roles.BANK) || user.getRole().equals(Roles.EMPLOYEE))
             return transactionRepository.findAll();
-
-        return transactionRepository.getAllByAccountFrom(user.getUuid());
+        return transactionRepository.getAllByAccountFromOrAccountTo(user.getUuid(),user.getUuid());
     }
 
     public Long withdrawMoney(AtmRequest body) {

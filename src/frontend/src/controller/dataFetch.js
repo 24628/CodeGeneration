@@ -20,7 +20,7 @@ class DataFetch{
                     const token  =  response.data.token;
                     localStorage.setItem("token", token);
                     localStorage.setItem("role",response.data.userEntity.role);
-                    localStorage.setItem("uuid",response.data.userEntity.uuid);
+                    localStorage.setItem("uuid",response.data.userEntity.userId);
                     setAuthToken(token);
                     resolve({status: true});
                 })
@@ -31,20 +31,40 @@ class DataFetch{
 
     }
 
-    static accounts(limit){
+    static getAccountsById(limit){
         return new Promise((resolve, reject) => {
             axios.get(baseurl+"accounts/id/"+localStorage.getItem("uuid"), limit)
                 .then(response => {
-                    console.log(response)
-                    resolve({status: true});
+                    resolve({status: true,accounts: response.data.accountEntityList});
                 })
                 .catch(err => {
                     reject({status: false,message: getErrorHandled(err)});
                 });
         })
-
     }
 
+    static getTransactions(limit){
+        return new Promise((resolve, reject) => {
+            axios.get(baseurl+"transactions", limit)
+                .then(response => {
+                    resolve(response.data.transactionEntityList);
+                })
+                .catch(err => {
+                    reject({error: true,message: getErrorHandled(err)});
+                });
+        })
+    }
+    static createTransactions(from,to,amount){
+        return new Promise((resolve, reject) => {
+            axios.post(baseurl+"transactions", {from: from, to: to, amount: amount})
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(err => {
+                    reject({error: true,message: getErrorHandled(err)});
+                });
+        })
+    }
 }
 function  getErrorHandled(err){
     console.log(err);
