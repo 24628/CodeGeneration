@@ -1,6 +1,6 @@
 package io.swagger.responses.auth;
 
-import io.swagger.model.UserResponseEntity.UserLoginEntity;
+import io.swagger.model.Responses.UserLoginEntity;
 import org.springframework.http.HttpStatus;
 
 public class JwtTokenResponse {

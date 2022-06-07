@@ -81,8 +81,6 @@ public class AccountService {
     }
 
 
-    // get account after inserting the iban
-    // Zorg dat je geen atm kan op halen
     public AccountEntity getAccountByIBAN(String IBAN) {
         return accountRepository.getAccountByIBAN(IBAN);
     }
