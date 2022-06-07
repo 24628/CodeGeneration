@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,11 +54,13 @@ public class TransactionsApiController implements TransactionsApi {
     }
 
     public ResponseEntity<TransactionListResponse> transactionsGet(
+            @Parameter(in = ParameterIn.PATH, description = "IBAN for transactions to get", required = false, schema = @Schema())
+            @PathVariable("iban") String iban,
             @Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema())
             @Valid @RequestParam(value = "limit", required = false) Integer limit,
             @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema())
             @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
-        List<TransactionEntity> transactions = transactionService.getTransactions(offset,limit);
+        List<TransactionEntity> transactions = transactionService.getTransactions(iban,offset,limit);
         return ResponseEntity.ok(new TransactionListResponse(HttpStatus.OK, transactions));
     }
 

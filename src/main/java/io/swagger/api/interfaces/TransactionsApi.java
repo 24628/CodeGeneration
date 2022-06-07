@@ -23,10 +23,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -42,10 +39,12 @@ public interface TransactionsApi {
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "returns a list of all the transactions tht has been made", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TransactionRequest.class)))),
     })
-    @RequestMapping(value = "/transactions",
+    @RequestMapping(value = "/transactions/{iban}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<TransactionListResponse> transactionsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
+    ResponseEntity<TransactionListResponse> transactionsGet(@Parameter(in = ParameterIn.PATH, description = "IBAN of transaction", required = false, schema = @Schema()) @PathVariable("iban") String iban,
+                                                            @Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,
+                                                            @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
 
 
     @Operation(summary = "creates a new transaction", description = "this endpoint creates a new transaction. First perform checks that you are sending it to the right accounttype. e.g. savings to normal account. Then check balance and the limits. if everything passes the transaction will be valid and execute", security = {

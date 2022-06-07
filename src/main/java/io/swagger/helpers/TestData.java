@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 @Component
 public class TestData {
@@ -41,9 +42,10 @@ public class TestData {
   }
 
     public void Generate(){
-        CreateBank();
+
         generateUsers();
-      //  generateTransactions();
+        generateTransactions();
+        CreateBank();
     }
 
     private void generateUsers() {
@@ -105,13 +107,23 @@ public class TestData {
 
         List<UserEntity> users = allusers.findAll();
         for (UserEntity currentuser : users) {
+            UUID currentuuid = currentuser.getUuid();
             TransactionEntity transaction = new TransactionEntity();
+
             UserEntity randomuser = users.get(new Random().nextInt(users.size()));
+
+            String toAccount = allaccounts.getAccountEntityByUserIdAndTypeIsNot(randomuser.getUuid(),AccountType.SAVING).getIBAN();
+
             transaction.setAmount(random.nextInt((1000 - 100) + 1) + 10);
-            transaction.setAccountFrom(allaccounts.getOne(currentuser.getUuid()).getIBAN()); // moet account entity pakken
+
+            transaction.setAccountFrom(
+                    allaccounts.getAccountEntityByUserIdAndTypeIsNot(currentuuid,AccountType.SAVING).getIBAN()
+            ); // moet account entity pakken
             transaction.setDate(LocalDateTime.now());
             transaction.setUser_id(randomuser.getUuid());
-            transaction.setAccountTo(allaccounts.getOne(randomuser.getUuid()).getIBAN());
+
+            transaction.setAccountTo(toAccount);
+
             if (currentuser == randomuser) {
                 continue;
             }

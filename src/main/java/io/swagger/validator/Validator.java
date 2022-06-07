@@ -86,10 +86,10 @@ public class Validator {
         return new ValidateAtmHelper(userEntity, accountEntity);
     }
 
-    public void CheckDayLimit(UserEntity user, Long amount) {
+    public void CheckDayLimit(UserEntity user,String iban, Long amount) {
         long limit = 0;
         List<TransactionEntity> transactions = transactionDTO.getAllByAccountFromAndDate(
-                user.getUuid(),
+                iban,
                 LocalDateTime.from(LocalDate.now(ZoneId.of("Europe/Paris")).atStartOfDay(ZoneId.of("Europe/Paris")))
         );
         for (TransactionEntity transaction : transactions) {
