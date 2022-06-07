@@ -32,8 +32,8 @@ public class SwaggerUiConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        generateData();
-//        testData.Generate();
+
+        testData.Generate();
         registry.
                 addResourceHandler("/swagger-ui/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
@@ -45,13 +45,5 @@ public class SwaggerUiConfiguration implements WebMvcConfigurer {
         registry.addViewController("/swagger-ui/").setViewName("forward:/swagger-ui/index.html");
     }
 
-    private void generateData() {
 
-//        DayLimitEntity dayLimit = new DayLimitEntity();
-//        dayLimit.setUserId(userEntity.getUuid());
-//        dayLimit.setActualLimit(2000L);
-//        dayLimit.setCurrent(0L);
-//        dayLimitService.save(dayLimit);
-
-    }
 }

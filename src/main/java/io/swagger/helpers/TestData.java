@@ -43,7 +43,7 @@ public class TestData {
     public void Generate(){
         CreateBank();
         generateUsers();
-        generateTransactions();
+      //  generateTransactions();
     }
 
     private void generateUsers() {
