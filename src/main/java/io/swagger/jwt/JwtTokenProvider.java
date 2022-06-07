@@ -78,9 +78,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            System.out.println("lmao");
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            System.out.println("Bro return true");
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Expired or invalid JWT token");

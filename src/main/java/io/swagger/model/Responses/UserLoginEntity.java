@@ -1,4 +1,4 @@
-package io.swagger.model.UserResponseEntity;
+package io.swagger.model.Responses;
 
 
 import io.swagger.enums.Roles;
@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,4 +17,5 @@ public class UserLoginEntity{
     @GeneratedValue
     private Roles role;
     private String username;
+    private UUID userId;
 }

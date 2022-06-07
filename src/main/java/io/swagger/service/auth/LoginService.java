@@ -5,7 +5,7 @@ import io.swagger.api.exceptions.UserNotFoundException;
 import io.swagger.helpers.AuthResult;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.UserResponseEntity.UserLoginEntity;
+import io.swagger.model.Responses.UserLoginEntity;
 import io.swagger.repository.IUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,6 +44,7 @@ public class LoginService {
         UserLoginEntity userInfo = new UserLoginEntity();
         userInfo.setUsername(user.getUsername());
         userInfo.setRole(user.getRole());
+        userInfo.setUserId(user.getUuid());
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         token = jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getRole());

@@ -6,7 +6,7 @@ import io.swagger.enums.Roles;
 import io.swagger.helpers.AuthResult;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.UserResponseEntity.UserLoginEntity;
+import io.swagger.model.Responses.UserLoginEntity;
 import io.swagger.model.Request.RegisterRequest;
 import io.swagger.repository.IUserDTO;
 import io.swagger.validator.Validator;
