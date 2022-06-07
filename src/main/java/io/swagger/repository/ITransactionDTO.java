@@ -14,8 +14,8 @@ import java.util.UUID;
 public interface ITransactionDTO extends JpaRepository<TransactionEntity, UUID> {
 
     List<TransactionEntity> getAllByAccountFromAndDate(UUID accountFrom, LocalDateTime date);
-    List<TransactionEntity> getAllByAccountFromOrAccountTo(UUID account,Pageable pg);
-    List<TransactionEntity> getAllByAccountFromOrAccountTo(UUID account);
+    List<TransactionEntity> getAllByAccountFromOrAccountTo(UUID account,UUID account2,Pageable pg);
+    List<TransactionEntity> getAllByAccountFromOrAccountTo(UUID account,UUID account2);
 
     List<TransactionEntity> findAllBy(Pageable pg);
 
