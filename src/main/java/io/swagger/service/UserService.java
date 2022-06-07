@@ -79,7 +79,7 @@ public class UserService {
 
 
     public List<UserEntity> getUsersWithNoAccount(Integer offset,Integer limit) {
-        List<UserEntity> userEntityList = userDTO.findAllByRoleIs(Roles.CUSTOMER, new OffsetPageableUUID(limit,offset));
+        List<UserEntity> userEntityList = userDTO.findAllByRoleIs(Roles.CUSTOMER);
         ArrayList<UserEntity> foundUsers = new ArrayList<>();
 
         for (UserEntity user : userEntityList) {
@@ -87,10 +87,10 @@ public class UserService {
                 foundUsers.add(user);
             }
 
-            if(foundUsers.size() > 10)
+            if(foundUsers.size() > (limit +(offset * limit)))
                 break;
         }
 
-        return foundUsers;
+        return foundUsers.subList(foundUsers.size()-limit, foundUsers.size());
     }
 }
