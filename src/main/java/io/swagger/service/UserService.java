@@ -29,11 +29,9 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    Validator validator;
+    private Validator validator;
 
     public UserEntity addUser(UserRequest body) {
-        validator.NeedsToBeEmployee();
-
         validator.CanCreateUser(body.getName(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L,body.getName());
 
         UserEntity userEntity = new UserEntity();
@@ -47,24 +45,19 @@ public class UserService {
     }
 
     public UserEntity findUserByName(String username) {
-
         return userDTO.findByUsername(username);
     }
 
     public List<UserEntity> getUsers(Integer limit,Integer offset) throws InvalidPermissionsException {
-        validator.NeedsToBeEmployee();
         return userDTO.findAll(new OffsetPageableUUID(limit,offset)).getContent();
     }
 
     public UserEntity getUserById(String uuid) {
-        validator.NeedsToBeEmployee();
-
         return userDTO.getOne(UUID.fromString(uuid));
     }
 
     public UserEntity updateUser(String uuid, UserRequest body) throws InvalidPermissionsException{
         UserEntity userToEdit = userDTO.getOne(UUID.fromString(uuid));
-
 
         if(!userToEdit.getRole().equals(Roles.EMPLOYEE) && !userToEdit.getUuid().equals(UUID.fromString(uuid))) {
             throw new InvalidPermissionsException("Your only allowed to view your own account");
@@ -75,9 +68,6 @@ public class UserService {
     }
 
     public void deleteUser(String uuid) {
-
-        validator.NeedsToBeEmployee();
-
         UserEntity user = userDTO.getOne(UUID.fromString(uuid));
 
         user.setRole(Roles.DISABLED);

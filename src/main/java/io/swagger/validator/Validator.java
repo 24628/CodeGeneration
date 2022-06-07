@@ -67,13 +67,7 @@ public class Validator {
             throw new ValidationException("transaction limit has to be positive");
     }
 
-    public void NeedsToBeEmployee() throws InvalidPermissionsException {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserEntity user = userDTO.findByUsername(userDetails.getUsername());
 
-        if (!user.getRole().equals(Roles.EMPLOYEE))
-            throw new InvalidPermissionsException("no permissions to access this");
-    }
 
     public ValidateAtmHelper isAllowedToAtm(AtmRequest body){
 

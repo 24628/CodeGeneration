@@ -175,7 +175,7 @@ public class TransactionService {
         AccountEntity accountEntity = res.getAccountEntity();
         AccountEntity atm = accountRepository.findByTypeIs(AccountType.ATM);
         UserEntity bank = userDTO.findUserEntityByRoleIs(Roles.BANK);
-        
+
         TransactionEntity transaction = new TransactionEntity();
         transaction.setAccountFrom(atm.getIBAN());
         transaction.setAmount(body.getAmount());
@@ -195,8 +195,6 @@ public class TransactionService {
     }
 
     public List<TransactionEntity> advanceSearch(Integer limit, Integer offset, Long lessThenTransAmount, Long greaterThanTransAmount, LocalDateTime dateBefore, LocalDateTime dateAfter, String ibanTo, String ibanFrom) {
-        validator.NeedsToBeEmployee();
-
         AccountEntity accountEntityFrom = accountRepository.getAccountByIBAN(ibanFrom);
         AccountEntity accountEntityTo = accountRepository.getAccountByIBAN(ibanTo);
 

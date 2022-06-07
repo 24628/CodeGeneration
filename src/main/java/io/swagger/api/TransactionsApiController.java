@@ -2,6 +2,7 @@ package io.swagger.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.TransactionsApi;
+import io.swagger.helpers.Authorized;
 import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Request.TransactionRequest;
@@ -43,6 +44,8 @@ public class TransactionsApiController implements TransactionsApi {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    Authorized authorized;
     @org.springframework.beans.factory.annotation.Autowired
     public TransactionsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -83,6 +86,7 @@ public class TransactionsApiController implements TransactionsApi {
             String ibanTo,
             String ibanFrom
     ) throws IOException {
+        authorized.NeedsToBeEmployee();
         List<TransactionEntity> transactions = transactionService.advanceSearch(limit, offset, lessThenTransAmount, greaterThanTransAmount, dateBefore, dateAfter, ibanTo, ibanFrom);
         return ResponseEntity.ok(new TransactionListResponse(HttpStatus.OK, transactions));
     }
