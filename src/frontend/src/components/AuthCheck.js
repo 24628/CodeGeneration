@@ -2,10 +2,10 @@ import {Navigate, useLocation} from 'react-router-dom'
 import React from "react";
 import {setAuthToken} from "../controller/dataFetch";
 
-const customerPaths = ['/'];
+const customerPaths = ['','account'];
 
 export default function AuthCheck(){
-    let path = useLocation().pathname;
+    let path = useLocation().pathname.split('/')[1];
     let authorised = false;
     if(localStorage.getItem("token") == null){
         authorised = false;

@@ -35,8 +35,7 @@ class DataFetch{
         return new Promise((resolve, reject) => {
             axios.get(baseurl+"accounts/id/"+localStorage.getItem("uuid"), limit)
                 .then(response => {
-                    console.log(response)
-                    resolve({status: true});
+                    resolve({status: true,accounts: response.data.accountEntityList});
                 })
                 .catch(err => {
                     reject({status: false,message: getErrorHandled(err)});
@@ -44,6 +43,28 @@ class DataFetch{
         })
     }
 
+    static getTransactions(limit){
+        return new Promise((resolve, reject) => {
+            axios.get(baseurl+"transactions", limit)
+                .then(response => {
+                    resolve(response.data.transactionEntityList);
+                })
+                .catch(err => {
+                    reject({error: true,message: getErrorHandled(err)});
+                });
+        })
+    }
+    static createTransactions(from,to,amount){
+        return new Promise((resolve, reject) => {
+            axios.post(baseurl+"transactions", {from: from, to: to, amount: amount})
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(err => {
+                    reject({error: true,message: getErrorHandled(err)});
+                });
+        })
+    }
 }
 function  getErrorHandled(err){
     console.log(err);
