@@ -74,10 +74,7 @@ public class AccountService {
         return account;
     }
 
-    // haalt alle accounts op uit de database
-    // Zorg dat alleen employee dit mag doen
-    // Als de account role ATM heeft moet deze weg gefilterd worden
-    // Stuurt een lijst terug van alle accounts
+   // alleen employee amg alle accounts opnemen
     public List<AccountEntity> getAccounts(Integer offset, Integer limit) {
         validator.NeedsToBeEmployee();
         return accountRepository.getAllByTypeIsNot(AccountType.ATM, new OffsetPageableUUID(limit,offset));

@@ -1,9 +1,7 @@
 package io.swagger.api.exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
@@ -24,10 +22,10 @@ public class GlobalExceptionHandler {
         return new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ResponseStatus(code = HttpStatus.FORBIDDEN)
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseStatusException handleUserNotFound(UserNotFoundException e) {
-        return new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+    public ResponseStatusException ResponseStatusException(UserNotFoundException e) {
+        return new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
