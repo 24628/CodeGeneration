@@ -3,17 +3,13 @@ package services;
 import io.swagger.Swagger2SpringBoot;
 import io.swagger.api.exceptions.EntityNotFoundException;
 import io.swagger.api.exceptions.ValidationException;
-import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
 import io.swagger.helpers.OffsetPageableUUID;
-import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.Request.AccountRequest;
 import io.swagger.model.Request.UserRequest;
 import io.swagger.repository.IAccountDTO;
 import io.swagger.repository.ITransactionDTO;
 import io.swagger.repository.IUserDTO;
-import io.swagger.service.AccountService;
 import io.swagger.service.UserService;
 import io.swagger.validator.Validator;
 import org.junit.Before;
@@ -21,9 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -33,10 +27,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Swagger2SpringBoot.class, UserService.class}, webEnvironment = SpringBootTest.WebEnvironment.MOCK)

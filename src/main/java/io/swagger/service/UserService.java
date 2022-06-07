@@ -1,7 +1,6 @@
 package io.swagger.service;
 
 import io.swagger.api.exceptions.EntityNotFoundException;
-import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.Roles;
 import io.swagger.helpers.OffsetPageableUUID;
@@ -106,7 +105,7 @@ public class UserService {
                 foundUsers.add(user);
             }
 
-            if(foundUsers.size() > (limit +(offset * limit)))
+            if(foundUsers.size() > ((offset + 1) * limit))
                 break;
         }
 

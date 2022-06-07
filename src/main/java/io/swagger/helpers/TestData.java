@@ -7,18 +7,15 @@ import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.repository.IAccountDTO;
 import io.swagger.repository.IUserDTO;
+import io.swagger.service.AccountService;
 import io.swagger.service.TransactionService;
+import io.swagger.service.UserService;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
-import io.swagger.service.AccountService;
-import io.swagger.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -114,7 +111,7 @@ public class TestData {
 
             String toAccount = allaccounts.getAccountEntityByUserIdAndTypeIsNot(randomuser.getUuid(),AccountType.SAVING).getIBAN();
 
-            transaction.setAmount(random.nextInt((1000 - 100) + 1) + 10);
+            transaction.setAmount((long) (random.nextInt((1000 - 100) + 1) + 10));
 
             transaction.setAccountFrom(
                     allaccounts.getAccountEntityByUserIdAndTypeIsNot(currentuuid,AccountType.SAVING).getIBAN()
