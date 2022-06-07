@@ -37,7 +37,7 @@ public class AccountService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
-        List<AccountEntity>  accountEntityList = accountRepository.getAllByUuidIs(UUID.fromString(body.getUserId()));
+        List<AccountEntity>  accountEntityList = accountRepository.getAllByUserId(UUID.fromString(body.getUserId()));
         for (AccountEntity account: accountEntityList){
             if(account.getType().equals(AccountType.valueOf(body.getType()))){
                 throw new EntityAlreadyExistException("they account of the type " + body.getType() + " already exist on this user");
@@ -93,7 +93,7 @@ public class AccountService {
             throw new InvalidPermissionsException("Your only allowed to view your own account");
         }
 
-        return accountRepository.getAllByUuidIs(userid);
+        return accountRepository.getAllByUserId(userid);
     }
 
     public AccountEntity updateAccountByIBAN(AccountRequest body, String IBAN) {
