@@ -56,8 +56,8 @@ public class TransactionService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userService.findUserByName(userDetails.getUsername());
 
-        AccountEntity accountFrom = accountRepository.getOne(UUID.fromString(body.getFrom()));
-        AccountEntity accountTo = accountRepository.getOne(UUID.fromString(body.getTo()));
+        AccountEntity accountFrom = accountRepository.getAccountByIBAN((body.getFrom()));
+        AccountEntity accountTo = accountRepository.getAccountByIBAN((body.getTo()));
 
         System.out.println(accountFrom.getUuid());
         System.out.println(accountTo.getUuid());
@@ -97,7 +97,7 @@ public class TransactionService {
         ) throw new ValidationException("Cannot make transactions from normal account to another users saving account");
 
         if (user.getRole().equals(Roles.CUSTOMER)
-                && accountFrom.getUserId() != user.getUuid())
+                && !accountFrom.getUserId().toString().equals(user.getUuid().toString()))
             throw new ValidationException("This is not your own account!");
 
         //Create the transactions
