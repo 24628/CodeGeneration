@@ -20,7 +20,7 @@ class DataFetch{
                     const token  =  response.data.token;
                     localStorage.setItem("token", token);
                     localStorage.setItem("role",response.data.userEntity.role);
-                    localStorage.setItem("uuid",response.data.userEntity.uuid);
+                    localStorage.setItem("uuid",response.data.userEntity.userId);
                     setAuthToken(token);
                     resolve({status: true});
                 })
@@ -31,7 +31,7 @@ class DataFetch{
 
     }
 
-    static accounts(limit){
+    static getAccountsById(limit){
         return new Promise((resolve, reject) => {
             axios.get(baseurl+"accounts/id/"+localStorage.getItem("uuid"), limit)
                 .then(response => {
@@ -42,7 +42,6 @@ class DataFetch{
                     reject({status: false,message: getErrorHandled(err)});
                 });
         })
-
     }
 
 }

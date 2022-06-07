@@ -6,7 +6,7 @@ import DataFetch from "../controller/dataFetch";
 
 function Home() {
     useEffect(()=>{
-        DataFetch.accounts().then(val => {
+        DataFetch.getAccountsById().then(val => {
 
         });
     }, []);

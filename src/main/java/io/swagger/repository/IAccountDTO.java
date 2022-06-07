@@ -16,7 +16,7 @@ public interface IAccountDTO extends JpaRepository<AccountEntity, UUID> {
 
      AccountEntity getAccountByIBAN(String IBAN);
 
-     List<AccountEntity> getAllByUuidIs(UUID userid);
+     List<AccountEntity> getAllByUserId(UUID userid);
 
      List<AccountEntity> getAllByTypeIsNot(AccountType type, Pageable pg);
 
