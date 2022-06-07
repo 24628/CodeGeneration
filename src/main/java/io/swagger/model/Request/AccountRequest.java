@@ -14,8 +14,8 @@ import org.springframework.validation.annotation.Validated;
 
 
 public class AccountRequest {
-    @JsonProperty("IBAN")
-    private String IBAN = null;
+    @JsonProperty("iban")
+    private String iban = null;
 
     @JsonProperty("type")
     private String type = null;
@@ -27,18 +27,18 @@ public class AccountRequest {
     private Long absoluteLimit = null;
 
     /**
-     * Get IBAN
+     * Get iban
      *
-     * @return IBAN
+     * @return iban
      **/
     @Schema(example = "NL69INHO1234123412", required = false, description = "")
 
-    public String getIBAN() {
-        return IBAN;
+    public String getIban() {
+        return iban;
     }
 
-    public void setIBAN(String IBAN) {
-        this.IBAN = IBAN;
+    public void setIban(String iban) {
+        this.iban = iban;
     }
 
     public AccountRequest type(String type) {
@@ -112,7 +112,7 @@ public class AccountRequest {
             return false;
         }
         AccountRequest accountRequest = (AccountRequest) o;
-        return Objects.equals(this.IBAN, accountRequest.IBAN) &&
+        return Objects.equals(this.iban, accountRequest.iban) &&
                 Objects.equals(this.type, accountRequest.type) &&
                 Objects.equals(this.userId, accountRequest.userId) &&
                 Objects.equals(this.absoluteLimit, accountRequest.absoluteLimit);
@@ -120,7 +120,7 @@ public class AccountRequest {
 
     @Override
     public int hashCode() {
-        return Objects.hash(IBAN, type, userId, absoluteLimit);
+        return Objects.hash(iban, type, userId, absoluteLimit);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class AccountRequest {
         StringBuilder sb = new StringBuilder();
         sb.append("class Account {\n");
 
-        sb.append("    IBAN: ").append(toIndentedString(IBAN)).append("\n");
+        sb.append("    iban: ").append(toIndentedString(iban)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
         sb.append("    absoluteLimit: ").append(toIndentedString(absoluteLimit)).append("\n");
