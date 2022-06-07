@@ -1,13 +1,13 @@
 package io.swagger.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.TransactionsApi;
 import io.swagger.helpers.Authorized;
-import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Entity.TransactionEntity;
+import io.swagger.model.Entity.UserEntity;
+import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Request.TransactionRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.model.Request.TransactionAdvancedSearchRequest;
 import io.swagger.responses.transactions.TransactionAtmResponse;
 import io.swagger.responses.transactions.TransactionListResponse;
 import io.swagger.responses.transactions.TransactionSingleResponse;
@@ -22,14 +22,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @RestController
@@ -65,7 +66,8 @@ public class TransactionsApiController implements TransactionsApi {
     }
 
     public ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody TransactionRequest body) throws IOException {
-        TransactionEntity transaction = transactionService.addTransaction(body);
+        UserEntity user =  authorized.CanOnlyEditOwnAccount(UUID.fromString(body.getFrom()));
+        TransactionEntity transaction = transactionService.addTransaction(body, user);
         return ResponseEntity.ok(new TransactionSingleResponse(HttpStatus.OK, transaction));
     }
 

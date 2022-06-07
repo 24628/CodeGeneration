@@ -1,10 +1,10 @@
 package io.swagger.model.Request;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
+
+import java.util.Objects;
 
 /**
  * Transaction
@@ -30,7 +30,7 @@ public class TransactionRequest {
     private Object date = null;
 
     @JsonProperty("amount")
-    private Integer amount = null;
+    private Long amount = null;
 
 
     public TransactionRequest id(String id) {
@@ -133,7 +133,7 @@ public class TransactionRequest {
         this.date = date;
     }
 
-    public TransactionRequest amount(Integer amount) {
+    public TransactionRequest amount(Long amount) {
         this.amount = amount;
         return this;
     }
@@ -145,11 +145,11 @@ public class TransactionRequest {
      **/
     @Schema(description = "")
 
-    public Integer getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 

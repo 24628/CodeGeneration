@@ -52,10 +52,7 @@ public class TransactionService {
     @Autowired
     Validator validator;
 
-    public TransactionEntity addTransaction(TransactionRequest body) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserEntity user = userService.findUserByName(userDetails.getUsername());
-
+    public TransactionEntity addTransaction(TransactionRequest body, UserEntity loggedInUser) {
         AccountEntity accountFrom = accountRepository.getAccountByIBAN((body.getFrom()));
         AccountEntity accountTo = accountRepository.getAccountByIBAN((body.getTo()));
 
@@ -68,7 +65,7 @@ public class TransactionService {
         if (accountTo == null)
             throw new EntityNotFoundException("Account to ");
 
-        UserEntity userFrom = userService.getUserById(accountFrom.getUserId().toString());
+        UserEntity userFrom = userDTO.getOne(accountFrom.getUserId());
 
         //amount to deposit has to be higher then 0
         if (body.getAmount() < 1)
@@ -96,17 +93,13 @@ public class TransactionService {
                 && accountFrom.getUserId() != accountTo.getUserId()
         ) throw new ValidationException("Cannot make transactions from normal account to another users saving account");
 
-        if (user.getRole().equals(Roles.CUSTOMER)
-                && !accountFrom.getUserId().toString().equals(user.getUuid().toString()))
-            throw new ValidationException("This is not your own account!");
-
         //Create the transactions
         TransactionEntity transaction = new TransactionEntity();
         transaction.setAmount(body.getAmount());
         transaction.setDate(LocalDateTime.now());
         transaction.setAccountFrom(body.getFrom());
         transaction.setAccountTo(body.getTo());
-        transaction.setUser_id(user.getUuid());
+        transaction.setUser_id(loggedInUser.getUuid());
         transactionRepository.save(transaction);
 
         //update balance from
@@ -129,6 +122,7 @@ public class TransactionService {
 
         if(iban == null)
             throw new IllegalArgumentException("Iban cant be null");
+
         return transactionRepository.getAllByAccountFromOrAccountTo(iban,iban,new OffsetPageableDate(limit,offset));
     }
 

@@ -22,5 +22,5 @@ public class TransactionEntity {
     private String accountTo;
     private UUID user_id;
     private LocalDateTime date;
-    private long amount;
+    private Long amount;
 }

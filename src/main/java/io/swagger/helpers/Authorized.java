@@ -24,12 +24,14 @@ public class Authorized {
             throw new InvalidPermissionsException("no permissions to access this");
     }
 
-    public void CanOnlyEditOwnAccount(UUID uuid) throws InvalidPermissionsException {
+    public UserEntity CanOnlyEditOwnAccount(UUID uuid) throws InvalidPermissionsException {
         UserEntity user = getUser();
 
         if(!user.getRole().equals(Roles.EMPLOYEE) && !user.getUuid().equals(uuid)) {
             throw new InvalidPermissionsException("Your only allowed to view your own account");
         }
+
+        return user;
     }
 
     private UserEntity getUser(){
