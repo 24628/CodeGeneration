@@ -2,6 +2,7 @@ package io.swagger.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.UsersApi;
+import io.swagger.helpers.Authorized;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.Request.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +13,7 @@ import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.validator.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ public class UsersApiController implements UsersApi {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    Authorized authorized;
+
     @org.springframework.beans.factory.annotation.Autowired
     public UsersApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
@@ -53,6 +58,7 @@ public class UsersApiController implements UsersApi {
             @Valid @RequestParam(value = "limit", required = false) Integer limit,
             @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema())
             @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
+        authorized.NeedsToBeEmployee();
         List<UserEntity> users = userService.getUsers(limit,offset);
         return ResponseEntity.ok(new UserListResponse(HttpStatus.CREATED, users));
     }
@@ -60,6 +66,7 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<UserDeletedResponse> usersIdDelete(
             @Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user to get", required = true, schema = @Schema())
             @PathVariable("id") String id) throws IOException {
+        authorized.NeedsToBeEmployee();
         userService.deleteUser(id);
         return ResponseEntity.ok(new UserDeletedResponse(HttpStatus.OK));
     }
@@ -67,6 +74,7 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<UserSingleResponse> usersIdGet(
             @Parameter(in = ParameterIn.PATH, description = "Numeric ID of the user", required = true, schema = @Schema())
             @PathVariable("id") String id) throws IOException {
+        authorized.NeedsToBeEmployee();
         UserEntity user = userService.getUserById(id);
         return ResponseEntity.ok(new UserSingleResponse(HttpStatus.OK, user));
     }
@@ -79,12 +87,14 @@ public class UsersApiController implements UsersApi {
     }
 
     public ResponseEntity<UserSingleResponse> usersPost(@RequestBody UserRequest body) throws IOException {
+        authorized.NeedsToBeEmployee();
         UserEntity user = userService.addUser(body);
         return ResponseEntity.ok(new UserSingleResponse(HttpStatus.CREATED, user));
     }
 
     @Override
     public ResponseEntity<UserListResponse> usersGetAllUserWithNoAccount(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
+        authorized.NeedsToBeEmployee();
         List<UserEntity> foundUsers = userService.getUsersWithNoAccount(offset,limit);
         return ResponseEntity.ok(new UserListResponse(HttpStatus.CREATED, foundUsers));
     }

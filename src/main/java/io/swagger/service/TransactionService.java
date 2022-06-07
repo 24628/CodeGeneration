@@ -133,6 +133,7 @@ public class TransactionService {
         UserEntity user = userService.findUserByName(userDetails.getUsername());
         if (user.getRole().equals(Roles.BANK) || user.getRole().equals(Roles.EMPLOYEE))
             return transactionRepository.findAll();
+
         return transactionRepository.getAllByAccountFrom(user.getUuid());
     }
 
@@ -195,8 +196,6 @@ public class TransactionService {
     }
 
     public List<TransactionEntity> advanceSearch(Integer limit, Integer offset, Long lessThenTransAmount, Long greaterThanTransAmount, LocalDateTime dateBefore, LocalDateTime dateAfter, String ibanTo, String ibanFrom) {
-        validator.NeedsToBeEmployee();
-
         AccountEntity accountEntityFrom = accountRepository.getAccountByIBAN(ibanFrom);
         AccountEntity accountEntityTo = accountRepository.getAccountByIBAN(ibanTo);
 
