@@ -39,7 +39,7 @@ function Transaction() {
                     <Form.Control {...register("amount")} type="currency" placeholder="00.00" />
                 </Form.Group>
                 <Button variant="primary" style={{width: '100%'}} type="submit">
-                    Submit
+                    Transer ->
                 </Button>
             </Form>
 
