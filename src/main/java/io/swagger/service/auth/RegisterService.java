@@ -6,7 +6,7 @@ import io.swagger.enums.Roles;
 import io.swagger.helpers.AuthResult;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.Entity.UserLoginEntity;
+import io.swagger.model.UserResponseEntity.UserLoginEntity;
 import io.swagger.model.Request.RegisterRequest;
 import io.swagger.repository.IUserDTO;
 import io.swagger.validator.Validator;
@@ -29,30 +29,29 @@ public class RegisterService {
     @Autowired
     IUserDTO userDTO;
 
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     Validator validator;
 
-    public AuthResult register(RegisterRequest body) throws AuthenticationException, ValidationException, EntityAlreadyExistException
-    {
-        String token = "";
+    public AuthResult register(RegisterRequest body) throws AuthenticationException, ValidationException, EntityAlreadyExistException {
         UserEntity user = new UserEntity();
 
-        validator.CanCreateUser(body.getUsername(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L,body.getName());
+        validator.CanCreateUser(body.getUsername(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L, body.getName());
 
         user.setEmail(body.getEmail());
         user.setUsername(body.getUsername());
+        user.setDayLimit(body.getDayLimit());
         user.setPassword(passwordEncoder.encode(body.getPassword()));
         user.setRole(Roles.CUSTOMER);
         user.setTransactionLimit(500L);
         user.setName(body.getName());
         userDTO.save(user);
 
-
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword()));
-        token = jwtTokenProvider.createToken(body.getUsername(), userDTO.findByUsername(body.getUsername()).getRole());
+        String token = jwtTokenProvider.createToken(body.getUsername(), userDTO.findByUsername(body.getUsername()).getRole());
 
         UserLoginEntity userInfo = new UserLoginEntity();
         userInfo.setUsername(user.getUsername());

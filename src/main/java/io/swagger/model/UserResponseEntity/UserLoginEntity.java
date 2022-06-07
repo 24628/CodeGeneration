@@ -1,4 +1,4 @@
-package io.swagger.model.Entity;
+package io.swagger.model.UserResponseEntity;
 
 
 import io.swagger.enums.Roles;

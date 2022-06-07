@@ -1,7 +1,6 @@
 package io.swagger.helpers;
 
-import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.Entity.UserLoginEntity;
+import io.swagger.model.UserResponseEntity.UserLoginEntity;
 
 public final class AuthResult {
     private final String token;
