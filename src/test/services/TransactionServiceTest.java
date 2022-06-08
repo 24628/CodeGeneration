@@ -104,8 +104,8 @@ public class TransactionServiceTest {
 
         transactionRequest = new TransactionRequest();
         transactionRequest.setAmount(400L);
-        transactionRequest.setFrom(String.valueOf(accountEntityFrom.getUuid()));
-        transactionRequest.setTo(String.valueOf(accountEntityTo.getUuid()));
+        transactionRequest.setFrom(String.valueOf(accountEntityFrom.getIBAN()));
+        transactionRequest.setTo(String.valueOf(accountEntityTo.getIBAN()));
         transactionRequest.setUserId(String.valueOf(userEntityLoggedInUser.getUuid()));
 
         atmRequest = new AtmRequest();
@@ -116,11 +116,15 @@ public class TransactionServiceTest {
 
     @Test
     public void addTransaction(){
-        given(iAccountDTO.getOne(accountEntityFrom.getUuid()))
+        //@todo what wrong idk its 3am tho so wtf
+        given(iAccountDTO.getAccountByIBAN(accountEntityFrom.getIBAN()))
                 .willReturn(accountEntityFrom);
 
-        given(iAccountDTO.getOne(accountEntityTo.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityTo.getIBAN()))
                 .willReturn(accountEntityTo);
+
+        System.out.println(accountEntityFrom.getUserId());
+        System.out.println(userEntityFrom.getUuid());
 
         given(userDTO.getOne(userEntityFrom.getUuid()))
                 .willReturn(userEntityFrom);
@@ -166,10 +170,10 @@ public class TransactionServiceTest {
 
     @Test
     public void addTransactionAmountBeHigherThenZero(){
-        given(iAccountDTO.getOne(accountEntityFrom.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityFrom.getIBAN()))
                 .willReturn(accountEntityFrom);
 
-        given(iAccountDTO.getOne(accountEntityTo.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityTo.getIBAN()))
                 .willReturn(accountEntityTo);
 
         given(userDTO.getOne(userEntityFrom.getUuid()))
@@ -183,10 +187,10 @@ public class TransactionServiceTest {
 
     @Test
     public void addTransactionAmountBeOverTransactionLimit(){
-        given(iAccountDTO.getOne(accountEntityFrom.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityFrom.getIBAN()))
                 .willReturn(accountEntityFrom);
 
-        given(iAccountDTO.getOne(accountEntityTo.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityTo.getIBAN()))
                 .willReturn(accountEntityTo);
 
         given(userDTO.getOne(userEntityFrom.getUuid()))
@@ -202,10 +206,10 @@ public class TransactionServiceTest {
     public void addTransactionNotSameUserSavingAccountFrom(){
         accountEntityFrom.setType(AccountType.SAVING);
 
-        given(iAccountDTO.getOne(accountEntityFrom.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityFrom.getIBAN()))
                 .willReturn(accountEntityFrom);
 
-        given(iAccountDTO.getOne(accountEntityTo.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityTo.getIBAN()))
                 .willReturn(accountEntityTo);
 
         given(userDTO.getOne(userEntityFrom.getUuid()))
@@ -221,10 +225,10 @@ public class TransactionServiceTest {
     public void addTransactionNotSameUserSavingAccountTo(){
         accountEntityTo.setType(AccountType.SAVING);
 
-        given(iAccountDTO.getOne(accountEntityFrom.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityFrom.getIBAN()))
                 .willReturn(accountEntityFrom);
 
-        given(iAccountDTO.getOne(accountEntityTo.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityTo.getIBAN()))
                 .willReturn(accountEntityTo);
 
         given(userDTO.getOne(userEntityFrom.getUuid()))
