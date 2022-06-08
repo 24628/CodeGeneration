@@ -69,7 +69,7 @@ public class TransactionServiceTest {
                 .password("test")
                 .pinCode(1234)
                 .role(Roles.EMPLOYEE)
-                .transactionLimit(2000L)
+                .transactionLimit(1500L)
                 .build();
 
         userEntityFrom = UserEntity.builder()
@@ -81,7 +81,7 @@ public class TransactionServiceTest {
                 .password("test")
                 .pinCode(1234)
                 .role(Roles.CUSTOMER)
-                .transactionLimit(2000L)
+                .transactionLimit(1500L)
                 .build();
 
         accountEntityFrom = AccountEntity.builder()
@@ -267,6 +267,7 @@ public class TransactionServiceTest {
     public void withdrawMoneyThrowBelowAbsoluteLimit(){
         ValidateAtmHelper atmHelper = new ValidateAtmHelper(userEntityFrom, accountEntityFrom);
 
+        atmRequest.setAmount(50000L);
         accountEntityTo.setType(AccountType.ATM);
         userEntityLoggedInUser.setRole(Roles.BANK);
 
@@ -279,9 +280,54 @@ public class TransactionServiceTest {
         given(userDTO.findUserEntityByRoleIs(Roles.BANK))
                 .willReturn(userEntityLoggedInUser);
 
-        Long amount = transactionService.withdrawMoney(atmRequest);
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
+            transactionService.withdrawMoney(atmRequest);
+        });
+    }
+
+    @Test
+    public void withdrawMoneyGoOverTransactionLimit(){
+        ValidateAtmHelper atmHelper = new ValidateAtmHelper(userEntityFrom, accountEntityFrom);
+
+        atmRequest.setAmount(2000L);
+        accountEntityTo.setType(AccountType.ATM);
+        userEntityLoggedInUser.setRole(Roles.BANK);
+
+        given(validator.isAllowedToAtm(atmRequest))
+                .willReturn(atmHelper);
+
+        given(iAccountDTO.findByTypeIs(AccountType.ATM))
+                .willReturn(accountEntityTo);
+
+        given(userDTO.findUserEntityByRoleIs(Roles.BANK))
+                .willReturn(userEntityLoggedInUser);
+
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
+            transactionService.withdrawMoney(atmRequest);
+        });
+    }
+
+    @Test
+    public void depositMoney(){
+        ValidateAtmHelper atmHelper = new ValidateAtmHelper(userEntityFrom, accountEntityFrom);
+
+        accountEntityTo.setType(AccountType.ATM);
+        userEntityLoggedInUser.setRole(Roles.BANK);
+
+        given(validator.isAllowedToAtm(atmRequest))
+                .willReturn(atmHelper);
+
+        given(iAccountDTO.findByTypeIs(AccountType.ATM))
+                .willReturn(accountEntityTo);
+
+        given(userDTO.findUserEntityByRoleIs(Roles.BANK))
+                .willReturn(userEntityLoggedInUser);
+
+        Long amount = transactionService.depositMoney(atmRequest);
 
         assertNotNull(amount);
-        assertEquals(Optional.of(atmRequest.getAmount()), Optional.of(amount));
+        assertEquals(Optional.of(atmRequest.getAmount()), Optional.of(amount));;
     }
+
+
 }
