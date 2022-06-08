@@ -30,7 +30,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @RestController
@@ -66,7 +65,7 @@ public class TransactionsApiController implements TransactionsApi {
     }
 
     public ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody TransactionRequest body) throws IOException {
-        UserEntity user =  authorized.CanOnlyEditOwnAccount(UUID.fromString(body.getFrom()));
+        UserEntity user =  authorized.CanOnlyEditOwnAccountByIBan(body.getFrom());
         TransactionEntity transaction = transactionService.addTransaction(body, user);
         return ResponseEntity.ok(new TransactionSingleResponse(HttpStatus.OK, transaction));
     }

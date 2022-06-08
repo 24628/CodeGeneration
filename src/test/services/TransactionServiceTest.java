@@ -69,7 +69,7 @@ public class TransactionServiceTest {
                 .password("test")
                 .pinCode(1234)
                 .role(Roles.EMPLOYEE)
-                .transactionLimit(2000L)
+                .transactionLimit(1500L)
                 .build();
 
         userEntityFrom = UserEntity.builder()
@@ -81,7 +81,7 @@ public class TransactionServiceTest {
                 .password("test")
                 .pinCode(1234)
                 .role(Roles.CUSTOMER)
-                .transactionLimit(2000L)
+                .transactionLimit(1500L)
                 .build();
 
         accountEntityFrom = AccountEntity.builder()
@@ -104,8 +104,8 @@ public class TransactionServiceTest {
 
         transactionRequest = new TransactionRequest();
         transactionRequest.setAmount(400L);
-        transactionRequest.setFrom(String.valueOf(accountEntityFrom.getUuid()));
-        transactionRequest.setTo(String.valueOf(accountEntityTo.getUuid()));
+        transactionRequest.setFrom(String.valueOf(accountEntityFrom.getIBAN()));
+        transactionRequest.setTo(String.valueOf(accountEntityTo.getIBAN()));
         transactionRequest.setUserId(String.valueOf(userEntityLoggedInUser.getUuid()));
 
         atmRequest = new AtmRequest();
@@ -116,11 +116,15 @@ public class TransactionServiceTest {
 
     @Test
     public void addTransaction(){
-        given(iAccountDTO.getOne(accountEntityFrom.getUuid()))
+        //@todo what wrong idk its 3am tho so wtf
+        given(iAccountDTO.getAccountByIBAN(accountEntityFrom.getIBAN()))
                 .willReturn(accountEntityFrom);
 
-        given(iAccountDTO.getOne(accountEntityTo.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityTo.getIBAN()))
                 .willReturn(accountEntityTo);
+
+        System.out.println(accountEntityFrom.getUserId());
+        System.out.println(userEntityFrom.getUuid());
 
         given(userDTO.getOne(userEntityFrom.getUuid()))
                 .willReturn(userEntityFrom);
@@ -166,10 +170,10 @@ public class TransactionServiceTest {
 
     @Test
     public void addTransactionAmountBeHigherThenZero(){
-        given(iAccountDTO.getOne(accountEntityFrom.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityFrom.getIBAN()))
                 .willReturn(accountEntityFrom);
 
-        given(iAccountDTO.getOne(accountEntityTo.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityTo.getIBAN()))
                 .willReturn(accountEntityTo);
 
         given(userDTO.getOne(userEntityFrom.getUuid()))
@@ -183,10 +187,10 @@ public class TransactionServiceTest {
 
     @Test
     public void addTransactionAmountBeOverTransactionLimit(){
-        given(iAccountDTO.getOne(accountEntityFrom.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityFrom.getIBAN()))
                 .willReturn(accountEntityFrom);
 
-        given(iAccountDTO.getOne(accountEntityTo.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityTo.getIBAN()))
                 .willReturn(accountEntityTo);
 
         given(userDTO.getOne(userEntityFrom.getUuid()))
@@ -202,10 +206,10 @@ public class TransactionServiceTest {
     public void addTransactionNotSameUserSavingAccountFrom(){
         accountEntityFrom.setType(AccountType.SAVING);
 
-        given(iAccountDTO.getOne(accountEntityFrom.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityFrom.getIBAN()))
                 .willReturn(accountEntityFrom);
 
-        given(iAccountDTO.getOne(accountEntityTo.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityTo.getIBAN()))
                 .willReturn(accountEntityTo);
 
         given(userDTO.getOne(userEntityFrom.getUuid()))
@@ -221,10 +225,10 @@ public class TransactionServiceTest {
     public void addTransactionNotSameUserSavingAccountTo(){
         accountEntityTo.setType(AccountType.SAVING);
 
-        given(iAccountDTO.getOne(accountEntityFrom.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityFrom.getIBAN()))
                 .willReturn(accountEntityFrom);
 
-        given(iAccountDTO.getOne(accountEntityTo.getUuid()))
+        given(iAccountDTO.getAccountByIBAN(accountEntityTo.getIBAN()))
                 .willReturn(accountEntityTo);
 
         given(userDTO.getOne(userEntityFrom.getUuid()))
@@ -267,6 +271,7 @@ public class TransactionServiceTest {
     public void withdrawMoneyThrowBelowAbsoluteLimit(){
         ValidateAtmHelper atmHelper = new ValidateAtmHelper(userEntityFrom, accountEntityFrom);
 
+        atmRequest.setAmount(50000L);
         accountEntityTo.setType(AccountType.ATM);
         userEntityLoggedInUser.setRole(Roles.BANK);
 
@@ -279,9 +284,54 @@ public class TransactionServiceTest {
         given(userDTO.findUserEntityByRoleIs(Roles.BANK))
                 .willReturn(userEntityLoggedInUser);
 
-        Long amount = transactionService.withdrawMoney(atmRequest);
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
+            transactionService.withdrawMoney(atmRequest);
+        });
+    }
+
+    @Test
+    public void withdrawMoneyGoOverTransactionLimit(){
+        ValidateAtmHelper atmHelper = new ValidateAtmHelper(userEntityFrom, accountEntityFrom);
+
+        atmRequest.setAmount(2000L);
+        accountEntityTo.setType(AccountType.ATM);
+        userEntityLoggedInUser.setRole(Roles.BANK);
+
+        given(validator.isAllowedToAtm(atmRequest))
+                .willReturn(atmHelper);
+
+        given(iAccountDTO.findByTypeIs(AccountType.ATM))
+                .willReturn(accountEntityTo);
+
+        given(userDTO.findUserEntityByRoleIs(Roles.BANK))
+                .willReturn(userEntityLoggedInUser);
+
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
+            transactionService.withdrawMoney(atmRequest);
+        });
+    }
+
+    @Test
+    public void depositMoney(){
+        ValidateAtmHelper atmHelper = new ValidateAtmHelper(userEntityFrom, accountEntityFrom);
+
+        accountEntityTo.setType(AccountType.ATM);
+        userEntityLoggedInUser.setRole(Roles.BANK);
+
+        given(validator.isAllowedToAtm(atmRequest))
+                .willReturn(atmHelper);
+
+        given(iAccountDTO.findByTypeIs(AccountType.ATM))
+                .willReturn(accountEntityTo);
+
+        given(userDTO.findUserEntityByRoleIs(Roles.BANK))
+                .willReturn(userEntityLoggedInUser);
+
+        Long amount = transactionService.depositMoney(atmRequest);
 
         assertNotNull(amount);
-        assertEquals(Optional.of(atmRequest.getAmount()), Optional.of(amount));
+        assertEquals(Optional.of(atmRequest.getAmount()), Optional.of(amount));;
     }
+
+
 }
