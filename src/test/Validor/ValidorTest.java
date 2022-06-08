@@ -39,7 +39,6 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest(classes = {Swagger2SpringBoot.class, AccountService.class}, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class ValidorTest {
 
-
     @Mock
     private IUserDTO iUserDTO;
 
@@ -48,9 +47,8 @@ public class ValidorTest {
     private AccountService accountService;
     private RegisterService registerService;
     private RegisterRequest registerRequest;
-    private RegisterRequest registerRequest2;
-    private RegisterRequest registerRequest3;
 
+    private AccountEntity accountEntity;
     private UserEntity userEntity;
 
 
@@ -70,6 +68,14 @@ public class ValidorTest {
 
         given(iUserDTO.save(userEntity)).willReturn(userEntity);
 
+        accountEntity = AccountEntity.builder()
+                .uuid(UUID.randomUUID())
+                .IBAN("NL01INHO0000000001")
+                .userId(userEntity.getUuid())
+                .build();
+
+        given(iUserDTO.save(userEntity)).willReturn(userEntity);
+
 
         registerRequest = new RegisterRequest();
         registerRequest.setEmail(userEntity.getEmail());
@@ -79,107 +85,77 @@ public class ValidorTest {
 
     }
 
-    // werkt
+
     @Test
     public void ContainsWhiteSpaceShouldReturnTrue() {
+
+        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
+            validator.CanCreateUser("John doe ", "Johndoe@email.com", "password", 50L, 20L, "johndoe");
+        });
+    }
+
+
+    @Test
+    public void CanCreateUserShouldThrowValidationErrorMissingContent() {
 
         org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
             validator.CanCreateUser("", "Johndoe@email.com", "password", 50L, 20L, "johndoe");
         });
     }
 
-    // werkt
     @Test
-    public void CanCreateUserShouldThrowValidationErrorMissingContent() {
-
-        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
-            validator.CanCreateUser("John doe", "Johndoe@email.com", "password", 50L, 20L, "johndoe");
-        });
-    }
-
-    @Test // done
     public void ShouldThrowUsernameAlreadyExitstIntheDatabaseError() {
 
         given(iUserDTO.findByUsername(userEntity.getUsername()))
                 .willReturn(userEntity);
 
-        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
-            validator.CanCreateUser("Johndoe", "Johndoe@email.com", "password", 50L, 20L, "johndoe");
+        org.junit.jupiter.api.Assertions.assertThrows(EntityAlreadyExistException.class, () -> {
+            validator.CanCreateUser("johndoe", "Johndoe@email.com", "password", 50L, 20L, "johndoe");
         });
     }
 
     @Test
     public void ShouldThrowValidationExceptionDayLimitHasToBePositive() {
-//        given(iUserDTO.findByUsername(userEntity.getUsername()))
-//                .willReturn(userEntity);
-//        System.out.println(userEntity.getUsername());
-//        org.junit.jupiter.api.Assertions.assertThrows(DayLimitReachedException.class, () -> {
-//            validator.CheckDayLimit(userEntity, 5000L);
-//        });
+        given(iUserDTO.findByUsername(userEntity.getUsername()))
+                .willReturn(userEntity);
+
+        org.junit.jupiter.api.Assertions.assertThrows(DayLimitReachedException.class, () -> {
+            validator.CheckDayLimit(userEntity,"NL01INHO0000000001", 5000L);
+        });
     }
 
     @Test
     public void ShouldThrowTransActionlimitHasToBePositive() {
-//        given(iAccountDTO.getAccountByIBAN(accountEntity.getIBAN()))
-//                .willReturn(accountEntity);
-//
-//        AccountEntity acc = accountService.getAccountByIBAN(accountEntity.getIBAN());
-//
-//        assertNotNull(acc);
+        given(iUserDTO.findByUsername(userEntity.getUsername()))
+                .willReturn(userEntity);
+
+        org.junit.jupiter.api.Assertions.assertThrows(DayLimitReachedException.class, () -> {
+            validator.CheckDayLimit(userEntity,"NL01INHO0000000001", 5000L);
+        });
+
+
     }
 
     @Test
     public void cannotFindAccountByIbanShouldReturnNull() {
-//        given(iAccountDTO.getAccountByIBAN(accountEntity.getIBAN()))
-//                .willReturn(null);
-//
-//        AccountEntity acc = accountService.getAccountByIBAN("deze random string");
-//
-//        assertNull(acc);
+
     }
 
     @Test
     public void CantFindUserEntityShouldThrowValidationExceptionError() {
-//        given(iAccountDTO.getAccountByIBAN(accountEntity.getIBAN()))
-//                .willReturn(accountEntity);
-//
-//        AccountEntity updatedAccount = accountService.updateAccountByIBAN(accountRequestUpdate, accountEntity.getIBAN());
-//
-//        assertEquals(Optional.of(2000L), Optional.of(updatedAccount.getAbsoluteLimit()));
+
     }
 
     @Test
     public void CantFindAccountEntityShouldThrowValidationException() {
-//        given(iAccountDTO.getAccountByIBAN(accountEntity.getIBAN()))
-//                .willReturn(accountEntity);
-//
-//        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class, () -> {
-//            accountService.updateAccountByIBAN(accountRequestUpdate1, accountEntity.getIBAN());
-//        });
-//
-//        verify(iAccountDTO, never()).save(any(AccountEntity.class));
+
     }
 
-//    @Test
-//    public void PincodeIncorrectShouldThrowIncorrectPincodeException() {
-//        given(iUserDTO.findUserEntitiesByPinCode(userEntity4.getPinCode()))
-//                .willReturn(userEntity4);
-//
-//        Assertions.assertEquals(userEntity4.getPinCode(), registerRequest3);
-//    }
 
 
     @Test
     public void ShouldThrowDaylimitReachedException() {
-//        given(iUserDTO.findByUsername(userEntity.getUsername()))
-//                .willReturn(userEntity);
-//
-//        given(iAccountDTO.getAccountEntityByUserIdAndTypeIsNot(userEntity.getUuid(), AccountType.SAVING))
-//                .willReturn(accountEntity);
-//
-//        AccountEntity account = accountService.findAccountByUserName(userEntity.getUsername());
-//
-//        assertNotNull(account);
+
     }
 
 }
