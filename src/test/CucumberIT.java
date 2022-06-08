@@ -1,4 +1,3 @@
-
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -6,7 +5,7 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = "src/test/resources",
-        glue = "steps",
+        glue = "java.io.swagger.steps",
         plugin = "pretty",
         publish = true)
 public class CucumberIT {
