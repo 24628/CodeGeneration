@@ -1,16 +1,17 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import AuthCheck from "../components/AuthCheck";
 import SideNav from "../components/SideNav";
 import {Badge, ListGroup} from "react-bootstrap";
 import DataFetch from "../controller/dataFetch";
 import AccountDisplayListItem, {currencyFormatter} from "../components/AccountDisplayListItem";
 import {Link} from "react-router-dom";
+import {accountContext} from "../App";
 
 function Home() {
 
     const [accounts,setAccounts] = useState([null,null]);
     const [total,setTotal] = useState(0);
-
+    const {setaccountC} = useContext(accountContext);
     useEffect(()=>{
         DataFetch.getAccountsById().then(val => {
             //intentional slowdown to showcase placeholders
@@ -34,7 +35,7 @@ function Home() {
             <ListGroup as="ol">
                 {accounts.map((item,index)=>{
 
-                    return <Link key={index} to={"/account/"+item?.iban}><AccountDisplayListItem  account={item}/></Link>
+                    return <Link key={index} onClick={()=>setaccountC(item)} to={"/account/"+item?.iban}><AccountDisplayListItem  account={item}/></Link>
 
                 })}
                 <ListGroup.Item

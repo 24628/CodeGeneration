@@ -2,19 +2,19 @@ import React, {useEffect, useState} from "react";
 import AuthCheck from "../components/AuthCheck";
 import SideNav from "../components/SideNav";
 import {Link, useParams} from "react-router-dom";
-import {Button, Table} from "react-bootstrap";
+import {Button, ButtonGroup, Table} from "react-bootstrap";
 import DataFetch from "../controller/dataFetch";
-import AccountDisplayListItem from "../components/AccountDisplayListItem";
 import TransactionTableRow from "../components/TransactionTableRow";
 
 function Account() {
     const iban = useParams()['iban'];
     const [transactions,setTransactions] = useState([]);
+    const [page,setPage] = useState(0);
     useEffect(()=>{
-        DataFetch.getTransactions().then(val => {
+        DataFetch.getTransactions(iban,{limit: 10,offset: page*10}).then(val => {
             setTransactions(val)
         });
-    }, []);
+    }, [page]);
 
     return(
         <>
@@ -37,6 +37,10 @@ function Account() {
                 })}
                 </tbody>
             </Table>
+            <ButtonGroup aria-label="Basic example">
+                <Button onClick={() => setPage(Math.max(page-1,0))} variant="secondary">Previous</Button>
+                <Button onClick={() => setPage(page+1)} variant="secondary">Next</Button>
+            </ButtonGroup>
         </>
     )
 }

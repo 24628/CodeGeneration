@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import DataFetch from "../controller/dataFetch";
 import { useForm } from "react-hook-form";
 import {Navigate} from "react-router-dom";
+import {userContext} from "../App";
 
 
 
@@ -10,10 +11,13 @@ function Login(){
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [error, setError] = useState('');
     const [login,setLogin] = useState(false);
+    const { userC,setUserC } = React.useContext(userContext)
+
     function submit(e) {
         DataFetch.login(e.username, e.password)
             .then(r => {
                 //forward to signed in page
+                setUserC(r.data);
                 setLogin(true);
             }).catch(reason => {
                 //show error

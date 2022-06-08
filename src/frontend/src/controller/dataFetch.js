@@ -22,7 +22,7 @@ class DataFetch{
                     localStorage.setItem("role",response.data.userEntity.role);
                     localStorage.setItem("uuid",response.data.userEntity.userId);
                     setAuthToken(token);
-                    resolve({status: true});
+                    resolve({status: true,data: response.data.userEntity});
                 })
                 .catch(err => {
                     reject({status: false,message: getErrorHandled(err)});
@@ -43,9 +43,9 @@ class DataFetch{
         })
     }
 
-    static getTransactions(limit){
+    static getTransactions(iban,limit){
         return new Promise((resolve, reject) => {
-            axios.get(baseurl+"transactions", limit)
+            axios.get(baseurl+"transactions/"+iban,{ params: limit } )
                 .then(response => {
                     resolve(response.data.transactionEntityList);
                 })

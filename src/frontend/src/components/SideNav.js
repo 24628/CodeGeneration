@@ -22,12 +22,6 @@ const SideNav = props => {
                     <Nav.Link to="/" as={Link}>Home</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link to="/login" as={Link}>Active</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link to="/login" as={Link}>Active</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
                     <Nav.Link eventKey="signout" >
                         Sign-out
                     </Nav.Link>

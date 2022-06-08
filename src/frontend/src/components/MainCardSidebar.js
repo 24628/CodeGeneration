@@ -1,8 +1,4 @@
 import {Card, Col} from "react-bootstrap";
-import {Route, Routes} from "react-router-dom";
-import Login from "../pages/login";
-import Home from "../pages/Home";
-import React from "react";
 
 
 export default function MainCardSidebar(props){
