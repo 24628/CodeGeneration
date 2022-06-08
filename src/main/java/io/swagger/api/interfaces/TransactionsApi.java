@@ -20,33 +20,34 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-04-26T09:18:21.534Z[GMT]")
 @Validated
 public interface TransactionsApi {
 
-    @Operation(summary = "", description = "Returns a list of transactions", security = {
+    @Operation(summary = "return all transactions", description = "first check the usertype, if the user has the sufficient right it can get all the transactions that has been made. And if it is a normal customer you will see your on transaction of your account", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "returns a list of all the transactions tht has been made", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TransactionRequest.class)))),
     })
-    @RequestMapping(value = "/transactions",
+    @RequestMapping(value = "/transactions/{iban}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<TransactionListResponse> transactionsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
+    ResponseEntity<TransactionListResponse> transactionsGet(@Parameter(in = ParameterIn.PATH, description = "IBAN of transaction", required = false, schema = @Schema()) @PathVariable("iban") String iban,
+                                                            @Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,
+                                                            @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
 
 
-    @Operation(summary = "creates a new transaction", description = "creates a new transaction", security = {
+    @Operation(summary = "creates a new transaction", description = "this endpoint creates a new transaction. First perform checks that you are sending it to the right accounttype. e.g. savings to normal account. Then check balance and the limits. if everything passes the transaction will be valid and execute", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "creates new transaction and returns the information of the transaction e.g. timestamp, from, to and the amount of the transaction", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
@@ -56,7 +57,7 @@ public interface TransactionsApi {
         method = RequestMethod.POST)
     ResponseEntity<TransactionSingleResponse> transactionsPost(@RequestBody TransactionRequest body) throws IOException;
 
-    @Operation(summary = "Withdraw money", description = "withdraw money", security = {
+    @Operation(summary = "Withdraw money", description = "withdraw money orm the account if the balance is suffient and check the limits e.g. transaction limit, daylimit. if valid proceed with the transaction", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
@@ -66,17 +67,17 @@ public interface TransactionsApi {
             method = RequestMethod.POST)
     ResponseEntity<TransactionAtmResponse> atmWithdraw(@RequestBody AtmRequest body) throws IOException;
 
-    @Operation(summary = "Depositing money", description = "depositing money", security = {
+    @Operation(summary = "Depositing money", description = "this endpoint deposits money on the account. It checks if the inserted pincode is correct and if is deposits money on the accounttype which has been selected", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Withdraws money from the account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
+            @ApiResponse(responseCode = "200", description = "the money has been deposited", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionRequest.class))),
     })
     @RequestMapping(value = "/atm/deposit",
             produces = { "application/json" },
             method = RequestMethod.POST)
     ResponseEntity<TransactionAtmResponse> atmDeposit(@RequestBody AtmRequest body) throws IOException;
 
-    @Operation(summary = "", description = "Advanced search for transactions", security = {
+    @Operation(summary = "Advanced search for transactions", description = "filter the transaction based in the submitted input e.g. datebefore transaction, lessthantransaction amount or bigger than transactionamount, iban of the account the money was send to or from", security = {
             @SecurityRequirement(name = "bearerAuth")    }, tags={ "Transactions" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "advance search for transactions", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TransactionRequest.class)))),
@@ -84,12 +85,23 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions/search",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<List<TransactionListResponse>> transactionsGetAdvancedSearch(
+    ResponseEntity<TransactionListResponse> transactionsGetAdvancedSearch(
             @Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema())
             @Valid @RequestParam(value = "limit", required = false) Integer limit,
             @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema())
             @Valid @RequestParam(value = "offset", required = false) Integer offset,
-            @RequestBody TransactionAdvancedSearchRequest body) throws IOException;
-
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on less then transaction amount" ,schema=@Schema())
+            @Valid @RequestParam(value = "lessThenTransAmount", required = false) Long lessThenTransAmount,
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on greater then transaction amount" ,schema=@Schema())
+            @Valid @RequestParam(value = "greaterThanTransAmount", required = false) Long greaterThanTransAmount,
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on date before the transaction took place" ,schema=@Schema())
+            @Valid @RequestParam(value = "dateBefore", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateBefore,
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on date after the transaction took place" ,schema=@Schema())
+            @Valid @RequestParam(value = "dateAfter", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateAfter,
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on the iban to" ,schema=@Schema())
+            @Valid @RequestParam(value = "ibanTo", required = false) String ibanTo,
+            @Parameter(in = ParameterIn.QUERY, description = "Filter on the iban from" ,schema=@Schema())
+            @Valid @RequestParam(value = "ibanFrom", required = false) String ibanFrom
+    ) throws IOException;
 }
 

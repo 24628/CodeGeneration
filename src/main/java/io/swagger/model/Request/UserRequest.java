@@ -16,33 +16,33 @@ import org.springframework.validation.annotation.Validated;
 public class UserRequest {
     @JsonProperty("id")
     private Integer id = null;
-
-
     @JsonProperty("role")
     private String role = null;
-
-
-
     @JsonProperty("username")
     private String username = null;
     @JsonProperty("name")
     private String name = null;
-
     @JsonProperty("email")
     private String email = null;
-
     @JsonProperty("password")
     private String password = null;
-
     @JsonProperty("dayLimit")
     private Long dayLimit = null;
-
     @JsonProperty("transactionLimit")
     private Long transactionLimit = null;
-
+    @JsonProperty("pinCode")
+    private Integer pinCode = null;
     public UserRequest id(Integer id) {
         this.id = id;
         return this;
+    }
+
+    public Integer getPinCode() {
+        return pinCode;
+    }
+
+    public void setPinCode(Integer pinCode) {
+        this.pinCode = pinCode;
     }
 
     /**

@@ -28,16 +28,16 @@ import java.io.IOException;
 @Validated
 public interface RegisterApi {
 
-    @Operation(summary = "Register", description = "", security = {
+    @Operation(summary = "add new user to the database", description = "check if all field or not empty and if the user already exists in the database. then create a new user", security = {
         @SecurityRequirement(name = "bearerAuth")    }, tags={ "Auth" })
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "registerd successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtTokenResponse.class))),
+        @ApiResponse(responseCode = "200", description = "registerd successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtTokenResponse.class))),
     })
     @RequestMapping(value = "/register",
         produces = { "application/json" },
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "register a new account", required=true, schema=@Schema()) @Valid @RequestBody RegisterRequest body) throws IOException;
+    ResponseEntity registerPost(@Parameter(in = ParameterIn.DEFAULT, description = "create a new user", required=true, schema=@Schema()) @Valid @RequestBody RegisterRequest body) throws IOException;
 
 }
 

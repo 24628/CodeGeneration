@@ -3,9 +3,11 @@ package io.swagger.service;
 import io.swagger.api.exceptions.*;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
+import io.swagger.helpers.OffsetPageableUUID;
 import io.swagger.model.Request.AccountRequest;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.UserEntity;
+import io.swagger.repository.IUserDTO;
 import io.swagger.validator.Validator;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
@@ -26,25 +28,18 @@ public class AccountService {
     private IAccountDTO accountRepository;
 
     @Autowired
-    private UserService userService;
+    private IUserDTO userDTO;
 
     @Autowired
     Validator validator;
 
     //Check if the user has already a saving // normal account
     public AccountEntity addAccount(AccountRequest body) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserEntity user = userService.findUserByName(userDetails.getUsername());
-
-        List<AccountEntity>  accountEntityList = accountRepository.getAllByUuidIs(UUID.fromString(body.getUserId()));
+        List<AccountEntity>  accountEntityList = accountRepository.getAllByUserId(UUID.fromString(body.getUserId()));
         for (AccountEntity account: accountEntityList){
             if(account.getType().equals(AccountType.valueOf(body.getType()))){
                 throw new EntityAlreadyExistException("they account of the type " + body.getType() + " already exist on this user");
             }
-        }
-
-        if(!user.getRole().equals(Roles.EMPLOYEE) && !user.getUuid().equals(UUID.fromString(body.getUserId()))) {
-            throw new InvalidPermissionsException("Your only allowed to view your own account");
         }
 
         if (1 > body.getAbsoluteLimit())
@@ -61,58 +56,35 @@ public class AccountService {
                         .buildRandom()
                         .toString()
         );
-
-        if (user.getRole().equals(Roles.CUSTOMER))
-            account.setUserId(user.getUuid());
-
-        if (user.getRole().equals(Roles.EMPLOYEE))
-            account.setUserId(UUID.fromString(body.getUserId()));
+        account.setUserId(UUID.fromString(body.getUserId()));
 
         accountRepository.save(account);
 
         return account;
     }
 
-    // haalt alle accounts op uit de database
-    // Zorg dat alleen employee dit mag doen
-    // Als de account role ATM heeft moet deze weg gefilterd worden
-    // Stuurt een lijst terug van alle accounts
-    public List<AccountEntity> getAccounts() {
-        validator.NeedsToBeEmployee();
-
-        return accountRepository.getAllByTypeIsNot(AccountType.ATM);
+   // alleen employee amg alle accounts opnemen
+    public List<AccountEntity> getAccounts(Integer offset, Integer limit) {
+        return accountRepository.getAllByTypeIsNot(AccountType.ATM, new OffsetPageableUUID(limit,offset));
     }
 
 
-    // get account after inserting the iban
-    // Zorg dat je geen atm kan op halen
     public AccountEntity getAccountByIBAN(String IBAN) {
         return accountRepository.getAccountByIBAN(IBAN);
     }
 
     public List<AccountEntity> getAccountByUserId(UUID userid) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserEntity user = userService.findUserByName(userDetails.getUsername());
-
-        if(!user.getRole().equals(Roles.EMPLOYEE) && !user.getUuid().equals(userid)) {
-            throw new InvalidPermissionsException("Your only allowed to view your own account");
-        }
-
-        return accountRepository.getAllByUuidIs(userid);
+        return accountRepository.getAllByUserId(userid);
     }
 
     public AccountEntity updateAccountByIBAN(AccountRequest body, String IBAN) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserEntity user = userService.findUserByName(userDetails.getUsername());
-
-        if(!user.getRole().equals(Roles.EMPLOYEE) && !user.getUuid().equals(UUID.fromString(body.getUserId()))) {
-            throw new InvalidPermissionsException("Your only allowed to view your own account");
-        }
-
         AccountEntity account = accountRepository.getAccountByIBAN(IBAN);
 
         if (1 > body.getAbsoluteLimit())
             throw new ValidationException("Absolute limit has to be higher then 0");
+
+        if(AccountType.valueOf(body.getType()) == AccountType.ATM)
+            throw new ValidationException("Can not have account type of ATM");
 
         account.setAbsoluteLimit(body.getAbsoluteLimit());
         account.setType(AccountType.valueOf(body.getType()));
@@ -129,7 +101,7 @@ public class AccountService {
 
     public AccountEntity findAccountByUserName(String name) {
 
-        UserEntity userEntity = userService.findUserByName(name);
+        UserEntity userEntity = userDTO.findByUsername(name);
 
         if(userEntity == null)
             throw new UserNotFoundException(name);

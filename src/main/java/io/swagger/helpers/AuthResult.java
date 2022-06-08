@@ -1,12 +1,12 @@
 package io.swagger.helpers;
 
-import io.swagger.model.Entity.UserEntity;
+import io.swagger.model.Responses.UserLoginEntity;
 
 public final class AuthResult {
     private final String token;
-    private final UserEntity user;
+    private final UserLoginEntity user;
 
-    public AuthResult(String token, UserEntity user) {
+    public AuthResult(String token, UserLoginEntity user) {
         this.token = token;
         this.user = user;
     }
@@ -15,7 +15,7 @@ public final class AuthResult {
         return token;
     }
 
-    public UserEntity getUser() {
+    public UserLoginEntity getUser() {
         return user;
     }
 }

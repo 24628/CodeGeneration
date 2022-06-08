@@ -1,7 +1,9 @@
 package io.swagger.service;
 
-import io.swagger.api.exceptions.InvalidPermissionsException;
+import io.swagger.api.exceptions.EntityNotFoundException;
+import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.Roles;
+import io.swagger.helpers.OffsetPageableUUID;
 import io.swagger.model.Entity.UserEntity;
 import io.swagger.model.Request.UserRequest;
 import io.swagger.repository.IAccountDTO;
@@ -28,66 +30,73 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    Validator validator;
+    private Validator validator;
 
     public UserEntity addUser(UserRequest body) {
-        validator.NeedsToBeEmployee();
+        validator.CanCreateUser(body.getName(), body.getEmail(), body.getPassword(), body.getDayLimit(), body.getTransactionLimit(),body.getName());
 
-        validator.CanCreateUser(body.getName(), body.getEmail(), body.getPassword(), body.getDayLimit(), 100L,body.getName());
+        UserEntity userEntity = UserEntity.builder()
+                .dayLimit(body.getDayLimit())
+                .email(body.getEmail())
+                .name(body.getName())
+                .username(body.getUsername())
+                .password(passwordEncoder.encode(body.getPassword()))
+                .pinCode(body.getPinCode())
+                .role(Roles.valueOf(body.getRole()))
+                .transactionLimit(body.getTransactionLimit())
+                .build();
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(body.getName());
-        userEntity.setEmail(body.getEmail());
-        userEntity.setTransactionLimit(body.getTransactionLimit());
-        userEntity.setPassword(passwordEncoder.encode(body.getPassword()));
-        userEntity.setRole(Roles.valueOf(body.getRole()));
-
-        return userDTO.save(userEntity);
+        userDTO.save(userEntity);
+        return userEntity;
     }
 
     public UserEntity findUserByName(String username) {
-
         return userDTO.findByUsername(username);
     }
 
-    public List<UserEntity> getUsers() throws InvalidPermissionsException {
-        validator.NeedsToBeEmployee();
-        return userDTO.findAll();
+    public List<UserEntity> getUsers(Integer limit,Integer offset) {
+        return userDTO.findAllByRoleIsNot(Roles.BANK, new OffsetPageableUUID(limit,offset));
     }
 
     public UserEntity getUserById(String uuid) {
-        validator.NeedsToBeEmployee();
+        UserEntity found = userDTO.getOne(UUID.fromString(uuid));
 
-        return userDTO.getOne(UUID.fromString(uuid));
+        if(found == null)
+            throw new EntityNotFoundException("User with this uuid ");
+
+        return found;
     }
 
-    public UserEntity updateUser(String uuid, UserRequest body) throws InvalidPermissionsException{
+    public UserEntity updateUser(String uuid, UserRequest body) {
         UserEntity userToEdit = userDTO.getOne(UUID.fromString(uuid));
 
+        if(userToEdit == null)
+            throw new EntityNotFoundException("User with this uuid ");
 
-        if(!userToEdit.getRole().equals(Roles.EMPLOYEE) && !userToEdit.getUuid().equals(UUID.fromString(uuid))) {
-            throw new InvalidPermissionsException("Your only allowed to view your own account");
-        }
+        if (1 > body.getTransactionLimit())
+            throw new ValidationException("Transaction limit has to be higher then 0");
 
         userToEdit.setTransactionLimit(body.getTransactionLimit());
-        return userDTO.save(userToEdit);
+        userDTO.save(userToEdit);
+        return userToEdit;
     }
 
-    public void deleteUser(String uuid) {
-
-        validator.NeedsToBeEmployee();
-
+    public UserEntity deleteUser(String uuid) {
         UserEntity user = userDTO.getOne(UUID.fromString(uuid));
+
+        if(user == null)
+            throw new EntityNotFoundException("User with this uuid ");
 
         user.setRole(Roles.DISABLED);
 
         userDTO.save(user);
+        return user;
     }
 
     public void generateUsers(UserEntity u) { userDTO.save(u); }
 
 
-    public List<UserEntity> getUsersWithNoAccount() {
+    public List<UserEntity> getUsersWithNoAccount(Integer offset,Integer limit) {
         List<UserEntity> userEntityList = userDTO.findAllByRoleIs(Roles.CUSTOMER);
         ArrayList<UserEntity> foundUsers = new ArrayList<>();
 
@@ -96,10 +105,10 @@ public class UserService {
                 foundUsers.add(user);
             }
 
-            if(foundUsers.size() > 10)
+            if(foundUsers.size() > ((offset + 1) * limit))
                 break;
         }
 
-        return foundUsers;
+        return foundUsers.subList(foundUsers.size()-limit, foundUsers.size());
     }
 }

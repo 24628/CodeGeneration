@@ -2,6 +2,7 @@ package io.swagger.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.api.interfaces.AccountsApi;
+import io.swagger.helpers.Authorized;
 import io.swagger.jwt.JwtTokenProvider;
 import io.swagger.model.Request.AccountRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,6 +50,8 @@ public class AccountsApiController implements AccountsApi {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    Authorized authorized;
 
     @org.springframework.beans.factory.annotation.Autowired
     public AccountsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -59,7 +62,8 @@ public class AccountsApiController implements AccountsApi {
     public ResponseEntity<AccountListResponse> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit,
                                                            @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid
                                                                  @RequestParam(value = "offset", required = false) Integer offset) throws IOException {
-        List<AccountEntity> accounts = accountService.getAccounts();
+        authorized.NeedsToBeEmployee();
+        List<AccountEntity> accounts = accountService.getAccounts(offset,limit);
         return ResponseEntity.ok(new AccountListResponse(HttpStatus.OK, accounts));
     }
 
@@ -75,6 +79,7 @@ public class AccountsApiController implements AccountsApi {
                     required = true,
                     schema = @Schema()) @PathVariable("IBAN") String IBAN,
             @RequestBody AccountRequest body) throws IOException {
+        authorized.CanOnlyEditOwnAccount(UUID.fromString(body.getUserId()));
         AccountEntity account = accountService.updateAccountByIBAN(body, IBAN);
         return ResponseEntity.ok(new AccountSingleResponse(HttpStatus.OK, account));
     }
@@ -83,13 +88,18 @@ public class AccountsApiController implements AccountsApi {
             description = "The unique id of the user is taken",
             required = true,
             schema = @Schema()) @PathVariable("id") String id) throws IOException {
-        List<AccountEntity> accounts = accountService.getAccountByUserId(UUID.fromString(id));
+        String newid = id.replaceAll("-","").replaceAll(
+                "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
+                "$1-$2-$3-$4-$5");
+        authorized.CanOnlyEditOwnAccount(UUID.fromString(id));
+        List<AccountEntity> accounts = accountService.getAccountByUserId(UUID.fromString(newid));
         return ResponseEntity.ok(new AccountListResponse(HttpStatus.OK, accounts));
     }
 
     public ResponseEntity<AccountSingleResponse> accountsPost(@Parameter(in = ParameterIn.DEFAULT,
             description = "This endpoint creates a new account that can be used to transfer and withdraw money.",
             required = true, schema = @Schema()) @RequestBody AccountRequest body) throws IOException {
+        authorized.CanOnlyEditOwnAccount(UUID.fromString(body.getUserId()));
         AccountEntity account = accountService.addAccount(body);
         return ResponseEntity.ok(new AccountSingleResponse(HttpStatus.CREATED, account));
     }

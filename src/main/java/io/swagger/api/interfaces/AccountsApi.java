@@ -34,70 +34,74 @@ import java.util.List;
 public interface AccountsApi {
 
     @Operation(summary = "Returns a list of accounts", description = "Successfully returns a list of all users and the acoounts with it. A saving account or the current account.", security = {
-        @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Successfully returned a list of accounts", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AccountRequest.class)))),
+            @SecurityRequirement(name = "bearerAuth")}, tags = {"Accounts"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully returned a list of accounts", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AccountRequest.class)))),
     })
     @RequestMapping(value = "/accounts",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<AccountListResponse> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page" ,schema=@Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed" ,schema=@Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<AccountListResponse> accountsGet(@Parameter(in = ParameterIn.QUERY, description = "Limits the number of items on a page", schema = @Schema()) @Valid @RequestParam(value = "limit", required = false) Integer limit, @Parameter(in = ParameterIn.QUERY, description = "Specifies the page number of the artists to be displayed", schema = @Schema()) @Valid @RequestParam(value = "offset", required = false) Integer offset) throws IOException;
 
 
-    @Operation(summary = "Returns single account using IBAN", description = "", security = {
-        @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
+    @Operation(summary = "Returns single account using IBAN", description = "returns a savings and a with the given iban", security = {
+            @SecurityRequirement(name = "bearerAuth")}, tags = {"Accounts"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successfully returns the account of the user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
+            @ApiResponse(responseCode = "404", description = "did not find the account", content = @Content(mediaType = "application/json")),
     })
     @RequestMapping(value = "/accounts/IBAN/{IBAN}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<AccountSingleResponse> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN) throws IOException;
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<AccountSingleResponse> accountsIbanIbanGet(@Parameter(in = ParameterIn.PATH, description = "Gets the Iban of the user based on the input", required = true, schema = @Schema()) @PathVariable("IBAN") String IBAN) throws IOException;
 
 
-    @Operation(summary = "Change account data", description = "", security = {
-        @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
+    @Operation(summary = "Change account data", description = "change the data of the user with put for instance the name of the account", security = {
+            @SecurityRequirement(name = "bearerAuth")}, tags = {"Accounts"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "succesfully updated the account of the user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
+            @ApiResponse(responseCode = "404", description = "did not find the account", content = @Content(mediaType = "application/json")),
     })
     @RequestMapping(value = "/accounts/IBAN/{IBAN}",
-        produces = { "application/json" }, 
-        method = RequestMethod.PUT)
-    ResponseEntity<AccountSingleResponse> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required=true, schema=@Schema()) @PathVariable("IBAN") String IBAN, @RequestBody AccountRequest body) throws IOException;
+            produces = {"application/json"},
+            method = RequestMethod.PUT)
+    ResponseEntity<AccountSingleResponse> accountsIbanIbanPut(@Parameter(in = ParameterIn.PATH, description = "The iban of the user is taken", required = true, schema = @Schema()) @PathVariable("IBAN") String IBAN, @RequestBody AccountRequest body) throws IOException;
 
 
-    @Operation(summary = "Returns all accounts on user id", description = "", security = {
-        @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
+    @Operation(summary = "Returns all accounts on user id", description = "returns all of the account that are associated with the user based on the user id", security = {
+            @SecurityRequirement(name = "bearerAuth")}, tags = {"Accounts"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = " succesfully retrieved all the account of the user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
+            @ApiResponse(responseCode = "404", description = "did not find the account", content = @Content(mediaType = "application/json")),
     })
     @RequestMapping(value = "/accounts/id/{id}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<AccountListResponse> accountsIdIdGet(@Parameter(in = ParameterIn.PATH, description = "The unique id of the user is taken", required=true, schema=@Schema()) @PathVariable("id") String id) throws IOException;
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<AccountListResponse> accountsIdIdGet(@Parameter(in = ParameterIn.PATH, description = "The unique id of the user is taken", required = true, schema = @Schema()) @PathVariable("id") String id) throws IOException;
 
 
-    @Operation(summary = "Creating a new account", description = "", security = {
-        @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "201", description = "The account has been successfully created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
+    @Operation(summary = "Creating a new account", description = "A new account is created for the user, it can be a saving or a normal account", security = {
+            @SecurityRequirement(name = "bearerAuth")}, tags = {"Accounts"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The account has been successfully created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
     })
     @RequestMapping(value = "/accounts",
-        produces = { "application/json" }, 
-        consumes = { "application/json" }, 
-        method = RequestMethod.POST)
-    ResponseEntity<AccountSingleResponse> accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required=true, schema=@Schema()) @Valid @RequestBody AccountRequest body) throws IOException;
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<AccountSingleResponse> accountsPost(@Parameter(in = ParameterIn.DEFAULT, description = "This endpoint creates a new account that can be used to transfer and withdraw money.", required = true, schema = @Schema()) @Valid @RequestBody AccountRequest body) throws IOException;
 
 
-    @Operation(summary = "Returns single account using IBAN", description = "", security = {
-        @SecurityRequirement(name = "bearerAuth")    }, tags={ "Accounts" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
+    @Operation(summary = "Returns single account using username", description = "", security = {
+            @SecurityRequirement(name = "bearerAuth")}, tags = {"Accounts"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "returns account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AccountRequest.class))),
+            @ApiResponse(responseCode = "404", description = "did not find the account", content = @Content(mediaType = "application/json")),
     })
     @RequestMapping(value = "/accounts/search",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<AccountSingleResponse> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned" ,schema=@Schema()) @Valid @RequestParam(value = "name", required = false) String name) throws IOException;
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<AccountSingleResponse> accountsSearchGet(@Parameter(in = ParameterIn.QUERY, description = "The name of the user is searched with the submitted input. If the user existed the account is returned", schema = @Schema()) @Valid @RequestParam(value = "name", required = false) String name) throws IOException;
 
 }
 
