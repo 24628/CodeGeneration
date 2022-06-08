@@ -1,16 +1,19 @@
 package io.swagger.service;
 
+import io.swagger.api.exceptions.DayLimitReachedException;
 import io.swagger.api.exceptions.EntityNotFoundException;
+import io.swagger.api.exceptions.InvalidPermissionsException;
 import io.swagger.api.exceptions.ValidationException;
 import io.swagger.enums.AccountType;
 import io.swagger.enums.Roles;
 import io.swagger.helpers.OffsetPageableDate;
 import io.swagger.helpers.ValidateAtmHelper;
+import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Entity.AccountEntity;
 import io.swagger.model.Entity.TransactionEntity;
 import io.swagger.model.Entity.UserEntity;
-import io.swagger.model.Request.AtmRequest;
 import io.swagger.model.Request.TransactionRequest;
+import io.swagger.model.Request.TransactionAdvancedSearchRequest;
 import io.swagger.repository.IAccountDTO;
 import io.swagger.repository.ITransactionDTO;
 import io.swagger.repository.IUserDTO;
@@ -21,6 +24,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,8 +53,11 @@ public class TransactionService {
     Validator validator;
 
     public TransactionEntity addTransaction(TransactionRequest body, UserEntity loggedInUser) {
-        AccountEntity accountFrom = accountRepository.getOne(UUID.fromString(body.getFrom()));
-        AccountEntity accountTo = accountRepository.getOne(UUID.fromString(body.getTo()));
+        AccountEntity accountFrom = accountRepository.getAccountByIBAN((body.getFrom()));
+        AccountEntity accountTo = accountRepository.getAccountByIBAN((body.getTo()));
+
+        System.out.println(accountFrom.getUuid());
+        System.out.println(accountTo.getUuid());
 
         if (accountFrom == null)
             throw new EntityNotFoundException("Account from ");
@@ -63,7 +76,7 @@ public class TransactionService {
             throw new ValidationException("the account value will go below the absolute limit");
 
         //als left to transact 0 is dan zjn we over de limit van de day limit en mogen er geen transactie limits gemaakt worden
-        validator.CheckDayLimit(userFrom,accountFrom.getIBAN(), body.getAmount());
+        validator.CheckDayLimit(userFrom,accountFrom.getIBAN(), (long)body.getAmount());
 
         // als de body hoger is dan de transactie limit dan gooien we een error
         if ((float) body.getAmount() > userFrom.getTransactionLimit())

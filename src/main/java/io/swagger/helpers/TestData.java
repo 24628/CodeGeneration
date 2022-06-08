@@ -41,13 +41,15 @@ public class TestData {
     public void Generate(){
 
         generateUsers();
-        generateTransactions();
+        for (int i = 0; i < 1000; i++) {
+            generateTransactions();
+        }
         CreateBank();
     }
 
     private void generateUsers() {
         Roles [] roles = new Roles[]{Roles.EMPLOYEE,Roles.CUSTOMER,Roles.DISABLED};
-        String[] names = {"bob", "karel", "hans", "piet"};
+        String[] names = {"bob", "karel", "hans", "piet","albert","frank","henk","kroll","adolfje","eef","sixnine"};
         for (String user : names) {
             UserEntity userEntity = new UserEntity();
             userEntity.setUsername(user);
