@@ -49,7 +49,7 @@ public class TestData {
 
     private void generateUsers() {
         Roles [] roles = new Roles[]{Roles.EMPLOYEE,Roles.CUSTOMER,Roles.DISABLED};
-        String[] names = {"bob", "karel", "hans", "piet","albert","frank","henk","kroll","adolfje","eef","sixnine"};
+        String[] names = {"bob", "karel", "hans", "piet","albert","frank","henk","kroll","adolfje","eef","sixnine","jan"};
         for (String user : names) {
             UserEntity userEntity = new UserEntity();
             userEntity.setUsername(user);
