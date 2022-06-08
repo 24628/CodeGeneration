@@ -1,4 +1,4 @@
-package models;
+package io.swagger.model;
 
 import io.swagger.model.Entity.AccountEntity;
 import org.junit.Assert;

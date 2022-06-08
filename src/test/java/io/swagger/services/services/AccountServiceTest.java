@@ -1,4 +1,4 @@
-package services;
+package io.swagger.services.services;
 
 import io.swagger.Swagger2SpringBoot;
 import io.swagger.api.exceptions.EntityAlreadyExistException;
