@@ -10,3 +10,5 @@ Feature: the version can be retrieved
 #    Given I have an invalid user object
 #    When I call the login endpoint
 #    Then I receive a status of 422
+
+#  not running with io.cucumber.core.cli.Main
