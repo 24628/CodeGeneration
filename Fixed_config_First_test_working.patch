@@ -1,0 +1,235 @@
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	(revision db168bf1e2357813d8e6f51539ef64512bd2f755)
++++ b/pom.xml	(revision a05e709cfa2b7b23591cc73b41beac4f9b4339fd)
+@@ -125,7 +125,7 @@
+ 
+         <dependency>
+             <groupId>io.cucumber</groupId>
+-            <artifactId>cucumber-java8</artifactId>
++            <artifactId>cucumber-java</artifactId>
+             <version>${cucumber.version}</version>
+             <scope>test</scope>
+         </dependency>
+Index: src/test/java/io/swagger/CucumberContextConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/test/java/io/swagger/CucumberContextConfig.java b/src/test/java/io/swagger/CucumberContextConfig.java
+new file mode 100644
+--- /dev/null	(revision 36c0e13364b8f0af7b07973d0d72c872a3ff0fd8)
++++ b/src/test/java/io/swagger/CucumberContextConfig.java	(revision 36c0e13364b8f0af7b07973d0d72c872a3ff0fd8)
+@@ -0,0 +1,11 @@
++package io.swagger;
++
++import io.cucumber.spring.CucumberContextConfiguration;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.test.context.ContextConfiguration;
++import org.springframework.test.context.TestPropertySource;
++
++@CucumberContextConfiguration
++@ContextConfiguration
++public class CucumberContextConfig {
++}
+Index: src/test/java/steps/CucumberIntegrationTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/test/java/steps/CucumberIntegrationTest.java b/src/test/java/io/swagger/CucumberIntegrationTest.java
+rename from src/test/java/steps/CucumberIntegrationTest.java
+rename to src/test/java/io/swagger/CucumberIntegrationTest.java
+--- a/src/test/java/steps/CucumberIntegrationTest.java	(revision db168bf1e2357813d8e6f51539ef64512bd2f755)
++++ b/src/test/java/io/swagger/CucumberIntegrationTest.java	(revision a05e709cfa2b7b23591cc73b41beac4f9b4339fd)
+@@ -1,4 +1,4 @@
+-package steps;
++package io.swagger;
+ 
+ import io.cucumber.junit.Cucumber;
+ import io.cucumber.junit.CucumberOptions;
+Index: src/test/java/steps/SpringIntegrationTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/test/java/steps/SpringIntegrationTest.java b/src/test/java/io/swagger/steps/BaseStepDefinitions.java
+rename from src/test/java/steps/SpringIntegrationTest.java
+rename to src/test/java/io/swagger/steps/BaseStepDefinitions.java
+--- a/src/test/java/steps/SpringIntegrationTest.java	(revision db168bf1e2357813d8e6f51539ef64512bd2f755)
++++ b/src/test/java/io/swagger/steps/BaseStepDefinitions.java	(revision 36c0e13364b8f0af7b07973d0d72c872a3ff0fd8)
+@@ -1,20 +1,19 @@
+-package steps;
++package io.swagger.steps;
+ 
+-import io.cucumber.spring.CucumberContextConfiguration;
++import io.swagger.CucumberContextConfig;
+ import org.springframework.boot.test.context.SpringBootTest;
+ import org.springframework.boot.web.server.LocalServerPort;
+ 
+-@CucumberContextConfiguration
+-@SpringBootTest
+-public class SpringIntegrationTest {
++@SpringBootTest(classes = CucumberContextConfig.class)
++public class BaseStepDefinitions {
+ 
+     @LocalServerPort
+     private int port;
+-    // executeGet implementation
+ 
+     private String base = "http://localhost:";
+ 
+-    public String getBaseUrl () {
++    public String getBaseUrl() {
+         return base + port;
+     }
++
+ }
+Index: src/test/java/io/swagger/steps/login/LoginStepDefs.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/test/java/io/swagger/steps/login/LoginStepDefs.java b/src/test/java/io/swagger/steps/login/LoginStepDefs.java
+new file mode 100644
+--- /dev/null	(revision a05e709cfa2b7b23591cc73b41beac4f9b4339fd)
++++ b/src/test/java/io/swagger/steps/login/LoginStepDefs.java	(revision a05e709cfa2b7b23591cc73b41beac4f9b4339fd)
+@@ -0,0 +1,61 @@
++package io.swagger.steps.login;
++
++import io.cucumber.core.internal.com.fasterxml.jackson.core.JsonProcessingException;
++import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
++import io.cucumber.java.en.And;
++import io.cucumber.java.en.Given;
++import io.cucumber.java.en.Then;
++import io.cucumber.java.en.When;
++import io.cucumber.spring.CucumberContextConfiguration;
++import io.swagger.model.Request.LoginRequest;
++import io.swagger.steps.BaseStepDefinitions;
++import org.json.JSONException;
++import org.json.JSONObject;
++import org.junit.jupiter.api.Assertions;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.boot.test.web.client.TestRestTemplate;
++import org.springframework.http.HttpEntity;
++import org.springframework.http.HttpHeaders;
++import org.springframework.http.ResponseEntity;
++
++@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
++@CucumberContextConfiguration
++public class LoginStepDefs extends BaseStepDefinitions {
++
++    private final TestRestTemplate restTemplate = new TestRestTemplate();
++    private final ObjectMapper mapper = new ObjectMapper();
++    private ResponseEntity<String> response;
++    private LoginRequest loginRequest;
++
++    @Given("I have a valid user object")
++    public void iHaveAValidUserObject() {
++        loginRequest = new LoginRequest();
++        loginRequest.setUsername("jan");
++        loginRequest.setPassword("password");
++    }
++
++    @When("I call the login endpoint")
++    public void iCallTheLoginEndpoint() throws JsonProcessingException {
++        HttpHeaders httpHeaders = new HttpHeaders();
++        httpHeaders.add("Content-Type", "application/json");
++
++        HttpEntity<String> request = new HttpEntity<String>(mapper.writeValueAsString(
++                loginRequest),
++                httpHeaders);
++        response = restTemplate.postForEntity(getBaseUrl() + "/login",
++                request, String.class);
++    }
++
++    @Then("I receive a status of {int}")
++    public void iReceiveAStatusOf(int status) {
++        Assertions.assertEquals(status, response.getStatusCodeValue());
++    }
++
++    @And("I get a JWT-token")
++    public void iGetAJWTToken() throws JSONException {
++        JSONObject jsonObject = new JSONObject(response.getBody());
++        String token = jsonObject.getString("token");
++        Assertions.assertTrue(token.startsWith("ey"));
++    }
++}
+Index: src/test/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/src/test/resources/application.properties b/src/test/resources/application.properties
+new file mode 100644
+--- /dev/null	(revision a05e709cfa2b7b23591cc73b41beac4f9b4339fd)
++++ b/src/test/resources/application.properties	(revision a05e709cfa2b7b23591cc73b41beac4f9b4339fd)
+@@ -0,0 +1,1 @@
++server.port=0
+\ No newline at end of file
+Index: src/test/java/steps/MyStepdefs.java
+===================================================================
+diff --git a/src/test/java/steps/MyStepdefs.java b/src/test/java/steps/MyStepdefs.java
+deleted file mode 100644
+--- a/src/test/java/steps/MyStepdefs.java	(revision db168bf1e2357813d8e6f51539ef64512bd2f755)
++++ /dev/null	(revision db168bf1e2357813d8e6f51539ef64512bd2f755)
+@@ -1,54 +0,0 @@
+-package steps;
+-
+-import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
+-import io.cucumber.java8.En;
+-import io.cucumber.java8.PendingException;
+-import io.swagger.model.Request.LoginRequest;
+-import org.json.JSONObject;
+-import org.junit.jupiter.api.Assertions;
+-import org.junit.jupiter.api.TestInstance;
+-import org.springframework.boot.test.web.client.TestRestTemplate;
+-import org.springframework.http.HttpEntity;
+-import org.springframework.http.HttpHeaders;
+-import org.springframework.http.ResponseEntity;
+-import steps.SpringIntegrationTest;
+-
+-import java.util.Optional;
+-
+-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+-public class MyStepdefs  extends SpringIntegrationTest implements En {
+-
+-    private final TestRestTemplate restTemplate = new TestRestTemplate();
+-    private final ObjectMapper mapper = new ObjectMapper();
+-    private ResponseEntity<String> response;
+-    private LoginRequest loginRequest;
+-
+-    public MyStepdefs() {
+-
+-        Given("^I have a valid user object$", () -> {
+-            loginRequest = new LoginRequest();
+-            loginRequest.setUsername("jan");
+-            loginRequest.setPassword("password");
+-            throw new PendingException();
+-        });
+-        When("^I call the login endpoint$", () -> {
+-            HttpHeaders httpHeaders = new HttpHeaders();
+-            httpHeaders.add("Content-Type", "application/json");
+-
+-            HttpEntity<String> request = new HttpEntity<String>(mapper.writeValueAsString(
+-                    loginRequest),
+-                    httpHeaders);
+-            response = restTemplate.postForEntity(getBaseUrl() + "/login",
+-                    request, String.class);
+-        });
+-        Then("^I receive a status of (\\d+)$", (Integer status) -> {
+-            Assertions.assertEquals(Optional.ofNullable(status), Optional.of(response.getStatusCodeValue()));
+-        });
+-
+-        And("^I get a JWT-token$", () -> {
+-            JSONObject jsonObject = new JSONObject(response.getBody());
+-            String token = jsonObject.getString("token");
+-            Assertions.assertTrue(token.startsWith("ey"));
+-        });
+-    }
+-}
