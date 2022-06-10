@@ -6,3 +6,7 @@ Feature: the account controller works
     Then I receive a status of success of 200
     And I get a list of accounts back
 
+  Scenario:  I dont have valid jwt token
+    Given I dont have valid jwt token
+    When When I call an endpoint with permissions
+    Then I get a message forbidden to access

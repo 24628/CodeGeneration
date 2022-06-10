@@ -8,6 +8,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.swagger.model.Request.LoginRequest;
 import io.swagger.steps.BaseStepDefinitions;
+import io.swagger.steps.helper.CustomError;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -26,31 +27,9 @@ public class AccountStepDefs extends BaseStepDefinitions {
     private ResponseEntity<String> response;
 
     private String getAccountsToken;
+    private String invalidJwtToken;
     private ResponseEntity<String> getAccountsResponse;
-
-    @Given("I have a valid jwt token to get accounts and permissions")
-    public void iHaveAValidUserObject() throws JSONException, JsonProcessingException {
-        getAccountsToken = getJwtToken();
-        Assertions.assertTrue(getJwtToken().startsWith("ey"));
-    }
-
-    @When("I call the account get endpoint")
-    public void iCallTheAccountGetEndpoint() throws JsonProcessingException {
-        getAccountsResponse = callGetHttpHeaders(getAccountsToken, "/accounts");
-    }
-
-    @Then("I receive a status of success of {int}")
-    public void iReceiveAStatusOfSuccessOf(int status) {
-        Assertions.assertEquals(status, getAccountsResponse.getStatusCodeValue());
-    }
-
-    @And("I get a list of accounts back")
-    public void iGetAListOfAccountsBack() throws JSONException {
-        JSONObject jsonObject = new JSONObject(getAccountsResponse.getBody());
-        String accountEntityList = jsonObject.getString("accountEntityList");
-        Assertions.assertTrue(accountEntityList.contains("iban"));
-        Assertions.assertTrue(accountEntityList.contains("uuid"));
-    }
+    private ResponseEntity<String> invalidAccountResponseForbidden;
 
     private String getJwtToken() throws JSONException, JsonProcessingException {
         loginRequest = new LoginRequest();
@@ -80,4 +59,46 @@ public class AccountStepDefs extends BaseStepDefinitions {
                 String.class);
     }
 
+    @Given("I have a valid jwt token to get accounts and permissions")
+    public void iHaveAValidUserObject() throws JSONException, JsonProcessingException {
+        getAccountsToken = getJwtToken();
+        Assertions.assertTrue(getJwtToken().startsWith("ey"));
+    }
+
+    @When("I call the account get endpoint")
+    public void iCallTheAccountGetEndpoint() throws JsonProcessingException {
+        getAccountsResponse = callGetHttpHeaders(getAccountsToken, "/accounts");
+    }
+
+    @Then("I receive a status of success of {int}")
+    public void iReceiveAStatusOfSuccessOf(int status) {
+        Assertions.assertEquals(status, getAccountsResponse.getStatusCodeValue());
+    }
+
+    @And("I get a list of accounts back")
+    public void iGetAListOfAccountsBack() throws JSONException {
+        JSONObject jsonObject = new JSONObject(getAccountsResponse.getBody());
+        String accountEntityList = jsonObject.getString("accountEntityList");
+        Assertions.assertTrue(accountEntityList.contains("iban"));
+        Assertions.assertTrue(accountEntityList.contains("uuid"));
+    }
+
+    @Given("I dont have valid jwt token")
+    public void iDontHaveValidJwtToken() {
+        invalidJwtToken = "somerandombsthatsclearlynotatoken";
+    }
+
+    @When("When I call an endpoint with permissions")
+    public void whenICallAnEndpointWithPermissions() throws JsonProcessingException {
+        invalidAccountResponseForbidden = callGetHttpHeaders(invalidJwtToken, "/accounts");
+    }
+
+    @Then("I get a message forbidden to access")
+    public void iGetAMessageForbiddenToAccess() throws JsonProcessingException {
+        CustomError result = mapper.readValue(invalidAccountResponseForbidden.getBody(),
+                CustomError.class);
+        System.out.println("test123");
+        System.out.println(result.getMessage());
+        Assertions.assertEquals("Token not authorised",result.getMessage());
+    }
 }
