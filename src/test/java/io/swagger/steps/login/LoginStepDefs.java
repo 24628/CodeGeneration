@@ -10,6 +10,7 @@ import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.swagger.model.Request.LoginRequest;
 import io.swagger.steps.BaseStepDefinitions;
+import io.swagger.steps.helper.CustomError;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -55,6 +56,7 @@ public class LoginStepDefs extends BaseStepDefinitions {
 
     @Then("I receive a status of {int}")
     public void iReceiveAStatusOf(int status) {
+
         Assertions.assertEquals(status, response.getStatusCodeValue());
     }
 
@@ -114,28 +116,8 @@ public class LoginStepDefs extends BaseStepDefinitions {
     public void iReceiveAMessageWithUserOrPasswordWasInvalid() throws JsonProcessingException {
         CustomError result = mapper.readValue(invalidResponsePassword.getBody(),
                 CustomError.class);
-        System.out.println(result.getMessage());
         Assertions.assertEquals("Invalid username or password",result.getMessage());
     }
 
-    public static class CustomError {
-        @JsonProperty
-        private String message;
 
-        @JsonProperty
-        private String timestamp;
-
-        @JsonProperty
-        private int status;
-
-        @JsonProperty
-        private String error;
-
-        @JsonProperty
-        private String path;
-
-        public String getMessage() {
-            return message;
-        }
-    }
 }

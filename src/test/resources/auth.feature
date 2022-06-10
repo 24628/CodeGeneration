@@ -1,4 +1,4 @@
-Feature: the version can be retrieved
+Feature: the user can login
 
   Scenario: Post request to /login will result in jwt token
     Given I have a valid user object

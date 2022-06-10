@@ -63,6 +63,18 @@ public class TestData {
             userService.generateUsers(userEntity);
             generateAccount(userEntity);
         }
+
+        UserEntity employee = new UserEntity();
+        employee.setUsername("employee");
+        employee.setName("jan");
+        employee.setEmail("employee@example.com");
+        employee.setPassword("$2a$12$PDMzF/Zq9t6M.guuRiN5pevmQtcaG6wMv9wWvZJaFwylap9FYb7Tu"); //password all the same password
+        employee.setRole(Roles.EMPLOYEE);
+        employee.setTransactionLimit(200L);
+        employee.setDayLimit(500L);
+        employee.setPinCode(1234);
+        userService.generateUsers(employee);
+        generateAccount(employee);
     }
 
     private void CreateBank(){
