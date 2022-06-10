@@ -11,11 +11,11 @@ Feature: the account controller works
     When When I call an endpoint with permissions
     Then I get a message forbidden to access
 
-  Scenario: I can change the limits (accountLimit/absoluteLimit) account data of the user
+  Scenario: I can create a new user
     Given I have a valid jwt token to get accounts by IBAN and permissions
-    When I call the account/IBAN/{IBAN} post endpoint
+    When I call the account/ post endpoint
     Then I receive a status of success of 200
-    And I change the account data of the user
+    And I created a user
 
   Scenario: I can change the limits (accountLimit/absoluteLimit) account data of the user
     Given I have a valid jwt token to get accounts by IBAN and permissions
