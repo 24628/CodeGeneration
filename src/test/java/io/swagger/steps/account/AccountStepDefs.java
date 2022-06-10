@@ -101,4 +101,68 @@ public class AccountStepDefs extends BaseStepDefinitions {
         System.out.println(result.getMessage());
         Assertions.assertEquals("Token not authorised",result.getMessage());
     }
+
+    @Given("I have a valid jwt token to create new account")
+    public void iHaveAValidJwtTokenToCreateNewAccount() {
+    }
+
+    @When("I call the account post endpoint")
+    public void iCallTheAccountPostEndpoint() {
+    }
+
+    @Then("I receive a status of success of by new account {int}")
+    public void iReceiveAStatusOfSuccessOfByNewAccount(int arg0) {
+    }
+
+    @And("I will receive mine created account")
+    public void iWillReceiveMineCreatedAccount() {
+    }
+
+    @Given("I have a valid jwt token to update account")
+    public void iHaveAValidJwtTokenToUpdateAccount() {
+    }
+
+    @When("I call the account IBAN IBAN put endpoint")
+    public void iCallTheAccountIBANIBANPutEndpoint() {
+    }
+
+    @Then("I receive a status of success of  by update {int}")
+    public void iReceiveAStatusOfSuccessOfByUpdate(int arg0) {
+    }
+
+    @And("I change the account data of the IBAN")
+    public void iChangeTheAccountDataOfTheIBAN() {
+    }
+
+    @Given("I have a valid jwt token to get a list of account by userid")
+    public void iHaveAValidJwtTokenToGetAListOfAccountByUserid() {
+    }
+
+    @When("I call the account userid get endpoint")
+    public void iCallTheAccountUseridGetEndpoint() {
+    }
+
+    @Then("I receive a status of success of by userid {int}")
+    public void iReceiveAStatusOfSuccessOfByUserid(int arg0) {
+    }
+
+    @And("I get an list of account back saving or normal by userId")
+    public void iGetAnListOfAccountBackSavingOrNormalByUserId() {
+    }
+
+    @Given("I have a valid jwt token get a single account based on iban")
+    public void iHaveAValidJwtTokenGetASingleAccountBasedOnIban() {
+    }
+
+    @When("I call the account IBAN IBAN get endpoint")
+    public void iCallTheAccountIBANIBANGetEndpoint() {
+    }
+
+    @Then("I receive a status of success of by iban {int}")
+    public void iReceiveAStatusOfSuccessOfByIban(int arg0) {
+    }
+
+    @And("I get a single account using the IBAN")
+    public void iGetASingleAccountUsingTheIBAN() {
+    }
 }
