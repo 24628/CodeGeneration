@@ -11,28 +11,27 @@ Feature: the account controller works
     When When I call an endpoint with permissions
     Then I get a message forbidden to access
 
-  Scenario: I can create a new user
-    Given I have a valid jwt token to get accounts by IBAN and permissions
-    When I call the account/ post endpoint
+  Scenario: I can create a new account
+    Given I have a valid jwt token to create an account
+    When I call the account post endpoint
     Then I receive a status of success of 200
-    And I created a user
+    And I will receive mine created account
 
-  Scenario: I can change the limits (accountLimit/absoluteLimit) account data of the user
+  Scenario: I can change the limits accountLimit absoluteLimit account data of the user
     Given I have a valid jwt token to get accounts by IBAN and permissions
-    When I call the account/IBAN/{IBAN} put endpoint
+    When I call the account IBAN IBAN put endpoint
     Then I receive a status of success of 200
-    And I change the account data of the user
+    And I change the account data of the IBAN
 
   Scenario: I can get list of account based on the userId
     Given I have a valid jwt token to get accounts by userId and permissions
-    When I call the account/id/{id} get endpoint
+    When I call the account userid get endpoint
     Then I receive a status of success of 200
-    And I get an list of account back (saving or normal) by userId
-
+    And I get an list of account back saving or normal by userId
 
   Scenario: I can get single of account based on the IBAN
     Given I have a valid jwt token to get accounts by IBAN and permissions
-    When I call the account/IBAN/{IBAN} get endpoint
+    When I call the account IBAN IBAN get endpoint
     Then I receive a status of success of 200
     And I get a single account using the IBAN
 

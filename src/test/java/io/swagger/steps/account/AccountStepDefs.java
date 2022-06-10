@@ -144,31 +144,43 @@ public class AccountStepDefs extends BaseStepDefinitions {
         Assertions.assertEquals("Token not authorised",result.getMessage());
     }
 
+    @Given("I have a valid jwt token to create an account")
+    public void iHaveAValidJwtTokenToCreateAnAccount() {
+    }
+
+    @When("I call the account post endpoint")
+    public void iCallTheAccountPostEndpoint() {
+    }
+
+    @And("I will receive mine created account")
+    public void iWillReceiveMineCreatedAccount() {
+    }
+
     @Given("I have a valid jwt token to get accounts by IBAN and permissions")
     public void iHaveAValidJwtTokenToGetAccountsByIBANAndPermissions() {
     }
 
-    @When("I call the account\\/IBAN\\/\\{IBAN} put endpoint")
+    @When("I call the account IBAN IBAN put endpoint")
     public void iCallTheAccountIBANIBANPutEndpoint() {
     }
 
-    @And("I change the account data of the user")
-    public void iChangeTheAccountDataOfTheUser() {
+    @And("I change the account data of the IBAN")
+    public void iChangeTheAccountDataOfTheIBAN() {
     }
 
     @Given("I have a valid jwt token to get accounts by userId and permissions")
     public void iHaveAValidJwtTokenToGetAccountsByUserIdAndPermissions() {
     }
 
-    @When("I call the account\\/id\\/\\{id} get endpoint")
-    public void iCallTheAccountIdIdGetEndpoint() {
+    @When("I call the account userid get endpoint")
+    public void iCallTheAccountUseridGetEndpoint() {
     }
 
-    @And("I get an list of account back \\(saving or normal) by userId")
+    @And("I get an list of account back saving or normal by userId")
     public void iGetAnListOfAccountBackSavingOrNormalByUserId() {
     }
 
-    @When("I call the account\\/IBAN\\/\\{IBAN} get endpoint")
+    @When("I call the account IBAN IBAN get endpoint")
     public void iCallTheAccountIBANIBANGetEndpoint() {
     }
 
