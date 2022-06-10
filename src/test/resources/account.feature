@@ -20,8 +20,7 @@ Feature: the account controller works
   Scenario: I can change the limits accountLimit absoluteLimit account data of the user
     Given I have a valid jwt token to update account
     When I call the account IBAN IBAN put endpoint
-    Then I receive a status of success of  by update 200
-    And I change the account data of the IBAN
+    Then Check the get endpoint if its updated
 
   Scenario: I can get list of account based on the userId
     Given I have a valid jwt token to get a list of account by userid
