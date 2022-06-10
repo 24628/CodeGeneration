@@ -13,12 +13,6 @@ Feature: the account controller works
 
   Scenario: I can change the limits (accountLimit/absoluteLimit) account data of the user
     Given I have a valid jwt token to get accounts by IBAN and permissions
-    When I call the account/IBAN/{IBAN} post endpoint
-    Then I receive a status of success of 200
-    And I change the account data of the user
-
-  Scenario: I can change the limits (accountLimit/absoluteLimit) account data of the user
-    Given I have a valid jwt token to get accounts by IBAN and permissions
     When I call the account/IBAN/{IBAN} put endpoint
     Then I receive a status of success of 200
     And I change the account data of the user
@@ -28,7 +22,6 @@ Feature: the account controller works
     When I call the account/id/{id} get endpoint
     Then I receive a status of success of 200
     And I get an list of account back (saving or normal) by userId
-
 
   Scenario: I can get single of account based on the IBAN
     Given I have a valid jwt token to get accounts by IBAN and permissions

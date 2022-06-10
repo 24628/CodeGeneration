@@ -143,4 +143,36 @@ public class AccountStepDefs extends BaseStepDefinitions {
         System.out.println(result.getMessage());
         Assertions.assertEquals("Token not authorised",result.getMessage());
     }
+
+    @Given("I have a valid jwt token to get accounts by IBAN and permissions")
+    public void iHaveAValidJwtTokenToGetAccountsByIBANAndPermissions() {
+    }
+
+    @When("I call the account\\/IBAN\\/\\{IBAN} put endpoint")
+    public void iCallTheAccountIBANIBANPutEndpoint() {
+    }
+
+    @And("I change the account data of the user")
+    public void iChangeTheAccountDataOfTheUser() {
+    }
+
+    @Given("I have a valid jwt token to get accounts by userId and permissions")
+    public void iHaveAValidJwtTokenToGetAccountsByUserIdAndPermissions() {
+    }
+
+    @When("I call the account\\/id\\/\\{id} get endpoint")
+    public void iCallTheAccountIdIdGetEndpoint() {
+    }
+
+    @And("I get an list of account back \\(saving or normal) by userId")
+    public void iGetAnListOfAccountBackSavingOrNormalByUserId() {
+    }
+
+    @When("I call the account\\/IBAN\\/\\{IBAN} get endpoint")
+    public void iCallTheAccountIBANIBANGetEndpoint() {
+    }
+
+    @And("I get a single account using the IBAN")
+    public void iGetASingleAccountUsingTheIBAN() {
+    }
 }
